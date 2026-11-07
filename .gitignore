@@ -1,0 +1,9 @@
+# Audit output for prospects stays private by default.
+reports/
+test-run/
+final-run/
+*.log
+*.err
+__pycache__/
+*.pyc
+.venv/

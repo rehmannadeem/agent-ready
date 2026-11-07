@@ -30,7 +30,7 @@ Output: a score out of 100, a letter grade, findings ranked by severity with a p
 Python 3.10 or newer. No required packages.
 
 ```
-git clone https://github.com/<your-account>/agent-ready.git
+git clone https://github.com/rehmannadeem/agent-ready.git
 cd agent-ready
 python agent_ready.py yourstore.com
 ```

@@ -58,6 +58,17 @@ class Scoring(unittest.TestCase):
         self.assertEqual(r["coverage"], 85)
         self.assertTrue(all(f["severity"] == "INFO" for f in findings))
 
+    def test_soft_404_is_described_precisely(self):
+        r = perfect()
+        r["ucp"].update(present=False, version=None, mcp_endpoint=None, capabilities=[],
+                        missing_core=list(ar.CORE_CAPABILITIES), served_html=True,
+                        final_url="https://www.example.com/")
+        r["mcp"] = {"live": False, "server": None, "tools": []}
+        r["backend_ucp_present"] = True
+        _, _, findings = ar.score_and_findings(r)
+        self.assertIn("web page instead of the manifest", findings[0]["finding"])
+        self.assertIn("https://www.example.com/", findings[0]["finding"])
+
     def test_empty_policy_shell_is_named_as_empty(self):
         r = perfect()
         r["policies"].update(shipping=False, empty={"shipping": True})

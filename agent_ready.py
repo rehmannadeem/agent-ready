@@ -24,7 +24,7 @@ from datetime import datetime, timezone
 from html import unescape
 from pathlib import Path
 
-VERSION = "0.2.0"
+VERSION = "0.2.1"
 USER_AGENT = f"Mozilla/5.0 (compatible; ArmansAgentReadyAudit/{VERSION}; +https://armans.ai)"
 TIMEOUT = 20
 POLITE_DELAY = 1.0          # seconds between requests to the same store
@@ -152,8 +152,8 @@ def check_platform(f, base):
 
 
 def check_ucp(f, base):
-    status, _, text, _ = f.request(base + "/.well-known/ucp",
-                                   headers={"Accept": "application/json"})
+    status, hdrs, text, final_url = f.request(base + "/.well-known/ucp",
+                                              headers={"Accept": "application/json"})
     out = {"status": status, "present": False, "version": None, "mcp_endpoint": None,
            "capabilities": [], "payment_handlers": [], "missing_core": list(CORE_CAPABILITIES)}
     if status != 200:
@@ -163,7 +163,12 @@ def check_ucp(f, base):
         return out
     doc = parse_json(text)
     if not isinstance(doc, dict) or "ucp" not in doc:
-        out["status"] = "invalid-json"
+        # A "soft 404": the address answers 200 but with a web page (often a redirect to
+        # the homepage), not the manifest. Agents get HTML and cannot use it.
+        ctype = (hdrs.get("Content-Type") or hdrs.get("content-type") or "").lower()
+        out["status"] = "not-a-manifest"
+        out["served_html"] = "html" in ctype or (text or "").lstrip()[:1] == "<"
+        out["final_url"] = final_url
         return out
     ucp = doc["ucp"]
     out["present"] = True
@@ -399,16 +404,21 @@ def score_and_findings(r):
                 "Newer agents may expect newer capabilities. Check your platform or app for the current UCP release.")
     elif r.get("backend_ucp_present"):
         score += 15   # the capability exists on the platform; only the public route is missing
+        how = (f"answers /.well-known/ucp with a web page instead of the manifest "
+               f"(it ends up at {ucp.get('final_url')})" if ucp.get("served_html")
+               else "does not serve /.well-known/ucp")
         add("HIGH", "UCP manifest",
             f"Your Shopify backend ({r['platform']['myshopify_domain']}) publishes a UCP manifest, "
-            "but your public domain does not serve /.well-known/ucp. Agents that discover stores by "
+            f"but your public domain {how}. Agents that discover stores by "
             "domain cannot find your checkout. (Shopify's central Catalog may still list your products.)",
             "Typical for headless or custom front ends: proxy or redirect /.well-known/ucp from your "
             "Shopify backend to your public domain.")
     else:
+        detail = (f" The address returns a web page instead (it ends up at {ucp.get('final_url')})."
+                  if ucp.get("served_html") else "")
         add("HIGH", "UCP manifest",
             "No commerce manifest at /.well-known/ucp. AI shopping agents cannot discover how to "
-            "search, cart or check out with this store.",
+            "search, cart or check out with this store." + detail,
             "On Shopify this is normally automatic; check headless routing and sales-channel settings. "
             "On other platforms, review Google UCP and OpenAI ACP onboarding.")
 
@@ -526,6 +536,12 @@ def audit(store):
                       "The store may be rate-limiting or blocking automated requests. Re-run later.")
         r["requests"] = f.log
         return r
+    # The manifest's own MCP endpoint proves the platform even when the homepage
+    # hides Shopify markers (headless front ends, bot-blocked homepages).
+    m = re.search(r"([a-z0-9][a-z0-9-]*\.myshopify\.com)", r["ucp"].get("mcp_endpoint") or "")
+    if m:
+        r["platform"]["is_shopify"] = True
+        r["platform"]["myshopify_domain"] = r["platform"]["myshopify_domain"] or m.group(1)
     r["backend_ucp_present"] = False
     shop = r["platform"]["myshopify_domain"]
     if not r["ucp"]["present"] and shop and shop not in base:

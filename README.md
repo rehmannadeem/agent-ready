@@ -39,6 +39,38 @@ On Windows, also run `pip install truststore`. It makes Python use the operating
 
 Reports are written to `reports/` (git-ignored, so audits of other people's stores stay private).
 
+## Use it from Claude, ChatGPT or Cursor (MCP server)
+
+The audit also runs as an MCP server, so an AI assistant can call it as a tool.
+
+```
+pip install mcp
+```
+
+Add this to your MCP client's config (in Claude Desktop: **Settings → Developer → Edit Config**), using your own path:
+
+```json
+{
+  "mcpServers": {
+    "agent-ready-audit": {
+      "command": "python",
+      "args": ["/path/to/agent-ready/agent_ready_mcp.py"]
+    }
+  }
+}
+```
+
+Restart the client, then ask: *"Audit allbirds.com for AI-agent readiness."*
+
+| Tool | What it does |
+|---|---|
+| `audit_store` | Full report for one store |
+| `audit_stores` | Comparison table for up to 5 stores (an agency's client list, or prospects) |
+
+Both tools are marked read-only. Reports are also saved to `reports/`. Works with MCP Python SDK 1.x and 2.x.
+
+Check it without any AI client: `python mcp_smoke_test.py yourstore.com`
+
 ## Example output
 
 ```
@@ -75,7 +107,7 @@ Offline tests cover scoring, coverage, the headless gap, robots.txt parsing and 
 
 ## Roadmap
 
-- [ ] MCP server wrapper, so Claude, ChatGPT or Cursor can run audits as a tool
+- [x] MCP server, so Claude, ChatGPT or Cursor can run audits as a tool
 - [ ] Catalog-quality sampling through the UCP endpoint (needs an agent profile)
 - [ ] Batch mode with CSV output for agencies auditing many client stores
 - [ ] n8n workflow: new lead → automatic audit → draft report email for human review

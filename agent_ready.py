@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Agent-Ready Audit v0.1
+Agent-Ready Audit v0.2
 Checks whether AI shopping agents (ChatGPT, Gemini, Copilot and others) can
 discover and transact with an online store, using only public endpoints.
 
@@ -24,7 +24,7 @@ from datetime import datetime, timezone
 from html import unescape
 from pathlib import Path
 
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 USER_AGENT = f"Mozilla/5.0 (compatible; ArmansAgentReadyAudit/{VERSION}; +https://armans.ai)"
 TIMEOUT = 20
 POLITE_DELAY = 1.0          # seconds between requests to the same store
@@ -530,10 +530,12 @@ def audit(store):
     shop = r["platform"]["myshopify_domain"]
     if not r["ucp"]["present"] and shop and shop not in base:
         r["backend_ucp_present"] = check_ucp(f, "https://" + shop)["present"]
+    # Product pages are the most rate-limited, so read them early, before the
+    # store has seen many requests from us.
+    r["product"] = check_product(f, base, home_html)
     r["mcp"] = check_mcp(f, r["ucp"]["mcp_endpoint"])
     r["policies"] = check_policies(f, base, home_html)
     r["robots"] = check_robots(f, base)
-    r["product"] = check_product(f, base, home_html)
     r["score"], r["grade"], r["findings"] = score_and_findings(r)
     r["requests"] = f.log
     return r

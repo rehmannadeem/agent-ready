@@ -3,18 +3,25 @@
   "version": "0.2.0",
   "environment": "development store",
   "date": "2026-11-09",
-  "source_commit": "36a469417a852cea6c7bd2a34133c65834b5c17a",
-  "cloudflare_version": "aeece99a-e40c-4a7c-9be0-3809fc31ef39",
+  "source_commit": "b944fd8c265d18e0b987c991b8c4d26460397218",
+  "cloudflare_version": "f0db2ce6-63f3-4d29-a423-49a5b2e47406",
   "worker_url": "https://armans-agent-ready-live.veenus-rehman.workers.dev",
   "n8n_workflow_id": "lt6LYUdhwOpq2Wzi",
-  "n8n_published_version": "287ff9dc-5789-45d6-b0e5-2a7c3e090970",
-  "tests_passed": 28,
-  "live_agent_execution": "585",
-  "negative_evaluations": [
+  "n8n_published_version": "574ae801-34c9-446b-ac39-9c5223fcf893",
+  "tests_passed": 30,
+  "live_agent_execution": "591",
+  "earlier_agent_execution": "585",
+  "earlier_negative_evaluations": [
     "586",
     "587"
   ],
+  "browser_acceptance": "Authenticated hosted chat, current product at USD 79, one-item cart and rendered Shopify checkout verified in connected Chrome.",
+  "deterministic_cart_lifecycle": "Passed create, get, cancel, get; same cart returned not_found/cart_not_found at 2026-11-09T13:49:45.413Z",
   "payment_submitted": false,
   "order_placed": false,
-  "checkout_verification": "HTTP 200 and Shopify checkout page title; no completed purchase or rendered checkout acceptance"
+  "store_limitations": [
+    "Development storefront requires its existing password",
+    "Rendered checkout displays payments unavailable"
+  ],
+  "production_ready": false
 }

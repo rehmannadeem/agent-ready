@@ -7,6 +7,7 @@ A working development-store shopping demonstration: an n8n AI assistant searches
 - Workflow: https://nadeem-geo.app.n8n.cloud/workflow/lt6LYUdhwOpq2Wzi
 - Current results: [Shopping acceptance](SHOPPING-ACCEPTANCE-2026-11-09.md)
 - Repeatable client process: [Client delivery](CLIENT-DELIVERY.md)
+- Five-stage specification and delivery record: [SDD delivery](SDD-DELIVERY.md)
 
 ## Architecture
 
@@ -45,7 +46,7 @@ That rollback was exercised successfully during acceptance. It removes the new s
 
 ## Limits
 
-This is an owner-operated development-store demonstration. Human cart/checkout review is required. Production rollout needs merchant-approved access, model budget limits, durable session storage, monitoring, abuse controls, privacy/retention decisions, supported markets/shipping and UI acceptance. n8n Simple Memory is not a durable customer-session database. AI marketplace listing, completed orders and payment processing are not demonstrated. The Python auditor is unchanged.
+This is an owner-operated development-store demonstration. The current store is password protected and Shopify checkout displays payments unavailable. The rendered checkout handoff was verified; a completed purchase was not. Human cart/checkout review is required. Production rollout needs merchant-approved access, model budget limits, durable session storage, monitoring, abuse controls, privacy/retention decisions, supported markets/shipping and UI acceptance. n8n Simple Memory is not a durable customer-session database. AI marketplace listing, completed orders and payment processing are not demonstrated. The Python auditor is unchanged.
 
 ## Primary references
 

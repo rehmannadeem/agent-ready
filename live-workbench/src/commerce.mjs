@@ -55,18 +55,23 @@ export async function callCommerce(name,args,env,fetcher=fetch){
   const payload=await boundedJSON(response);
   let data=payload.result?.structuredContent;
   if(!data&&payload.result?.content?.[0]?.type==='text'){try{data=JSON.parse(payload.result.content[0].text);}catch{}}
-  if(payload.error||payload.result?.isError||!data||data.ucp?.status==='error')throw new CommerceError('COMMERCE_REJECTED','Shopify could not complete this operation. No successful cart or checkout is confirmed.');
+  if(payload.error||!data||typeof data!=='object'||Array.isArray(data))throw new CommerceError('COMMERCE_REJECTED','Shopify could not complete this operation. No successful cart or checkout is confirmed.');
   const messages=Array.isArray(data.messages)?data.messages:[];
   const common={source:'Shopify UCP MCP',store:host(env),observed_at:new Date().toISOString(),environment:'development store',messages};
+  const cart=data.cart||data;
+  const cartMessages=Array.isArray(cart.messages)?cart.messages:messages;
+  // Shopify's live missing-cart response uses isError=true and cart_not_found.
+  // Preserve only this explicit structured business outcome before generic rejection.
+  const missingCart=name==='get_cart'&&payload.result?.structuredContent&&cart&&typeof cart==='object'&&!Array.isArray(cart)&&typeof cart.id!=='string'&&(cart.ucp?.version||data.ucp?.version)===UCP_VERSION&&cartMessages.some(m=>m?.type==='error'&&m.severity==='unrecoverable'&&['not_found','cart_not_found'].includes(m.code));
+  if(missingCart)return {...common,id:null,status:'not_found',line_items:[],totals:[],messages:cartMessages,continue_url:null,ready_for_handoff:false,order_placed:false,payment_submitted:false};
+  if(payload.result?.isError||data.ucp?.status==='error'||cart.ucp?.status==='error')throw new CommerceError('COMMERCE_REJECTED','Shopify could not complete this operation. No successful cart or checkout is confirmed.');
   if(name==='search_catalog'){
     if(!Array.isArray(data.products))throw new CommerceError('INVALID_RESPONSE','Shopify did not return a product list.');
     return {...common,products:data.products.slice(0,5).map(p=>({id:p.id,title:p.title,description:plain(p.description?.html),variants:(p.variants||[]).slice(0,20).map(v=>({id:v.id,title:v.title,price:v.price,availability:v.availability,options:v.options})),product_url:safeLink(p.url,env)})),has_next_page:data.pagination?.has_next_page===true};
   }
-  const cart=data.cart||data;
   if(typeof cart.id!=='string')throw new CommerceError('INVALID_RESPONSE','Shopify did not return a cart identifier.');
   const items=Array.isArray(cart.line_items)?cart.line_items:[];
   // Keep merchant warnings/disclosures and ordered totals intact. Never infer success from HTTP 200.
-  const cartMessages=Array.isArray(cart.messages)?cart.messages:messages;
   const url=safeLink(cart.continue_url,env);
   const blocked=cartMessages.some(m=>m.type==='error'||/out_of_stock|unavailable|insufficient|not_enough/i.test(m.code||''));
   return {...common,id:cart.id,status:cart.status||null,currency:cart.currency,line_items:items,totals:cart.totals||[],messages:cartMessages,continue_url:url,expires_at:cart.expires_at,ready_for_handoff:name!=='cancel_cart'&&items.length>0&&!blocked&&Boolean(url),order_placed:false,payment_submitted:false};
@@ -104,3 +109,4 @@ export async function handleCommerce(req,env,fetcher=fetch){
     return json(mcp?{jsonrpc:'2.0',id,result:{content:[{type:'text',text:JSON.stringify(data)}],isError:true}}:data,mcp?200:e.status||500);
   }
 }
+

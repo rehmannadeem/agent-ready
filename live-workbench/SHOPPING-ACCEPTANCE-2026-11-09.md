@@ -1,42 +1,63 @@
 # Shopping workflow acceptance — 9 November 2026
 
-## Outcome
+## Current outcome
 
-The live AI workflow searched Karachi Kicks Runner Pro, returned USD 79.00, created a one-item Shopify cart, and returned a Shopify handoff URL. Following that URL returned HTTP 200 at the store's /checkouts/cn/... route with the title “Checkout - Karachi Kicks SupportOps Lab”. No order or payment was submitted. The cart was read back and a cancellation was acknowledged.
+The authenticated n8n hosted chat found Karachi Kicks Runner Pro at USD 79, created a one-item Shopify cart, and supplied the merchant's review link. The connected Chrome browser followed that link, entered the existing development-store password through authorized owner access, and rendered Shopify checkout with the correct product, quantity one and USD 79 total. No contact details, shipping address or payment data were entered. No order or payment was submitted.
 
-This is a real platform integration in a development store, not a client production deployment. The checkout handoff was verified by HTTP response and page title; a complete rendered checkout interaction was not performed.
+Shopify visibly displays **“This store can’t accept payments right now.”** Checkout rendering and the cart-to-checkout handoff passed; payment acceptance and a completed purchase did not. A fresh browser also encounters the development storefront password gate. Neither limit was disabled.
 
-## Evidence
+This is a real Shopify/Cloudflare/n8n integration using development-store data. It is not a production client deployment.
 
-All machine timestamps below are UTC; Lahore time is UTC+5.
+## Current browser and release checks
+
+| Check | Observed result |
+|---|---|
+| Signed-in hosted chat | Owner account reached chat through n8n's normal access confirmation. |
+| AI product search | Runner Pro found under the USD 80 budget; current price USD 79. |
+| AI cart creation | One Runner Pro, quantity one, subtotal/total USD 79, no warning reported. |
+| Rendered handoff | Shopify checkout displayed the matching item, quantity and total. |
+| Store access | Password gate resolved using the existing authorized store password. No password or protection setting changed. |
+| Payment boundary | Store displays payments unavailable; payment button disabled. No payment or order action taken. |
+| Cart refresh | AI read the existing cart back: quantity one, total USD 79. |
+| Cancellation | Independent deployed lifecycle at 18:49 Pakistan time: create → refresh → cancel → get, using the same in-memory cart ID. Final read returned not_found/cart_not_found, zero items and no handoff. See live-cart-lifecycle.json. |
+| Dashboard | Current product search, Admin catalog and public discovery all displayed successfully in Chrome. |
+| Final recorded AI acceptance | Manual execution 591, 18:50:56 Pakistan time: exactly four tools, search → create → cancel → get. One item USD 79; final not_found. Model correctly separated acknowledgement from verified current state. See n8n-lifecycle-591.json. |
+| Automated checks | 30 tests passed on Windows; syntax checks passed for changed scripts. |
+
+Production success execution data is not retained, so the hosted-chat browser journey is not assigned an invented execution ID. The earlier saved manual executions below remain separate evidence.
+
+The hosted assistant gave contradictory retrospective claims about whether it had called cancellation. Its final missing-cart status was visible, but the inaccessible historical tool trace could not resolve that narrative. The separate deterministic lifecycle above is the cancellation evidence. Model prose alone is not treated as an action audit. The agent instructions now require current tool-result evidence, prohibit conclusions from missing historical traces, and require a post-cancel read before claiming verified cleanup.
+
+## Issue found and fixed during acceptance
+
+The dashboard previously called an HTTP-success cancellation “cancelled” without independently checking removal. It now reports acknowledgement and displays merchant messages. A missing cart also releases the dashboard's active-cart state.
+
+Shopify's live post-cancel response differed from its documentation example: HTTP 200 with JSON-RPC `result.isError: true`, flat `structuredContent.ucp.status: "error"`, and an unrecoverable `cart_not_found` message. The adapter previously collapsed it into `COMMERCE_REJECTED`.
+
+The fix recognizes only the explicit structured missing-cart outcome for `get_cart`, with the expected UCP version, missing cart ID and exact `not_found` or `cart_not_found` code. It returns `status: "not_found"`, the merchant message, empty items/totals and no handoff URL. Other tool errors and malformed responses remain rejected. Regression tests cover both the documented nested example and observed flat MCP error envelope.
+
+The separate raw merchant probe used to capture that envelope produced an out-of-stock cart and was cancelled. It is evidence for error handling, not a second successful shopping acceptance. Inventory availability can depend on market context; no geography configuration was changed during this fix.
+
+## Earlier completed exercises
+
+Machine timestamps here are UTC; Pakistan time is UTC+5.
 
 | Check | Evidence | Result |
 |---|---|---|
-| Price change/restoration | 12:10:15.436Z USD 80; 12:11:26.065Z USD 79 | Passed; user made Shopify edits |
-| Configuration fault | 12:39:19Z catalog HTTP 503 CONFIGURATION; page/discovery HTTP 200 | Passed |
-| Deployment rollback | 12:40:05Z catalog USD 79; health/discovery HTTP 200; rollback exit 0 | Passed |
-| Initial cart rejection | 12:43:49Z empty cart, merchandise_out_of_stock | Correctly detected; not counted as success |
-| AI search | n8n execution 585; 12:55:29.556Z; exact variant returned at 7900 USD cents | Passed |
-| AI cart creation | execution 585; 12:55:31.470Z; one Runner Pro, quantity 1; subtotal/total 7900 USD cents; no warnings | Passed |
-| Shopify handoff | HTTP 200; checkout page title; no password gate | Passed at HTTP/page-title level |
-| Cart refresh | 12:57:11.835Z; one item; total 7900 USD cents; no warnings | Passed |
-| Cart cleanup | 12:57:12.495Z; cancel_cart returned successful response | Cancellation acknowledged; no order created |
-| Prohibited requests | execution 586; price change, credential disclosure and payment request rejected; zero tool calls | Passed |
-| Unknown product | execution 587; no matching product; no substitution/cart | Passed |
-| Automated code checks | 28 Node tests; original Admin checks plus UCP validation/stock/URL/error tests | Passed on Windows |
+| Price change/restoration | 12:10:15.436Z USD 80; 12:11:26.065Z USD 79 | User edited Shopify; fresh API reads verified both values. |
+| Configuration fault | 12:39:19Z catalog 503; page/discovery 200 | Fault correctly surfaced. |
+| Rollback | 12:40:05Z catalog USD 79; health/discovery 200 | Recovery passed. |
+| Initial stock rejection | 12:43:49Z empty cart, merchandise_out_of_stock | Correctly treated as failure. |
+| AI search and cart | Manual execution 585 | One accepted item, USD 79; Shopify handoff HTTP/title verified. |
+| Prohibited requests | Manual execution 586 | Price mutation, secret disclosure and payment request refused; zero tool calls. |
+| Unknown product | Manual execution 587 | No match; no substitute or cart invented. |
 
-Later cart creation accepted the product after the initial sold-out response. The exact inventory-setting change was not directly observed; no claim is made that the assistant changed inventory.
+Later Chrome inspection showed available inventory of 25 at Shop location. The inventory adjustment itself was not observed or performed by this assistant.
 
-## Model and deployment
+## Configuration and limits
 
-Workflow lt6LYUdhwOpq2Wzi is published in armans-shopify-supportops. Published version: 287ff9dc-5789-45d6-b0e5-2a7c3e090970. n8n sign-in and execution access are required for hosted chat.
+Workflow: `lt6LYUdhwOpq2Wzi`; published version `574ae801-34c9-446b-ac39-9c5223fcf893`. Hosted chat requires n8n sign-in and execute permission. The model is Claude Haiku 5.5 through n8n-managed credits. The earlier selected OpenAI credential's no-credit error does not establish the state of another key or account.
 
-The OpenAI credential originally selected in n8n returned “no credits remaining” in execution 583. This says nothing about another API key/account. The workflow now uses n8n-managed Anthropic credits and Claude Haiku 5.5; execution 585 completed the actual search/cart tool sequence. No new API secret was requested.
+See [RELEASE.json](RELEASE.json) for deployed Worker/source identifiers and [SDD-DELIVERY.md](SDD-DELIVERY.md) for the five-stage specification, acceptance trace and repeatable demonstration.
 
-Functional shopping release verified: Cloudflare version 7bf1d140-224c-4538-adea-19a80da71cfa. Later documentation/UI-label deployment, if present, is listed in RELEASE.json.
-
-## Scope of verification
-
-No payment submission, order placement, direct Checkout MCP transaction, AI-platform listing, production customer handling, load testing or cross-browser visual acceptance is claimed. The existing browser connector was unavailable. Source and live HTTP/API behavior were checked; the earlier catalog display/export was user-confirmed.
-
-Independent Claude review was not performed and, at Nadeem's instruction, is not a delivery gate. No outreach was sent. Cart secrets, buyer data and raw model traces are excluded from this report.
+No completed purchase, direct Checkout MCP transaction, AI-platform listing, production customer handling, load test or cross-browser acceptance is claimed. Production requires endpoint protection, session controls, cost/retention decisions, monitoring and merchant-specific commerce acceptance. No outreach was sent. Credentials, private cart URLs and raw model traces are excluded from this report.

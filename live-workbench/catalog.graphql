@@ -1,0 +1,16 @@
+query WorkbenchCatalog($search: String!) {
+  shop { name currencyCode }
+  products(first: 5, query: $search) {
+    nodes {
+      id
+      title
+      handle
+      status
+      variants(first: 10) {
+        nodes { id title price }
+        pageInfo { hasNextPage }
+      }
+    }
+    pageInfo { hasNextPage }
+  }
+}

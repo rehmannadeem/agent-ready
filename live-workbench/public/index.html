@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="Armans.AI live Shopify catalog and commerce discovery workbench.">
+  <title>Agent-Ready Live · Armans.AI</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="/" aria-label="Armans.AI home"><span class="brand-mark">A</span> ARMANS<span class="brand-suffix">.AI</span></a><span class="environment"><i></i> DEVELOPMENT STORE</span></header>
+  <main>
+    <section class="intro">
+      <div><p class="eyebrow">COMMERCE ENGINEERING / LIVE WORKBENCH</p><h1>See what works.<br><span>Prove what’s ready.</span></h1><p class="lede">Live Shopify product data and independent commerce discovery checks, with evidence you can inspect and export.</p></div>
+      <div class="controls"><button class="primary" id="run">Run live checks <span aria-hidden="true">↗</span></button><button id="download" disabled>Download evidence</button><p id="run-status" role="status" aria-live="polite">Ready to connect.</p></div>
+    </section>
+    <section class="summary" aria-label="Check status">
+      <article class="stat"><span class="label">01 / APPLICATION</span><strong id="app-status">Checking</strong><span id="app-detail">Cloudflare Worker</span></article>
+      <article class="stat"><span class="label">02 / SHOPIFY CATALOG</span><strong id="catalog-status">Not checked</strong><span id="catalog-detail">Selected product and its variants</span></article>
+      <article class="stat"><span class="label">03 / PUBLIC DISCOVERY</span><strong id="discovery-status">Not checked</strong><span id="discovery-detail">/.well-known/ucp</span></article>
+    </section>
+    <div class="workspace">
+      <section class="panel catalog-panel" aria-labelledby="catalog-heading">
+        <div class="panel-head"><div><p class="eyebrow">SHOPIFY → CLOUDFLARE → YOUR BROWSER</p><h2 id="catalog-heading">Live catalog</h2></div><span class="badge" id="catalog-badge">Waiting</span></div>
+        <p class="section-note" id="catalog-note">This panel reads a real record from Karachi Kicks SupportOps Lab. Product data is not embedded in this page.</p>
+        <div id="products" class="product-area"><div class="empty">Your selected Shopify product will appear here after the connection is configured.</div></div>
+        <div class="evidence-meta" id="catalog-meta">No observation yet.</div>
+      </section>
+      <section class="panel discovery-panel" aria-labelledby="discovery-heading">
+        <div class="panel-head"><div><p class="eyebrow">INDEPENDENT PUBLIC REQUEST</p><h2 id="discovery-heading">Commerce discovery</h2></div></div>
+        <div class="finding" id="finding"><span class="finding-label">RESULT</span><h3 id="finding-title">Awaiting check</h3><p id="finding-meaning">We inspect the public profile address without using Shopify Admin credentials.</p></div>
+        <dl class="facts"><div><dt>HTTP status</dt><dd id="http-status">—</dd></div><div><dt>Content type</dt><dd id="content-type">—</dd></div><div><dt>Redirects</dt><dd id="redirects">—</dd></div><div><dt>Observed</dt><dd id="discovery-time">—</dd></div></dl>
+        <p class="final-url" id="final-url"></p>
+      </section>
+    </div>
+    <section class="panel proof" aria-labelledby="proof-heading"><div><p class="eyebrow">YOUR HANDS-ON ACCEPTANCE CHECK</p><h2 id="proof-heading">Change it in Shopify. Verify it here.</h2></div><ol><li>Open <strong>Karachi Kicks Runner Pro</strong> in your Shopify development store.</li><li>Record the current price, make a small test change, then save.</li><li>Wait 30 seconds, run these checks and compare the price. Restore the original price and verify again.</li></ol><p>Every observation includes a timestamp. Successful checks may be cached for up to 30 seconds. This preview exposes only the configured demo product.</p></section>
+    <section class="boundaries"><div><span class="label">WHAT THIS DEMONSTRATES</span><p>Shopify authentication, a live product API, Cloudflare deployment, public HTTP diagnosis and exportable evidence.</p></div><div><span class="label">WHAT REMAINS UNTESTED</span><p>UCP service operations, AI platform listing, carts, checkout, payments and production customer handling.</p></div></section>
+    <details class="raw"><summary>Inspect the last evidence record</summary><pre id="raw-output">Run the checks to capture evidence.</pre></details>
+  </main>
+  <footer><span>ARMANS.AI <span class="muted">/ Intelligence. Engineered.</span></span><span>Real platform integration · Development store data</span></footer>
+</body>
+</html>

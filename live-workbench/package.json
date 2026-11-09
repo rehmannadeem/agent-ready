@@ -1,0 +1,13 @@
+{
+  "name": "armans-agent-ready-live",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "dev": "npx wrangler@4.158.0 dev",
+    "deploy": "npx wrangler@4.158.0 deploy",
+    "check": "node --check src/worker.mjs && node --check public/app.js"
+  },
+  "engines": { "node": ">=22" }
+}

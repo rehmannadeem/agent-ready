@@ -8,6 +8,7 @@
   <title>Agent-Ready Live · Armans.AI</title>
   <link rel="stylesheet" href="/styles.css">
   <script src="/app.js" defer></script>
+  <script src="/shopping.js" defer></script>
 </head>
 <body>
   <header class="topbar"><a class="brand" href="/" aria-label="Armans.AI home"><span class="brand-mark">A</span> ARMANS<span class="brand-suffix">.AI</span></a><span class="environment"><i></i> DEVELOPMENT STORE</span></header>
@@ -15,6 +16,15 @@
     <section class="intro">
       <div><p class="eyebrow">COMMERCE ENGINEERING / LIVE WORKBENCH</p><h1>See what works.<br><span>Prove what’s ready.</span></h1><p class="lede">Live Shopify product data and independent commerce discovery checks, with evidence you can inspect and export.</p></div>
       <div class="controls"><button class="primary" id="run">Run live checks <span aria-hidden="true">↗</span></button><button id="download" disabled>Download evidence</button><p id="run-status" role="status" aria-live="polite">Ready to connect.</p></div>
+    </section>
+    <section class="panel shopping-panel" aria-labelledby="shopping-heading">
+      <div class="panel-head"><div><p class="eyebrow">LIVE SHOPIFY SHOPPING / DEVELOPMENT STORE</p><h2 id="shopping-heading">From product search to a real cart</h2></div><a class="chat-link" href="https://nadeem-geo.app.n8n.cloud/webhook/6f819cfd-1881-4e5d-9c32-904c2d5beb42/chat" target="_blank" rel="noopener noreferrer">Open AI assistant ↗</a></div>
+      <p class="section-note">Sign in with your n8n account to chat with the AI assistant, or follow each step here. Shopify validates stock and totals. You review the cart on Shopify before any purchase.</p>
+      <form id="shop-search" class="shop-search"><label for="shop-query">Find a product</label><div><input id="shop-query" name="query" value="Runner Pro" maxlength="160" required><button class="primary" type="submit">Search store</button></div></form>
+      <p id="shop-status" role="status" aria-live="polite">Search the live store to begin.</p>
+      <div id="shop-results" class="shop-results"></div>
+      <section id="shop-cart" class="shop-cart" hidden aria-label="Your test cart"></section>
+      <details class="shop-guide"><summary>Five-minute client demonstration</summary><ol><li>Ask the AI assistant: “Find everyday shoes under $80.”</li><li>Select Runner Pro and ask: “Add one to a test cart.”</li><li>Check the returned items, stock messages and totals.</li><li>Open the Shopify link and review the cart. Stop before payment.</li><li>Return and cancel the test cart. Review the execution in n8n.</li></ol><p>A search result alone does not confirm stock. A rejected or empty cart is shown as blocked.</p></details>
     </section>
     <section class="summary" aria-label="Check status">
       <article class="stat"><span class="label">01 / APPLICATION</span><strong id="app-status">Checking</strong><span id="app-detail">Cloudflare Worker</span></article>
@@ -36,9 +46,10 @@
       </section>
     </div>
     <section class="panel proof" aria-labelledby="proof-heading"><div><p class="eyebrow">YOUR HANDS-ON ACCEPTANCE CHECK</p><h2 id="proof-heading">Change it in Shopify. Verify it here.</h2></div><ol><li>Open <strong>Karachi Kicks Runner Pro</strong> in your Shopify development store.</li><li>Record the current price, make a small test change, then save.</li><li>Wait 30 seconds, run these checks and compare the price. Restore the original price and verify again.</li></ol><p>Every observation includes a timestamp. Successful checks may be cached for up to 30 seconds. This preview exposes only the configured demo product.</p></section>
-    <section class="boundaries"><div><span class="label">WHAT THIS DEMONSTRATES</span><p>Shopify authentication, a live product API, Cloudflare deployment, public HTTP diagnosis and exportable evidence.</p></div><div><span class="label">WHAT REMAINS UNTESTED</span><p>UCP service operations, AI platform listing, carts, checkout, payments and production customer handling.</p></div></section>
+    <section class="boundaries"><div><span class="label">WHAT THIS IMPLEMENTS</span><p>Admin catalog checks, live UCP search and test carts, an n8n AI assistant, Shopify handoff and diagnostic evidence.</p></div><div><span class="label">DELIVERY BOUNDARY</span><p>Development store only. Cart acceptance depends on stock. Payment processing, order placement, AI platform listing and production customer handling are outside this demonstration.</p></div></section>
     <details class="raw"><summary>Inspect the last evidence record</summary><pre id="raw-output">Run the checks to capture evidence.</pre></details>
   </main>
   <footer><span>ARMANS.AI <span class="muted">/ Intelligence. Engineered.</span></span><span>Real platform integration · Development store data</span></footer>
 </body>
 </html>
+

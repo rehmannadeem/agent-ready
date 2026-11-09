@@ -58,9 +58,10 @@ async function run() {
   const [health,catalog,discovery]=await Promise.all([check('/api/health'),check('/api/catalog'),check('/api/discovery')]);
   set('app-status',health.ok ? 'Online' : 'Unavailable'); set('app-detail',health.ok ? `Cloudflare Worker · v${health.data.version}` : 'Check connection');
   renderProducts(catalog); renderDiscovery(discovery);
-  evidence={application:'Armans.AI Agent-Ready Live',captured_at:new Date().toISOString(),environment:'development store',health,catalog,discovery,not_tested:['UCP service operations','AI platform listing','carts','checkout','payments','production customer handling']};
+  evidence={application:'Armans.AI Agent-Ready Live',captured_at:new Date().toISOString(),environment:'development store',evidence_scope:'Diagnostic snapshot only. Shopping acceptance is recorded separately.',health,catalog,discovery,not_tested_in_this_capture:['UCP search and carts','Shopify checkout handoff'],not_tested:['AI platform listing','payment processing','order placement','production customer handling']};
   set('raw-output',JSON.stringify(evidence,null,2)); set('run-status',`Checks finished at ${new Date().toLocaleTimeString()}`); el('run').disabled=false; el('download').disabled=false;
 }
 el('run').addEventListener('click',run);
 el('download').addEventListener('click',()=>{if(!evidence)return;const url=URL.createObjectURL(new Blob([JSON.stringify(evidence,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=`agent-ready-evidence-${new Date().toISOString().replace(/[:.]/g,'-')}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
 run();
+

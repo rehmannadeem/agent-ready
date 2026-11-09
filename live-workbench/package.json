@@ -1,7 +1,7 @@
 {
   "name": "armans-agent-ready-live",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "test": "node --test test/*.test.mjs",
@@ -11,3 +11,4 @@
   },
   "engines": { "node": ">=22" }
 }
+

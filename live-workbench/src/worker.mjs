@@ -1,4 +1,5 @@
-// Read-only, single-store preview. No customer, order, cart or payment mutations.
+import { handleCommerce } from './commerce.mjs';
+// Admin operations remain read-only; the UCP adapter supports test carts only.
 export const CATALOG_QUERY = `query WorkbenchCatalog($search: String!) {
   shop { name currencyCode }
   products(first: 5, query: $search) {
@@ -10,7 +11,7 @@ export const CATALOG_QUERY = `query WorkbenchCatalog($search: String!) {
   }
 }`;
 
-const VERSION = '0.1.0';
+const VERSION = '0.2.0';
 const MAX_BYTES = 262144;
 const CACHE_SECONDS = 30;
 const tokenCache = new Map();
@@ -149,7 +150,7 @@ export function classifyProfile(status, contentType, text, finalPath) {
   if (!object(body) || !object(ucp) || !/^\d{4}-\d{2}-\d{2}$/.test(ucp.version || '') || !object(ucp.services) || !object(ucp.payment_handlers) || (ucp.capabilities !== undefined && !object(ucp.capabilities))) {
     return { classification: 'PROFILE_SHAPE_FAILED', meaning: 'Basic profile structure checks failed. This is not a full schema validator.' };
   }
-  return { classification: 'PROFILE_SHAPE_OK', version: ucp.version, capability_names: Object.keys(ucp.capabilities || {}).slice(0,30), meaning: 'Basic JSON structure passed. Advertised endpoints, capabilities, checkout and payments have not been tested.' };
+  return { classification: 'PROFILE_SHAPE_OK', version: ucp.version, capability_names: Object.keys(ucp.capabilities || {}).slice(0,30), meaning: 'Basic JSON structure passed. Advertised operations have not been tested by this profile check. Use the shopping workflow to test search and carts.' };
 }
 
 export async function inspectDiscovery(env, fetcher = fetch) {
@@ -186,13 +187,15 @@ function json(data, status = 200, extra = {}) {
 
 export async function handleRequest(req, env, ctx = {}, fetcher = fetch, cache = null) {
   const url = new URL(req.url);
+  const commerce = await handleCommerce(req, env, fetcher);
+  if (commerce) return commerce;
   if (!['GET','HEAD'].includes(req.method)) return json({ error: 'METHOD_NOT_ALLOWED' }, 405, { Allow: 'GET, HEAD' });
   if (url.pathname === '/.well-known/ucp') return json({ error: 'NOT_A_COMMERCE_SERVICE', message: 'This application inspects commerce profiles. It does not implement a UCP merchant service.' }, 404);
   if (!url.pathname.startsWith('/api/')) return env.ASSETS ? env.ASSETS.fetch(req) : new Response('Not found', { status: 404 });
   if (url.search) return json({ error: 'QUERY_NOT_SUPPORTED', message: 'This preview inspects only its configured store and product.' }, 400);
   if (!['/api/health','/api/catalog','/api/discovery'].includes(url.pathname)) return json({ error: 'NOT_FOUND' }, 404);
   try {
-    if (url.pathname === '/api/health') return json({ service: 'Armans.AI Agent-Ready Live', version: VERSION, environment: 'development store preview', store: storeHost(env), catalog_configured: Boolean(env.SHOPIFY_CLIENT_ID && env.SHOPIFY_CLIENT_SECRET), commerce_operations_tested: false });
+    if (url.pathname === '/api/health') return json({ service: 'Armans.AI Agent-Ready Live', version: VERSION, environment: 'development store preview', store: storeHost(env), catalog_configured: Boolean(env.SHOPIFY_CLIENT_ID && env.SHOPIFY_CLIENT_SECRET), evidence_scope: 'Health only; shopping acceptance is recorded separately.', shopping_tools: ['search_catalog','create_cart','get_cart','cancel_cart'], payment_operations_enabled: false });
     const key = new Request(`${url.origin}${url.pathname}`, { method: 'GET' });
     const existing = cache ? await cache.match(key) : null;
     if (existing) { const result = new Response(existing.body, existing); result.headers.set('X-Workbench-Cache','HIT'); result.headers.set('Cache-Control','no-store'); return result; }
@@ -210,3 +213,4 @@ export async function handleRequest(req, env, ctx = {}, fetcher = fetch, cache =
 }
 
 export default { fetch(req, env, ctx) { return handleRequest(req, env, ctx, fetch, caches.default); } };
+

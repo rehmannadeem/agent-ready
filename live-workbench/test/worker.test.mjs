@@ -76,3 +76,4 @@ test('write requests are denied and the auditor does not advertise a fake mercha
   const write=await handleRequest(new Request('https://demo.test/api/catalog',{method:'POST'}),base);assert.equal(write.status,405);
   const profile=await handleRequest(new Request('https://demo.test/.well-known/ucp'),base);assert.equal(profile.status,404);assert.equal((await profile.json()).error,'NOT_A_COMMERCE_SERVICE');
 });
+

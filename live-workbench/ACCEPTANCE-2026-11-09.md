@@ -1,6 +1,8 @@
-# Agent-Ready Live: integration acceptance and handover
+# Agent-Ready Live: historical 0.1 acceptance
 
-FOR CLAUDE REVIEW — development-store demonstration, not a client production deployment.
+Current results: [Shopping acceptance](SHOPPING-ACCEPTANCE-2026-11-09.md). The observations below predate the shopping implementation and deployment-recovery test.
+
+Development-store demonstration. Independent review was not performed; Nadeem removed it as a required delivery gate during this session.
 
 Verified on 9 November 2026. User-facing times below are Asia/Karachi (UTC+05:00). Machine timestamps use UTC.
 
@@ -98,7 +100,7 @@ Nadeem confirmed that the dashboard displayed Karachi Kicks Runner Pro, Default 
 
 "This development-store integration reads one selected Shopify product through an authenticated server-side connection. I changed its price from 79 to 80 US dollars and restored it to 79; the deployed application returned both changes. It separately checks the store's public commerce profile. The profile passed basic structure checks, but I have not claimed checkout or payment support. The repository contains the implementation, tests and observed acceptance evidence."
 
-FOR CLAUDE REVIEW before use in outreach or client-facing claims.
+Historical draft. See CLIENT-DELIVERY.md for current verified portfolio wording.
 
 ## Captured change response
 

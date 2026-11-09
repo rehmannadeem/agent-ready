@@ -14,3 +14,4 @@ query WorkbenchCatalog($search: String!) {
     pageInfo { hasNextPage }
   }
 }
+

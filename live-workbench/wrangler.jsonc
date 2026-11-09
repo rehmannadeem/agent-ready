@@ -8,12 +8,14 @@
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
-    "run_worker_first": ["/api/*", "/.well-known/ucp"]
+    "run_worker_first": ["/api/*", "/.well-known/ucp", "/agent-profile.json"]
   },
   "vars": {
     "SHOPIFY_STORE": "karachi-kicks-supportops-lab.myshopify.com",
     "SHOPIFY_API_VERSION": "2026-07",
-    "CATALOG_HANDLE": "karachi-kicks-runner-pro"
+    "CATALOG_HANDLE": "karachi-kicks-runner-pro",
+    "UCP_AGENT_PROFILE_URL": "https://armans-agent-ready-live.veenus-rehman.workers.dev/agent-profile.json"
   },
   "observability": { "enabled": false }
 }
+

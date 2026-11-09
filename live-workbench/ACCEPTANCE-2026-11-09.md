@@ -25,7 +25,7 @@ This demonstrates authenticated product retrieval, propagation of a manual produ
 - Original code deployment: 00d3837c-4cc1-4930-9984-0a752c6b0451
 - Code review: draft PR #1; independent Claude review remains pending.
 
-Nadeem entered the Shopify application credentials in the private Wrangler prompts and performed both product-price edits. ChatGPT verified the endpoint responses, executed tests, checked permissions and prepared this record. No additional product-write permission was requested or granted during this acceptance sequence.
+Nadeem entered the Shopify application credentials in the private Wrangler prompts and performed both product-price edits. ChatGPT verified the endpoint responses, executed tests, checked permissions and prepared this record. The observed app permissions were read-only for products; no permission change was performed by ChatGPT.
 
 ## Price acceptance evidence
 
@@ -74,7 +74,7 @@ No credentials, access tokens, session cookies or complete authentication execut
 6. Use Download evidence to save the application's report. Review it before sharing.
 7. Explain separately: the Admin product read, the public discovery finding and the untested commerce operations.
 
-The browser button interaction, rendered layout and downloaded file were not independently exercised through browser automation in this session. The deployed API responses were verified directly, and the frontend source was inspected. Browser interaction remains an explicit acceptance item.
+Nadeem confirmed that the dashboard displayed Karachi Kicks Runner Pro, Default Title and 79.00 after running the live checks, then reported completing the evidence download. He supplied the exported JSON in chat. Its captured_at is 2026-11-09T12:28:32.498Z (17:28:32 Asia/Karachi). Health, catalog and discovery have HTTP 200; catalog and discovery are cache MISS; the catalog contains the correct store and USD 79.00. The submitted JSON contains no credentials or access tokens. This closes the user-assisted product-display and export-content checks. The original downloaded file's path/bytes were not independently read; no automated visual-layout or cross-browser verification is claimed.
 
 ## Recovery and operations
 
@@ -91,7 +91,7 @@ The browser button interaction, rendered layout and downloaded file were not ind
 - Full UCP schema validation, negotiation, actual UCP/MCP catalog operations, cart, checkout and payments are not verified.
 - No AI-platform listing, recommendations, sales uplift or general merchant compatibility is established.
 - The existing Python Agent-Ready auditor was not changed or newly tested during this workbench acceptance.
-- Visual UI acceptance, evidence-download acceptance and independent code/claim review remain open.
+- Product display and evidence export are user-confirmed, and the submitted export content was reviewed. Independent code/claim review remains open; full visual-layout and cross-browser testing were not performed.
 - A merchant production pilot requires an actual merchant scope, deployment and acceptance.
 
 ## Brief demonstration script
@@ -173,5 +173,103 @@ FOR CLAUDE REVIEW before use in outreach or client-facing claims.
     "more_products": false,
     "limitation": "Admin catalog access does not prove public storefront access, agent discovery, checkout or payment support."
   }
+}
+```
+
+## Browser export supplied by Nadeem
+
+Provenance: user-pasted export following reported browser download; preserved here as JSON content, not as a byte-for-byte copy of the original local file.
+
+```json
+{
+  "application": "Armans.AI Agent-Ready Live",
+  "captured_at": "2026-11-09T12:28:32.498Z",
+  "environment": "development store",
+  "health": {
+    "ok": true,
+    "http_status": 200,
+    "cache": null,
+    "data": {
+      "service": "Armans.AI Agent-Ready Live",
+      "version": "0.1.0",
+      "environment": "development store preview",
+      "store": "karachi-kicks-supportops-lab.myshopify.com",
+      "catalog_configured": true,
+      "commerce_operations_tested": false
+    }
+  },
+  "catalog": {
+    "ok": true,
+    "http_status": 200,
+    "cache": "MISS",
+    "data": {
+      "source": "Shopify Admin API",
+      "environment": "development store",
+      "observed_at": "2026-11-09T12:28:32.067Z",
+      "store": "karachi-kicks-supportops-lab.myshopify.com",
+      "shop_name": "Karachi Kicks SupportOps Lab",
+      "currency": "USD",
+      "product_filter": "karachi-kicks-runner-pro",
+      "products": [
+        {
+          "id": "gid://shopify/Product/8272134242367",
+          "title": "Karachi Kicks Runner Pro",
+          "handle": "karachi-kicks-runner-pro",
+          "status": "ACTIVE",
+          "product_url": "https://karachi-kicks-supportops-lab.myshopify.com/products/karachi-kicks-runner-pro",
+          "variants": [
+            {
+              "id": "gid://shopify/ProductVariant/43580047556671",
+              "title": "Default Title",
+              "price": "79.00"
+            }
+          ],
+          "more_variants": false
+        }
+      ],
+      "more_products": false,
+      "limitation": "Admin catalog access does not prove public storefront access, agent discovery, checkout or payment support."
+    }
+  },
+  "discovery": {
+    "ok": true,
+    "http_status": 200,
+    "cache": "MISS",
+    "data": {
+      "source": "Public HTTP request",
+      "observed_at": "2026-11-09T12:28:31.985Z",
+      "url": "https://karachi-kicks-supportops-lab.myshopify.com/.well-known/ucp",
+      "final_url": "https://karachi-kicks-supportops-lab.myshopify.com/.well-known/ucp",
+      "http_status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "redirects": [],
+      "classification": "PROFILE_SHAPE_OK",
+      "version": "2026-08-25",
+      "capability_names": [
+        "dev.ucp.shopping.checkout",
+        "dev.ucp.shopping.fulfillment",
+        "dev.ucp.shopping.discount",
+        "dev.ucp.shopping.cart",
+        "dev.ucp.shopping.buyer_consent",
+        "dev.ucp.shopping.order",
+        "dev.shopify.shopping.declared_fields",
+        "dev.ucp.common.ask",
+        "dev.ucp.shopping.catalog.search",
+        "dev.ucp.shopping.catalog.lookup",
+        "dev.shopify.catalog",
+        "dev.ucp.common.identity_linking",
+        "dev.ucp.shopping.permalink"
+      ],
+      "meaning": "Basic JSON structure passed. Advertised endpoints, capabilities, checkout and payments have not been tested."
+    }
+  },
+  "not_tested": [
+    "UCP service operations",
+    "AI platform listing",
+    "carts",
+    "checkout",
+    "payments",
+    "production customer handling"
+  ]
 }
 ```

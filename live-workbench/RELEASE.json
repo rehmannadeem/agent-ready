@@ -1,0 +1,20 @@
+{
+  "application": "Armans.AI Agent-Ready Live",
+  "version": "0.2.0",
+  "environment": "development store",
+  "date": "2026-11-09",
+  "source_commit": "36a469417a852cea6c7bd2a34133c65834b5c17a",
+  "cloudflare_version": "aeece99a-e40c-4a7c-9be0-3809fc31ef39",
+  "worker_url": "https://armans-agent-ready-live.veenus-rehman.workers.dev",
+  "n8n_workflow_id": "lt6LYUdhwOpq2Wzi",
+  "n8n_published_version": "287ff9dc-5789-45d6-b0e5-2a7c3e090970",
+  "tests_passed": 28,
+  "live_agent_execution": "585",
+  "negative_evaluations": [
+    "586",
+    "587"
+  ],
+  "payment_submitted": false,
+  "order_placed": false,
+  "checkout_verification": "HTTP 200 and Shopify checkout page title; no completed purchase or rendered checkout acceptance"
+}

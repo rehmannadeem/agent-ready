@@ -1,0 +1,27 @@
+{
+  "observed_at": "2026-11-10T17:13:32.169199+00:00",
+  "source": "Root connected Chrome visible UI",
+  "store": "karachi-kicks-supportops-lab.myshopify.com",
+  "fixture": "p001",
+  "product": "Karachi Kicks Running Shoe 001",
+  "variant": "10 / Black",
+  "quantity": 1,
+  "currency": "USD",
+  "subtotal": "79.00",
+  "total": "79.00",
+  "steps": {
+    "create": "Shopify returned current test cart with exact selection",
+    "get": "Current cart state checked; same variant, quantity and total",
+    "cancel": "Cancellation response received",
+    "verify_absence": "The requested cart does not exist"
+  },
+  "order_placed": false,
+  "payment_submitted": false,
+  "model_calls": 0,
+  "scope": "One browser cart lifecycle while catalogue seed was in progress; separate from full75 first-attempt evaluation",
+  "sensitive_cart_url_saved": false,
+  "screenshots": [
+    "windows-cart-created-2026-11-10.png",
+    "windows-cart-cancelled-2026-11-10.png"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "checked_at": "2026-11-10T17:22:28.288085+00:00",
+  "url": "https://github.com/rehmannadeem/agent-ready/pull/1",
+  "state": "open",
+  "merged": false,
+  "head_sha": "a813eaedf2bc1e5b37ce958415c0ae944aca7726",
+  "base_sha": "975c9b393d48e957e963d92d2040307aa35d1bbb",
+  "operation": "GitHub get_pr_info read-only"
+}

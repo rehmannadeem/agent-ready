@@ -1,0 +1,198 @@
+{
+  "status": "VERIFIED_SEED_AND_IDEMPOTENT_RERUN",
+  "captured_at": "2026-11-10T17:52:14.664Z",
+  "store": "karachi-kicks-supportops-lab.myshopify.com",
+  "seed_sha256": "72955f4f280b995d0cd37e69b7f9f6e848ed51de18eacf9983be783653008e32",
+  "manifest_sha256": "990b254894eb362e1da0e210d209aca2cf4b77153586e7726f3091c7de1ffdaa",
+  "manifest_path": "G:\\Projects\\Armans-AgentReady-Scale-20261110\\private\\owned-manifest.local.json",
+  "owned_products": 318,
+  "owned_variants": 3266,
+  "shopper_eligible_products": 300,
+  "shopper_eligible_variants": 3248,
+  "collections": 15,
+  "discounts": 4,
+  "store_counts": {
+    "products": 336,
+    "variants": 3293
+  },
+  "baseline_products_unchanged": 18,
+  "baseline_variants_unchanged": 27,
+  "baseline_comparison": "Exact live ID/handle/updatedAt comparison against pre-seed baseline passed",
+  "rerun": {
+    "created": 0,
+    "completed": 0,
+    "skipped": 318,
+    "collections_created": 0,
+    "discounts_created": 0,
+    "admin_mutation_requests": 0
+  },
+  "pending_mutation": null,
+  "simulations_run_by_seed_agent": false,
+  "location_ids": [
+    "gid://shopify/Location/76682002495",
+    "gid://shopify/Location/76682035263"
+  ],
+  "publication_ids": [
+    "gid://shopify/Publication/152115052607"
+  ],
+  "all_publication_ids": [
+    "gid://shopify/Publication/152115052607",
+    "gid://shopify/Publication/152115118143",
+    "gid://shopify/Publication/152115150911"
+  ],
+  "location_attribute_source": "Separately verified Shopify Admin settings UI",
+  "location_limitations": [
+    "Toronto location has Shipping Off and zero shipping rates. No settings altered; this does not establish shipping fulfillment availability.",
+    "Default US location; no street supplied. Shipping availability is not established by this inventory eligibility observation."
+  ],
+  "schema": {
+    "checked_at": "2026-11-10T17:52:02.843Z",
+    "api_version": "2026-07",
+    "schema_sha256": "a2873075cec8166db9339355f4f21514d75e5fb142b1e570ae52fd72482fd895",
+    "operations_sha256": "95f27477fd2339ca0546f9a486fe1bb068b467a958e1afc2e83f5b420992f63e",
+    "validated_operations": [
+      "preflight",
+      "locations",
+      "publications",
+      "products",
+      "product",
+      "byHandle",
+      "setProduct",
+      "updateProduct",
+      "publish",
+      "unpublish",
+      "collections",
+      "createCollection",
+      "collectionMembers",
+      "addCollectionProducts",
+      "discount",
+      "createDiscount",
+      "updateDiscount",
+      "inventory",
+      "setInventory",
+      "updatePrice"
+    ],
+    "method": "Full live Admin API introspection; GraphQL parse/validate of every operation and variable coercion before every subsequent request. Shopify custom scalar semantic validation remains server-side."
+  },
+  "product_read": {
+    "verified": true,
+    "operation": "SeedProduct",
+    "product_id": "gid://shopify/Product/8272124018751",
+    "requested_query_cost": 102,
+    "observed_variant_count": 1,
+    "baseline_has_more_variants": false,
+    "baseline_has_more_inventory_levels": false,
+    "checked_at": "2026-11-10T17:52:03.437Z",
+    "scope": "Exact seeded-product read shape and requested cost tested on one existing product; existing product pagination may continue and is not a complete baseline inventory audit."
+  },
+  "fixture_products": {
+    "trail_black_10": {
+      "fixture_id": "p001",
+      "id": "gid://shopify/Product/8510196547647",
+      "handle": "armans-seed-v1-p001"
+    },
+    "partial_black_10": {
+      "fixture_id": "p002",
+      "id": "gid://shopify/Product/8510198251583",
+      "handle": "armans-seed-v1-p002"
+    },
+    "fully_sold_out": {
+      "fixture_id": "p003",
+      "id": "gid://shopify/Product/8510198382655",
+      "handle": "armans-seed-v1-p003"
+    },
+    "bundle_shoe": {
+      "fixture_id": "p004",
+      "id": "gid://shopify/Product/8510198415423",
+      "handle": "armans-seed-v1-p004"
+    },
+    "stock_simulation": {
+      "fixture_id": "p007",
+      "id": "gid://shopify/Product/8510200676415",
+      "handle": "armans-seed-v1-p007"
+    },
+    "price_simulation": {
+      "fixture_id": "p008",
+      "id": "gid://shopify/Product/8510200774719",
+      "handle": "armans-seed-v1-p008"
+    },
+    "publication_simulation": {
+      "fixture_id": "p009",
+      "id": "gid://shopify/Product/8510200840255",
+      "handle": "armans-seed-v1-p009"
+    },
+    "late_page": {
+      "fixture_id": "p060",
+      "id": "gid://shopify/Product/8510203625535",
+      "handle": "armans-seed-v1-p060"
+    },
+    "typo_colour": {
+      "fixture_id": "p103",
+      "id": "gid://shopify/Product/8510205820991",
+      "handle": "armans-seed-v1-p103"
+    },
+    "jacket_a": {
+      "fixture_id": "p141",
+      "id": "gid://shopify/Product/8510207655999",
+      "handle": "armans-seed-v1-p141"
+    },
+    "jacket_b": {
+      "fixture_id": "p142",
+      "id": "gid://shopify/Product/8510207721535",
+      "handle": "armans-seed-v1-p142"
+    },
+    "bundle_socks": {
+      "fixture_id": "p241",
+      "id": "gid://shopify/Product/8510213357631",
+      "handle": "armans-seed-v1-p241"
+    },
+    "bundle_bottle": {
+      "fixture_id": "p281",
+      "id": "gid://shopify/Product/8510215487551",
+      "handle": "armans-seed-v1-p281"
+    }
+  },
+  "simulation_fixtures": {
+    "stock": {
+      "fixture_id": "p007",
+      "product_id": "gid://shopify/Product/8510200676415",
+      "variant_id": "gid://shopify/ProductVariant/44442626097215"
+    },
+    "price": {
+      "fixture_id": "p008",
+      "product_id": "gid://shopify/Product/8510200774719",
+      "variant_id": "gid://shopify/ProductVariant/44442626818111"
+    },
+    "publication": {
+      "fixture_id": "p009",
+      "product_id": "gid://shopify/Product/8510200840255",
+      "variant_id": "gid://shopify/ProductVariant/44442627440703"
+    },
+    "discount": {
+      "code": "ARMANS-SEED-V1-MIN100",
+      "id": "gid://shopify/DiscountCodeNode/1392662872127"
+    }
+  },
+  "teardown": {
+    "mode": "DRY_RUN_ONLY",
+    "selected": 318,
+    "refused": 18,
+    "deleted": 0,
+    "path": "G:/Projects/Armans-AgentReady-Scale-20261110/private/teardown-preview.local.json"
+  },
+  "source_file_sha256": {
+    "catalogue/generate.mjs": "69461a997d45a9a8959e08b05d870ba30e87cf4212499656a0325168c502f84d",
+    "catalogue/seed.mjs": "69e0b51006ede0b8748a7deebb6cebfec387e38237caf0acf0b69f332a752282",
+    "catalogue/preflight.mjs": "3ed04d6103003ab35817657c08ff2bf3afaddb1bc5161c4fdb452cf62335586d",
+    "catalogue/operations.mjs": "72868cbc38250d602f9052f9cb475a043f239c5b154748caafabbb404b619501",
+    "catalogue/process-lock.mjs": "eb38e6c3f1314a2954b9dee0394be9168876953dba377ed201486715548efb64",
+    "package.json": "6e952983698d4fa459a5f719389126991eeebe9b3be997ff5e1a0a77fbd5fa81",
+    "package-lock.json": "1cc69619a03978bc5d626711b4fc319bff11351f1b60e755fb42580108057fa3"
+  },
+  "not_tested": [
+    "UCP/cart/model scenario suite is a separate gate",
+    "Shipping or payment completion",
+    "Metafield-based querying",
+    "Live deletion"
+  ]
+}

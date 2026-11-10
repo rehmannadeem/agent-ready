@@ -1,6 +1,6 @@
 # Stage 5 — Implement
 
-Gate 2 approved. Candidate implemented; live validation is IN PROGRESS. Both separate apps are installed. One owned draft product has been created; its timestamp guard paused seeding for read-only reconciliation. No candidate source deployment or merge has occurred.
+Gate 2 approved. Candidate implemented; live validation is IN PROGRESS. Both separate apps are installed. All 318 owned products / 3,266 variants are seeded and verified. A complete rerun skipped all 318 and sent zero Admin mutation requests. The original 18 products / 27 variants remain unchanged. No candidate source deployment or merge has occurred.
 
 - `catalogue/`: deterministic 318-product / 3,266-variant JSON and CSV, 15 collections, four restricted discounts, separate seed client, read-only identity/count/scope/schema/throttle preflight, measured nested-read probe, owned-resource manifest, collision guards and ambiguous-mutation journal. See `catalogue/README.md` for exact execution constraints.
 - `src/catalog.mjs`, `catalog.graphql`: paginated read-only catalogue, filters, complete variant paging and fresh publication/US-market eligibility. The dedicated runtime app has only read_products and read_publications. Both reads passed; customer and order access were denied.
@@ -18,7 +18,7 @@ Generated JSON SHA-256: `72955f4f280b995d0cd37e69b7f9f6e848ed51de18eacf9983be783
 | L1 single handle | Removed from candidate reads | Deployed baseline unchanged |
 | L2 search paging | Cursor plus ten-result limit | Requires seeded live validation |
 | L3 one cart line | Multi-line updates, remove and discounts | Requires live validation |
-| L4 single-product dashboard | Paginated filters and stock display | Local visual acceptance pending; runtime permission verified |
+| L4 single-product dashboard | Paginated filters and stock display | Local dashboard and one cart lifecycle observed; full scaled acceptance pending |
 | L5 memory eight | Controlled local loop retains twenty interactions | Hosted n8n workflow remains eight; not claimed fixed there |
 | L6 unauthenticated tools | Service and per-session authentication with persisted ownership | Public deployed baseline remains unchanged under no-deploy instruction |
 | L7 no observability | Enabled and redaction checked locally | Production configuration unchanged |

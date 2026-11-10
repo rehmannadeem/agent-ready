@@ -1,0 +1,18 @@
+{
+  "captured_at": "2026-11-10T17:52:14.664Z",
+  "mode": "DRY_RUN_ONLY",
+  "store": "karachi-kicks-supportops-lab.myshopify.com",
+  "source": "Live products query plus selectTeardown() ownership predicate",
+  "selected_owned_products": 318,
+  "refused_original_products": 18,
+  "required_ownership": [
+    "armans-synthetic tag",
+    "seed-v1 tag",
+    "manifest product ID match",
+    "manifest handle match",
+    "armans-seed-v1- handle prefix"
+  ],
+  "deleted": 0,
+  "private_full_preview_path": "G:/Projects/Armans-AgentReady-Scale-20261110/private/teardown-preview.local.json",
+  "manifest_sha256": "990b254894eb362e1da0e210d209aca2cf4b77153586e7726f3091c7de1ffdaa"
+}

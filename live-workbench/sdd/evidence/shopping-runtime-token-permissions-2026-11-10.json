@@ -1,0 +1,52 @@
+{
+  "at": "2026-11-10T16:44:09.328Z",
+  "store": "karachi-kicks-supportops-lab.myshopify.com",
+  "scopes": [
+    "read_products",
+    "read_publications"
+  ],
+  "tests": {
+    "products": {
+      "denied": false,
+      "errors": []
+    },
+    "publications": {
+      "denied": false,
+      "errors": [],
+      "publications": [
+        {
+          "id": "gid://shopify/Publication/152115052607",
+          "name": "Online Store"
+        },
+        {
+          "id": "gid://shopify/Publication/152115118143",
+          "name": "Point of Sale"
+        },
+        {
+          "id": "gid://shopify/Publication/152115150911",
+          "name": "Shop"
+        }
+      ]
+    },
+    "customers": {
+      "denied": true,
+      "errors": [
+        {
+          "code": "ACCESS_DENIED",
+          "message": "Access denied for customers field."
+        }
+      ]
+    },
+    "orders": {
+      "denied": true,
+      "errors": [
+        {
+          "code": "ACCESS_DENIED",
+          "message": "Access denied for orders field."
+        }
+      ]
+    }
+  },
+  "passed": true,
+  "evidence_note": "Sanitized copy of actual token verification: application identifier omitted; credential and token values were not present in the source verification report."
+}

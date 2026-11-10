@@ -48,5 +48,28 @@
     "cart_mutations": 0,
     "model_calls": 0
   },
-  "all_passed": true
+  "all_passed": true,
+  "additional_seed_ui_checks": {
+    "observed_at": "2026-11-10T17:10:43.390453+00:00",
+    "seed_in_progress": true,
+    "filter": "Trail",
+    "page_1_products": 10,
+    "product_001_options": 16,
+    "selected_variant": "10 / Black",
+    "selected_price_usd": 79,
+    "selected_quantity": 1,
+    "selection_cleared": true,
+    "pagination_page": 2,
+    "page_2_fixture_numbers": [
+      31,
+      34,
+      37,
+      40,
+      43,
+      46,
+      49
+    ],
+    "shopify_mutations": 0,
+    "model_calls": 0
+  }
 }

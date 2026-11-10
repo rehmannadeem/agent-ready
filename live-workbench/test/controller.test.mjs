@@ -72,11 +72,11 @@ test('isolated child requires approved matching complete seed and passes explici
   await assert.rejects(()=>executeChild(request,config,{...deps,loadManifest:async()=>({...manifest,pending:{}})}),/COMPLETED_MATCHING_SEED_REQUIRED/);
  }finally{await rm(dir,{recursive:true,force:true});}
 });
-test('delegated simulation guards require both ownership tags and exact versioned snapshot before restoration',()=>{
+test('delegated simulation guards require both ownership tags and complete content snapshot before restoration',()=>{
  const entry={id:'gid://shopify/Product/1',handle:'armans-seed-v1-p007'};
  for(const tags of [[],['armans-synthetic'],['seed-v1']])assert.throws(()=>assertOwned({...entry,tags},entry),/UNOWNED_OR_CHANGED_PRODUCT/);
  assert.doesNotThrow(()=>assertOwned({...entry,tags:['armans-synthetic','seed-v1']},entry));
- const current={product:{id:entry.id,updatedAt:'version1',price:'79.00'}};const journal={phase:'applied',after_sha256:digest(canonical(current))};assert.equal(restoreAllowed(current,journal),true);assert.equal(restoreAllowed({...current,product:{...current.product,updatedAt:'version2'}},journal),false);assert.equal(restoreAllowed(current,{...journal,phase:'applying'}),false);
+ const current={product:{id:entry.id,updatedAt:'version1',price:'79.00'}};const journal={phase:'applied',before:current,before_sha256:digest(canonical(current)),after:current,after_sha256:digest(canonical(current))};assert.equal(restoreAllowed(current,journal),true);assert.equal(restoreAllowed({...current,product:{...current.product,updatedAt:'version2'}},journal),true);assert.equal(restoreAllowed(current,{...journal,phase:'applying'}),false);
 });
 function crossFixture({privateResolverFailure=false,rawFailure=false}={}){
  const env={SHOPIFY_STORE:STORE,COMMERCE_SERVICE_SECRET:'s'.repeat(40),SESSION_ISSUER_SECRET:'i'.repeat(40)};

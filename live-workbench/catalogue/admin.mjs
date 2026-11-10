@@ -4,12 +4,13 @@ export const API_VERSION='2026-07';
 export const APPROVED_SCOPES=['write_products','write_inventory','write_publications','write_discounts'];
 const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 export class SeedAdmin {
- constructor({token,store=STORE,fetcher=fetch,pause=delay}){if(store!==STORE)throw Error('STORE_MISMATCH');if(!token)throw Error('SEED_ACCESS_TOKEN_REQUIRED');this.token=token;this.store=store;this.fetcher=fetcher;this.pause=pause;this.writeEnabled=false;this.throttle=null;this.requests=0;this.costs=new Map();this.lastResponseAt=Date.now();}
+ constructor({token,store=STORE,fetcher=fetch,pause=delay}){if(store!==STORE)throw Error('STORE_MISMATCH');if(!token)throw Error('SEED_ACCESS_TOKEN_REQUIRED');this.token=token;this.store=store;this.fetcher=fetcher;this.pause=pause;this.writeEnabled=false;this.throttle=null;this.requests=0;this.mutationRequests=0;this.costs=new Map();this.lastResponseAt=Date.now();}
  async raw(query,variables={}){
   const mutation=/^\s*mutation\b/.test(query);if(mutation&&!this.writeEnabled)throw Error('PREFLIGHT_REQUIRED');
   if(this.validateOperation)this.validateOperation(query,variables);
   const operation=query.match(/^\s*(?:query|mutation)\s+(\w+)/)?.[1]||'anonymous';const reserve=this.costs.get(operation)||(operation==='SeedProduct'?1000:250);
   if(this.throttle){const available=Math.min(this.throttle.maximumAvailable,this.throttle.currentlyAvailable+(Date.now()-this.lastResponseAt)/1000*this.throttle.restoreRate);if(reserve>this.throttle.maximumAvailable)throw Error('QUERY_COST_EXCEEDS_BUCKET');const ms=Math.max(0,Math.ceil((reserve-available)/this.throttle.restoreRate*1000));if(ms>60000)throw Error('RATE_WAIT_EXCEEDS_60_SECONDS');if(ms>0)await this.pause(ms);}
+  if(mutation)this.mutationRequests++;
   const response=await this.fetcher(`https://${this.store}/admin/api/${API_VERSION}/graphql.json`,{method:'POST',headers:{'Content-Type':'application/json','X-Shopify-Access-Token':this.token},body:JSON.stringify({query,variables}),signal:AbortSignal.timeout(45000)});this.requests++;
   if(response.status===429)throw Error(`RATE_LIMIT_STOP retry_after=${response.headers.get('Retry-After')||'unknown'}`);
   if(!response.ok)throw Error(`ADMIN_HTTP_${response.status}`);

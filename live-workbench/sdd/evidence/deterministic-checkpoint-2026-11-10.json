@@ -1,0 +1,11 @@
+{
+  "candidate": "3c474a4ca9c6401ab37618a61708cdf3bbb166d5",
+  "observed_at": "2026-11-10T17:09:01.660905+00:00",
+  "command": "npm test",
+  "tests": 157,
+  "passed": 157,
+  "failed": 0,
+  "cancelled": 0,
+  "skipped": 0,
+  "scope": "Deterministic tests only; live merchant and model acceptance recorded separately"
+}

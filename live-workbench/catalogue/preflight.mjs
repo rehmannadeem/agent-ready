@@ -1,6 +1,17 @@
 import {STORE,TAGS,digest,canonical} from './generate.mjs';
 import {APPROVED_SCOPES,API_VERSION,paginate} from './admin.mjs';
 import {Q} from './operations.mjs';
+export function attestLocations(apiLocations,attestation,{now=Date.now()}={}){
+ if(!attestation||attestation.store!==STORE||attestation.source!=='Shopify Admin settings UI'||typeof attestation.verified_by!=='string'||!attestation.verified_by.trim())throw Error('PREFLIGHT_STOP:LOCATION_ATTESTATION_IDENTITY');
+ const observed=Date.parse(attestation.observed_at);if(!Number.isFinite(observed)||observed>now+120000||now-observed>24*60*60*1000)throw Error('PREFLIGHT_STOP:LOCATION_ATTESTATION_STALE_OR_FUTURE');
+ if(!Array.isArray(attestation.locations)||!attestation.locations.length)throw Error('PREFLIGHT_STOP:LOCATION_ATTESTATION_EMPTY');
+ const entries=new Map();for(const location of attestation.locations){const api=apiLocations.find(x=>x.id===location.id);const numeric=location.id?.match(/^gid:\/\/shopify\/Location\/(\d+)$/)?.[1];const expectedUrl=`https://admin.shopify.com/store/karachi-kicks-supportops-lab/settings/locations/${numeric}`;
+  if(!api||!numeric||entries.has(location.id))throw Error('PREFLIGHT_STOP:LOCATION_ATTESTATION_ID_MISMATCH');if(location.evidence_url!==expectedUrl||typeof location.isActive!=='boolean'||typeof location.fulfillsOnlineOrders!=='boolean'||!/^([A-Z]{2})$/.test(location.address?.countryCode||''))throw Error('PREFLIGHT_STOP:LOCATION_ATTESTATION_FIELDS');
+  for(const field of ['isActive','fulfillsOnlineOrders'])if(api[field]!==undefined&&api[field]!==location[field])throw Error('PREFLIGHT_STOP:LOCATION_API_UI_CONFLICT');if(api.address?.countryCode&&api.address.countryCode!==location.address.countryCode)throw Error('PREFLIGHT_STOP:LOCATION_API_UI_CONFLICT');
+  entries.set(location.id,{...api,isActive:location.isActive,fulfillsOnlineOrders:location.fulfillsOnlineOrders,address:{countryCode:location.address.countryCode},attribute_evidence:{source:attestation.source,observed_at:attestation.observed_at,verified_by:attestation.verified_by,url:location.evidence_url},limitations:location.limitations||[]});
+ }
+ return apiLocations.map(location=>entries.get(location.id)||location);
+}
 export async function checkSchema(admin){
  // Full schema and operation validation is read-only and mandatory before writes.
  const {buildClientSchema,getIntrospectionQuery,parse,validate,getVariableValues}=await import('graphql');
@@ -46,11 +57,11 @@ export function validatePreflight({data,products,locations,publications,manifest
  if(publications.some(p=>p.channels.pageInfo.hasNextPage))fail('PUBLICATION_CHANNELS_TRUNCATED');
  return {ok:true,store:STORE,api_version:API_VERSION,schema_checked:!!schema,at:new Date().toISOString(),shop,scopes,products_count:data.productsCount.count,variants_count:data.productVariantsCount.count,baseline_products:unowned,location_ids:chosenLocations,publication_ids:chosenPublications,all_publication_ids:publications.map(x=>x.id),locations,publications,throttle,schema,product_read:productRead,second_location_tested:chosenLocations.length>1,market:'US selected in the runtime; active US market independently verified in merchant admin; seed app has no market scope'};
 }
-export async function readPreflight(admin,{manifest={},selectedLocationIds,selectedPublicationIds}={}){
+export async function readPreflight(admin,{manifest={},selectedLocationIds,selectedPublicationIds,locationAttestation}={}){
  const data=await admin.query('preflight');if(data.shop.myshopifyDomain!==STORE||data.shop.plan?.partnerDevelopment!==true)throw Error('PREFLIGHT_STOP:STORE_OR_DEVELOPMENT_MISMATCH');
- const locations=await paginate(admin,'locations','locations');const publications=await paginate(admin,'publications','publications');const products=await paginate(admin,'products','products');const schema=await checkSchema(admin);
+ const apiLocations=await paginate(admin,'locations','locations');const attestation=locationAttestation||manifest.preflight?.location_attestation;const locations=attestation?attestLocations(apiLocations,attestation):apiLocations;const publications=await paginate(admin,'publications','publications');const products=await paginate(admin,'products','products');const schema=await checkSchema(admin);
  const productRead=await probeProductRead(admin,products,manifest);
  const observation={data,locations,publications,products,throttle:admin.throttle,schema,productRead};
  if(!selectedLocationIds?.length&&!manifest.preflight?.location_ids?.length)return {ok:false,store:STORE,reason:'SELECT_EXISTING_LOCATION_IDS_AND_PUBLICATION_IDS',...observation};
- return validatePreflight({...observation,manifest,selectedLocationIds,selectedPublicationIds});
+ return {...validatePreflight({...observation,manifest,selectedLocationIds,selectedPublicationIds}),location_attestation:attestation||null,location_api_fields:['id'],location_attribute_source:attestation?'Separately verified Shopify Admin settings UI':'Admin API',second_location_configured:(selectedLocationIds||manifest.preflight?.location_ids||[]).length>1,second_location_tested:false};
 }

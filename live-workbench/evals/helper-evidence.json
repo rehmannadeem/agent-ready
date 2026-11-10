@@ -1,7 +1,7 @@
 {
   "observed_at": "2026-11-10T16:01:59.362Z",
   "id": "McTDlGb8oc3hZ5gl",
-  "name": "Armans Scale Eval — single model call",
+  "name": "Armans Scale Eval \u2014 single model call",
   "active": false,
   "activeVersionId": null,
   "versionId": "55919eaf-7b14-468e-8402-9c783f2787f3",
@@ -78,8 +78,8 @@
       "credential_types": []
     }
   ],
-  "paid_execution_performed_by_this_agent": false,
+  "paid_execution_performed_by_this_agent": true,
   "architecture": "Inactive single native model invocation; local controlled loop; not hosted AI Agent equivalence",
-  "credential_note": "Workflow readback does not expose credential metadata. Managed Gateway attachment was selected at creation; availability/balance and one-call usage must be verified before full evaluation.",
-  "execution_verification": "NOT_RUN"
+  "credential_note": "The inactive helper successfully used its configured model transport in execution592, with exact raw usage. See helper-smoke-evidence.json. Owner verified the Gateway balance separately.",
+  "execution_verification": "ONE_SMOKE_PASSED_592"
 }

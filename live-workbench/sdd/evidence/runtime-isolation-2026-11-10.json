@@ -1,0 +1,33 @@
+{
+  "shared_app_draft": "Discarded unsaved failed form by navigating away; active version unchanged",
+  "new_app": "Armans Shopping Runtime v1",
+  "app_id": "445925916673",
+  "client_id": "2d074a330ee23827e2395447b68e4242",
+  "version_id": "1202515509249",
+  "scopes": [
+    "read_products",
+    "read_publications"
+  ],
+  "webhook_subscriptions": 0,
+  "install": "Installed; OAuth exchange succeeded",
+  "cloudflare_secrets": "SHOPIFY_CLIENT_ID and SHOPIFY_CLIENT_SECRET switched successfully using Wrangler4.158.0 secret bulk; source not deployed",
+  "negative_token_tests": {
+    "customers": "ACCESS_DENIED",
+    "orders": "ACCESS_DENIED",
+    "products": "SUCCESS",
+    "publications": "SUCCESS"
+  },
+  "seed_installed": true,
+  "verified_at": "2026-11-10T16:44:09.328Z",
+  "live_after_switch": {
+    "health": "OK",
+    "store": "karachi-kicks-supportops-lab.myshopify.com",
+    "catalog_source": "Shopify Admin API",
+    "catalog_products": 1,
+    "title": "Karachi Kicks Runner Pro"
+  },
+  "gateway_credit_usd": 1.98,
+  "gateway_auto_topup": false,
+  "evaluation_spend_usd_at_runtime_verification": 0,
+  "demo_local_shared_credential": "Removed private/runtime.json after successful isolated runtime verification; shared SupportOps app unchanged"
+}

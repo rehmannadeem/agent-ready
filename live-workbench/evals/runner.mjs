@@ -51,7 +51,8 @@ export async function runTurn({message,history,currentState,session,client,ledge
  for(let iteration=1;iteration<=BUDGET.maxIterations;iteration++){
   const prompt=JSON.stringify({tools:TOOLS,history:history.slice(-20),current_state:currentState,shopper_message:message,observations:observationsForModel(observations),iteration,maximum_iterations:5});
   const model=await invokeBudgeted({ledger,transport:modelTransport,system,prompt,label:{scenario,repetition,turn,iteration}});
-  const modelEvent={kind:'model',turn,iteration,reservation_id:model.reservationId,execution_id:model.executionId,usage:model.usage,cost_usd:dollars(model.actualNanoUsd)};events.push(modelEvent);await onEvent(modelEvent);
+  const modelEvent={kind:'model',turn,iteration,reservation_id:model.reservationId,execution_id:model.executionId,usage:model.usage,cost_usd:dollars(model.actualNanoUsd),provider_stop_reason:model.stopReason,output_error:model.error};events.push(modelEvent);await onEvent(modelEvent);
+  if(model.error)throw Error('MODEL_RESPONSE_REJECTED:'+model.error);
   const decision=parseDecision(model.text);
   if(decision.type==='final')return {message:decision.message,currentState,events,iterations:iteration};
   for(const call of decision.calls){
@@ -116,7 +117,9 @@ async function save(path,data){const tmp=path+'.tmp';await writeFile(tmp,JSON.st
 export function createSuiteLedger(approval){
  if(typeof approval?.budget_ledger_path!=='string'||!isAbsolute(approval.budget_ledger_path)||resolve(approval.budget_ledger_path)!==approval.budget_ledger_path)throw Error('CANONICAL_BUDGET_LEDGER_PATH_REQUIRED');
  if(typeof approval?.evaluation_run_id!=='string'||!/^[A-Za-z0-9_-]{8,128}$/.test(approval.evaluation_run_id))throw Error('EVALUATION_RUN_ID_REQUIRED');
- return new BudgetLedger(approval.budget_ledger_path,{evaluationRunId:approval.evaluation_run_id});
+ const funded=approval.funded_limit_usd;
+ if(typeof funded!=='number'||!Number.isFinite(funded)||funded<=0||funded>10||!Number.isSafeInteger(funded*1_000_000_000))throw Error('FUNDED_LIMIT_REQUIRED');
+ return new BudgetLedger(approval.budget_ledger_path,{evaluationRunId:approval.evaluation_run_id,fundedNanoUsd:funded*1_000_000_000});
 }
 export async function runSuite({oracle,adapter,modelTransport,outputDir,approval,system,only,reviewResults={}}){
  for(const k of ['owner_approved','gateway_tariff_verified','gateway_balance_confirmed','single_call_transport_verified','worker_preflight_passed','seed_verified'])if(approval?.[k]!==true)throw Error('PREFLIGHT_REQUIRED:'+k);
@@ -163,7 +166,7 @@ export async function runSuite({oracle,adapter,modelTransport,outputDir,approval
   }
   if(stop)break;
  }
- const budget=await ledger.snapshot();report.cost={confirmed_usd:dollars(budget.spentNanoUsd),reserved_unknown_usd:dollars(budget.reservedNanoUsd),cap_usd:10,halt:budget.halt};
+ const budget=await ledger.snapshot();report.cost={confirmed_usd:dollars(budget.spentNanoUsd),reserved_unknown_usd:dollars(budget.reservedNanoUsd),cap_usd:10,funded_limit_usd:dollars(budget.fundedNanoUsd),funded_remaining_usd:dollars(budget.fundedRemainingNanoUsd),halt:budget.halt};
  for(const row of report.runs){
   const calls=Object.values(budget.reservations).filter(r=>r.label?.scenario===row.id&&r.label?.repetition===row.repetition);
   const settled=calls.filter(r=>r.status==='settled');

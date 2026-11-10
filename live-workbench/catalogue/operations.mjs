@@ -1,7 +1,7 @@
 // All operations target Admin API 2026-07. Sources: catalogue/API-SOURCES.md.
 export const Q={
  preflight:`query SeedPreflight { shop { id name myshopifyDomain currencyCode plan { partnerDevelopment publicDisplayName } } currentAppInstallation { accessScopes { handle } } productsCount(limit:null){count precision} productVariantsCount(limit:null){count precision} }`,
- locations:`query SeedLocations($after:String){locations(first:50,after:$after){nodes{id name isActive fulfillsOnlineOrders address{countryCode}}pageInfo{hasNextPage endCursor}}}`,
+ locations:`query SeedLocations($after:String){locations(first:50,after:$after){nodes{id}pageInfo{hasNextPage endCursor}}}`,
  publications:`query SeedPublications($after:String){publications(first:50,after:$after){nodes{id autoPublish channels(first:10){nodes{id name}pageInfo{hasNextPage}}}pageInfo{hasNextPage endCursor}}}`,
  products:`query SeedProducts($after:String){products(first:50,after:$after){nodes{id handle status tags updatedAt}pageInfo{hasNextPage endCursor}}}`,
  product:`query SeedProduct($id:ID!){product(id:$id){id handle status tags updatedAt title descriptionHtml vendor productType options{name values} variants(first:40){nodes{id sku price compareAtPrice inventoryPolicy inventoryItem{id tracked inventoryLevels(first:5){nodes{location{id}quantities(names:["available"]){name quantity}}pageInfo{hasNextPage}}}selectedOptions{name value}}pageInfo{hasNextPage}}}}`,

@@ -27,10 +27,11 @@ export function boundedRequest(system, prompt) {
  * The ledger and unresolved reservations must never be deleted to resume a run.
  */
 export class BudgetLedger {
-  constructor(path, { capNanoUsd = BUDGET.capNanoUsd, lockWaitMs = 5000, evaluationRunId = 'standalone-test' } = {}) {
+  constructor(path, { capNanoUsd = BUDGET.capNanoUsd, lockWaitMs = 5000, evaluationRunId = 'standalone-test', fundedNanoUsd = capNanoUsd } = {}) {
     if (!safeInteger(capNanoUsd) || capNanoUsd <= 0 || capNanoUsd > BUDGET.capNanoUsd) throw new Error('INVALID_CAP');
+    if(!safeInteger(fundedNanoUsd)||fundedNanoUsd<=0||fundedNanoUsd>capNanoUsd)throw new Error('INVALID_FUNDED_LIMIT');
     if(typeof evaluationRunId!=='string'||!/^[A-Za-z0-9_-]{8,128}$/.test(evaluationRunId))throw new Error('INVALID_EVALUATION_RUN_ID');
-    this.path = path; this.cap = capNanoUsd; this.lockWaitMs = lockWaitMs;this.evaluationRunId=evaluationRunId;
+    this.path = path; this.cap = capNanoUsd; this.lockWaitMs = lockWaitMs;this.evaluationRunId=evaluationRunId;this.funded=fundedNanoUsd;
   }
   async transaction(fn) {
     await mkdir(dirname(this.path), { recursive: true, mode: 0o700 });
@@ -44,8 +45,8 @@ export class BudgetLedger {
       let state;
       try { state = JSON.parse(await readFile(this.path, 'utf8')); }
       catch (e) { if (e.code !== 'ENOENT') throw new Error('BUDGET_LEDGER_UNREADABLE', {cause:e});
-        state = {version:2,evaluationRunId:this.evaluationRunId,capNanoUsd:this.cap,rates:{input:100,output:500},reservations:{},halt:null}; }
-      if (state.version !== 2 || state.evaluationRunId !== this.evaluationRunId || state.capNanoUsd !== this.cap || state.rates?.input !== 100 || state.rates?.output !== 500 || !state.reservations || Array.isArray(state.reservations)) throw new Error('BUDGET_LEDGER_CONFIG_MISMATCH');
+        state = {version:2,evaluationRunId:this.evaluationRunId,capNanoUsd:this.cap,fundedNanoUsd:this.funded,rates:{input:100,output:500},reservations:{},halt:null}; }
+      if (state.version !== 2 || state.evaluationRunId !== this.evaluationRunId || state.capNanoUsd !== this.cap || state.fundedNanoUsd !== this.funded || state.rates?.input !== 100 || state.rates?.output !== 500 || !state.reservations || Array.isArray(state.reservations)) throw new Error('BUDGET_LEDGER_CONFIG_MISMATCH');
       for (const r of Object.values(state.reservations)) {
         if (!['reserved','settled','unknown'].includes(r.status) || !safeInteger(r.reserveNanoUsd) || (r.status === 'settled' && !safeInteger(r.actualNanoUsd))) throw new Error('BUDGET_LEDGER_CORRUPT');
       }
@@ -59,7 +60,7 @@ export class BudgetLedger {
   static totals(state) {
     let spent=0,reserved=0;
     for(const r of Object.values(state.reservations)) { if(r.status==='settled')spent+=r.actualNanoUsd;else reserved+=r.reserveNanoUsd; }
-    return {spentNanoUsd:spent,reservedNanoUsd:reserved,remainingNanoUsd:state.capNanoUsd-spent-reserved,capNanoUsd:state.capNanoUsd,halt:state.halt};
+    return {spentNanoUsd:spent,reservedNanoUsd:reserved,remainingNanoUsd:state.capNanoUsd-spent-reserved,capNanoUsd:state.capNanoUsd,fundedNanoUsd:state.fundedNanoUsd,fundedRemainingNanoUsd:state.fundedNanoUsd-spent-reserved,halt:state.halt};
   }
   async snapshot() { return this.transaction(s=>({...BudgetLedger.totals(s),calls:Object.keys(s.reservations).length,reservations:structuredClone(s.reservations)})); }
   async assertNoUnresolved() { return this.transaction(s=>{
@@ -71,7 +72,9 @@ export class BudgetLedger {
     return this.transaction(s=>{
       if(s.halt)throw new Error(`BUDGET_HALTED:${s.halt}`);
       const reserveNanoUsd=inputBound*100+outputBound*500;
-      if(reserveNanoUsd>BudgetLedger.totals(s).remainingNanoUsd)throw new Error('BUDGET_CAP_REACHED');
+      const remaining=BudgetLedger.totals(s);
+      if(reserveNanoUsd>remaining.remainingNanoUsd)throw new Error('BUDGET_CAP_REACHED');
+      if(reserveNanoUsd>remaining.fundedRemainingNanoUsd)throw new Error('BUDGET_FUNDED_LIMIT_REACHED');
       const id=randomUUID();
       const cleanLabel=Object.fromEntries(['scenario','repetition','turn','iteration'].filter(k=>label[k]!==undefined).map(k=>[k,label[k]]));
       s.reservations[id]={status:'reserved',reserveNanoUsd,inputBound,outputBound,digest,label:cleanLabel,createdAt:new Date().toISOString()};

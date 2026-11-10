@@ -18,7 +18,7 @@
     "node": ">=24"
   },
   "devDependencies": {
-    "graphql": "17.1.0",
+    "graphql": "16.15.0",
     "wrangler": "4.158.0"
   }
 }

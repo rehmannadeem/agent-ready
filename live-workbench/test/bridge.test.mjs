@@ -37,6 +37,20 @@ test('one-use operator bootstrap sets protected cookie and refuses arbitrary ide
   }finally{bridge.close();}
 });
 
+test('cross-site top-level document navigation exposes only the public login shell',async()=>{
+  let calls=0;const bridge=createBridge({env,fetcher:async()=>{calls++;return new Response('private');}});
+  try{
+    const first=await login(bridge);
+    const metadata={'Sec-Fetch-Site':'cross-site','Sec-Fetch-Mode':'navigate','Sec-Fetch-Dest':'document',Cookie:first.cookie};
+    for(const path of ['/','/index.html']){const response=await bridge.handle(req(path,{headers:metadata}));assert.equal(response.status,303);assert.equal(response.headers.get('location'),'/login');}
+    const page=await bridge.handle(req('/login',{headers:metadata}));assert.equal(page.status,200);assert.ok((await page.text()).includes('Armans development session'));
+    for(const path of ['/api/session','/api/catalog','/login.js'])assert.equal((await bridge.handle(req(path,{headers:metadata}))).status,403);
+    for(const extra of [{Origin:'https://evil.invalid'},{'Sec-Fetch-Dest':'iframe'},{'Sec-Fetch-Mode':'cors'}])assert.equal((await bridge.handle(req('/login',{headers:{...metadata,...extra}}))).status,403);
+    assert.equal((await bridge.handle(post('/login',{bootstrap:'x'.repeat(43)},metadata))).status,403);
+    assert.equal(calls,0);
+  }finally{bridge.close();}
+});
+
 test('caller headers cannot choose another session; upstream credentials and headers stay private',async()=>{
   const seen=[];const bridge=createBridge({env,fetcher:async(url,init)=>{const ctx=await authenticateCommerce(new Request(url,{headers:init.headers}),env);seen.push({url,ctx,headers:init.headers});return new Response('{"ok":true}',{headers:{'Content-Type':'application/json','Set-Cookie':'attacker=1','Authorization':'secret-response','X-Armans-Session':'secret-response'}});}});
   try{

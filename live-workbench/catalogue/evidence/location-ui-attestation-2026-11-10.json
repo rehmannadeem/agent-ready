@@ -1,0 +1,32 @@
+{
+  "store": "karachi-kicks-supportops-lab.myshopify.com",
+  "source": "Shopify Admin settings UI",
+  "verified_by": "Root agent in connected Shopify Admin browser",
+  "observed_at": "2026-11-10T16:50:00Z",
+  "locations": [
+    {
+      "id": "gid://shopify/Location/76682002495",
+      "isActive": true,
+      "fulfillsOnlineOrders": true,
+      "address": {
+        "countryCode": "US"
+      },
+      "evidence_url": "https://admin.shopify.com/store/karachi-kicks-supportops-lab/settings/locations/76682002495",
+      "limitations": [
+        "Default US location; no street supplied. Shipping availability is not established by this inventory eligibility observation."
+      ]
+    },
+    {
+      "id": "gid://shopify/Location/76682035263",
+      "isActive": true,
+      "fulfillsOnlineOrders": true,
+      "address": {
+        "countryCode": "CA"
+      },
+      "evidence_url": "https://admin.shopify.com/store/karachi-kicks-supportops-lab/settings/locations/76682035263",
+      "limitations": [
+        "Toronto location has Shipping Off and zero shipping rates. No settings altered; this does not establish shipping fulfillment availability."
+      ]
+    }
+  ]
+}

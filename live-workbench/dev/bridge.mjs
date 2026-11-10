@@ -96,7 +96,15 @@ export function createBridge({env,dbPath=':memory:',port=8788,workerPort=8787,fe
       if(host!==expectedHost||url.origin!==origin)return json({error:'HOST_DENIED'},403);
       const reqOrigin=request.headers.get('origin');
       if(reqOrigin&&reqOrigin!==origin)return json({error:'ORIGIN_DENIED'},403);
-      if(request.headers.get('sec-fetch-site')==='cross-site')return json({error:'ORIGIN_DENIED'},403);
+      const crossSite=request.headers.get('sec-fetch-site')==='cross-site';
+      const publicNavigation=crossSite&&request.method==='GET'&&!url.search&&!reqOrigin&&
+        request.headers.get('sec-fetch-mode')==='navigate'&&request.headers.get('sec-fetch-dest')==='document'&&
+        ['/', '/index.html', '/login'].includes(url.pathname);
+      if(crossSite&&!publicNavigation)return json({error:'ORIGIN_DENIED'},403);
+      // A browser opened from an external page may label its top-level visit
+      // cross-site. Only the public login shell is reachable in that case; do
+      // not consult a cookie or proxy authenticated content on this exception.
+      if(publicNavigation&&url.pathname!=='/login')return new Response(null,{status:303,headers:{...baseHeaders,Location:'/login'}});
       if(!['GET','HEAD','POST'].includes(request.method))return json({error:'METHOD_NOT_ALLOWED'},405);
       if(request.method==='POST'&&reqOrigin!==origin)return json({error:'ORIGIN_REQUIRED'},403);
       if(url.pathname==='/login'&&request.method==='GET'&&!url.search)return new Response(loginHTML,{headers:{...baseHeaders,'Content-Type':'text/html; charset=utf-8','Content-Security-Policy':"default-src 'none'; script-src 'self'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'"}});

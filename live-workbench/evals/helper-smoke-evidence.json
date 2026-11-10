@@ -1,0 +1,22 @@
+{
+  "verified": true,
+  "execution_id": "592",
+  "workflow_id": "McTDlGb8oc3hZ5gl",
+  "reservation_id": "728402db-cd1f-4a00-a249-f9651c556b5c",
+  "evaluation_run_id": "scale_20261110_owner_approved_v1",
+  "model": "claude-haiku-5-5",
+  "model_calls": 1,
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 51,
+    "output_tokens": 18,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+  },
+  "cost_usd": 0.0000141,
+  "reserved_unknown_usd": 0,
+  "funded_limit_usd": 1.9,
+  "authorized_cap_usd": 10,
+  "observed_at": "2026-11-10T16:56:40.533Z",
+  "scope": "One model-only transport smoke; no Shopify operation; full suite pending seeded catalogue verification."
+}

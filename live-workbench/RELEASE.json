@@ -27,20 +27,37 @@
   "candidate": {
     "date": "2026-11-10",
     "branch": "feat/realistic-catalogue-20261110",
-    "status": "IMPLEMENTED_LOCALLY_LIVE_VALIDATION_BLOCKED",
+    "status": "LIVE_VALIDATION_IN_PROGRESS",
     "deployed": false,
     "merged": false,
     "gate2_approved": true,
     "gate6_passed": false,
     "seed_products_generated": 318,
     "seed_variants_generated": 3266,
-    "seed_products_written": 0,
+    "seed_products_written": 1,
     "model_evaluation_runs": 0,
-    "model_evaluation_usd": 0,
+    "model_evaluation_usd": 1.41e-05,
     "runtime_checks_passed": 11,
     "evidence": "sdd/GATE-6-REPORT.md",
-    "deterministic_tests_passed": 149,
+    "deterministic_tests_passed": 153,
     "syntax_files_passed": 32,
-    "additional_private_runtime_checks_passed": 8
+    "additional_private_runtime_checks_passed": 8,
+    "seed_status": "First owned draft reconciled; guarded continuation in progress",
+    "model_transport_smoke_calls": 1,
+    "model_input_tokens": 51,
+    "model_output_tokens": 18,
+    "funded_limit_usd": 1.9,
+    "owner_limit_usd": 10,
+    "model_iterations": 5,
+    "runtime_app": "Armans Shopping Runtime v1",
+    "runtime_scopes": [
+      "read_products",
+      "read_publications"
+    ],
+    "runtime_customer_access": "ACCESS_DENIED",
+    "runtime_order_access": "ACCESS_DENIED",
+    "cloudflare_credentials_switched": true,
+    "source_deployed": false,
+    "deterministic_tests_status": "Intermediate tree; final rerun pending"
   }
 }

@@ -1,0 +1,210 @@
+{
+  "ok": true,
+  "store": "karachi-kicks-supportops-lab.myshopify.com",
+  "api_version": "2026-07",
+  "schema_checked": true,
+  "at": "2026-11-10T16:53:51.247Z",
+  "shop": {
+    "id": "gid://shopify/Shop/67450077247",
+    "name": "Karachi Kicks SupportOps Lab",
+    "myshopifyDomain": "karachi-kicks-supportops-lab.myshopify.com",
+    "currencyCode": "USD",
+    "plan": {
+      "partnerDevelopment": true,
+      "publicDisplayName": "Basic"
+    }
+  },
+  "scopes": [
+    "write_products",
+    "write_inventory",
+    "write_publications",
+    "write_discounts",
+    "read_products",
+    "read_inventory",
+    "read_publications",
+    "read_discounts"
+  ],
+  "products_count": 18,
+  "variants_count": 27,
+  "location_ids": [
+    "gid://shopify/Location/76682002495",
+    "gid://shopify/Location/76682035263"
+  ],
+  "publication_ids": [
+    "gid://shopify/Publication/152115052607"
+  ],
+  "all_publication_ids": [
+    "gid://shopify/Publication/152115052607",
+    "gid://shopify/Publication/152115118143",
+    "gid://shopify/Publication/152115150911"
+  ],
+  "locations": [
+    {
+      "id": "gid://shopify/Location/76682035263",
+      "isActive": true,
+      "fulfillsOnlineOrders": true,
+      "address": {
+        "countryCode": "CA"
+      },
+      "attribute_evidence": {
+        "source": "Shopify Admin settings UI",
+        "observed_at": "2026-11-10T16:50:00Z",
+        "verified_by": "Root agent in connected Shopify Admin browser",
+        "url": "https://admin.shopify.com/store/karachi-kicks-supportops-lab/settings/locations/76682035263"
+      },
+      "limitations": [
+        "Toronto location has Shipping Off and zero shipping rates. No settings altered; this does not establish shipping fulfillment availability."
+      ]
+    },
+    {
+      "id": "gid://shopify/Location/76682002495",
+      "isActive": true,
+      "fulfillsOnlineOrders": true,
+      "address": {
+        "countryCode": "US"
+      },
+      "attribute_evidence": {
+        "source": "Shopify Admin settings UI",
+        "observed_at": "2026-11-10T16:50:00Z",
+        "verified_by": "Root agent in connected Shopify Admin browser",
+        "url": "https://admin.shopify.com/store/karachi-kicks-supportops-lab/settings/locations/76682002495"
+      },
+      "limitations": [
+        "Default US location; no street supplied. Shipping availability is not established by this inventory eligibility observation."
+      ]
+    }
+  ],
+  "publications": [
+    {
+      "id": "gid://shopify/Publication/152115052607",
+      "autoPublish": false,
+      "channels": {
+        "nodes": [
+          {
+            "id": "gid://shopify/Channel/152115052607",
+            "name": "Online Store"
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false
+        }
+      }
+    },
+    {
+      "id": "gid://shopify/Publication/152115118143",
+      "autoPublish": false,
+      "channels": {
+        "nodes": [
+          {
+            "id": "gid://shopify/Channel/152115118143",
+            "name": "Point of Sale"
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false
+        }
+      }
+    },
+    {
+      "id": "gid://shopify/Publication/152115150911",
+      "autoPublish": false,
+      "channels": {
+        "nodes": [
+          {
+            "id": "gid://shopify/Channel/152115150911",
+            "name": "Shop"
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false
+        }
+      }
+    }
+  ],
+  "throttle": {
+    "maximumAvailable": 2000,
+    "currentlyAvailable": 1994,
+    "restoreRate": 100
+  },
+  "schema": {
+    "checked_at": "2026-11-10T16:53:50.764Z",
+    "api_version": "2026-07",
+    "schema_sha256": "a2873075cec8166db9339355f4f21514d75e5fb142b1e570ae52fd72482fd895",
+    "operations_sha256": "95f27477fd2339ca0546f9a486fe1bb068b467a958e1afc2e83f5b420992f63e",
+    "validated_operations": [
+      "preflight",
+      "locations",
+      "publications",
+      "products",
+      "product",
+      "byHandle",
+      "setProduct",
+      "updateProduct",
+      "publish",
+      "unpublish",
+      "collections",
+      "createCollection",
+      "collectionMembers",
+      "addCollectionProducts",
+      "discount",
+      "createDiscount",
+      "updateDiscount",
+      "inventory",
+      "setInventory",
+      "updatePrice"
+    ],
+    "method": "Full live Admin API introspection; GraphQL parse/validate of every operation and variable coercion before every subsequent request. Shopify custom scalar semantic validation remains server-side."
+  },
+  "product_read": {
+    "verified": true,
+    "operation": "SeedProduct",
+    "product_id": "gid://shopify/Product/8272124018751",
+    "requested_query_cost": 102,
+    "observed_variant_count": 1,
+    "baseline_has_more_variants": false,
+    "baseline_has_more_inventory_levels": false,
+    "checked_at": "2026-11-10T16:53:51.246Z",
+    "scope": "Exact seeded-product read shape and requested cost tested on one existing product; existing product pagination may continue and is not a complete baseline inventory audit."
+  },
+  "second_location_tested": false,
+  "market": "US selected in the runtime; active US market independently verified in merchant admin; seed app has no market scope",
+  "location_attestation": {
+    "store": "karachi-kicks-supportops-lab.myshopify.com",
+    "source": "Shopify Admin settings UI",
+    "verified_by": "Root agent in connected Shopify Admin browser",
+    "observed_at": "2026-11-10T16:50:00Z",
+    "locations": [
+      {
+        "id": "gid://shopify/Location/76682002495",
+        "isActive": true,
+        "fulfillsOnlineOrders": true,
+        "address": {
+          "countryCode": "US"
+        },
+        "evidence_url": "https://admin.shopify.com/store/karachi-kicks-supportops-lab/settings/locations/76682002495",
+        "limitations": [
+          "Default US location; no street supplied. Shipping availability is not established by this inventory eligibility observation."
+        ]
+      },
+      {
+        "id": "gid://shopify/Location/76682035263",
+        "isActive": true,
+        "fulfillsOnlineOrders": true,
+        "address": {
+          "countryCode": "CA"
+        },
+        "evidence_url": "https://admin.shopify.com/store/karachi-kicks-supportops-lab/settings/locations/76682035263",
+        "limitations": [
+          "Toronto location has Shipping Off and zero shipping rates. No settings altered; this does not establish shipping fulfillment availability."
+        ]
+      }
+    ]
+  },
+  "location_api_fields": [
+    "id"
+  ],
+  "location_attribute_source": "Separately verified Shopify Admin settings UI",
+  "second_location_configured": true,
+  "baseline_product_count": 18,
+  "mutations_executed_at_capture": 0
+}

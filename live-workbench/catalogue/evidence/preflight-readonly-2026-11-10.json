@@ -1,0 +1,164 @@
+{
+  "status": "READ_ONLY_OBSERVED_WRITES_BLOCKED",
+  "source_commit": "704057a78efc2c093e3631d5c569f340ddf0b388",
+  "local_patches": [
+    "GraphQL pinned to 16.15.0",
+    "Location query requests id only to preserve approved scopes"
+  ],
+  "store": "karachi-kicks-supportops-lab.myshopify.com",
+  "reason": "SELECT_EXISTING_LOCATION_IDS_AND_PUBLICATION_IDS",
+  "identity": {
+    "shop": {
+      "id": "gid://shopify/Shop/67450077247",
+      "name": "Karachi Kicks SupportOps Lab",
+      "myshopifyDomain": "karachi-kicks-supportops-lab.myshopify.com",
+      "currencyCode": "USD",
+      "plan": {
+        "partnerDevelopment": true,
+        "publicDisplayName": "Basic"
+      }
+    },
+    "currentAppInstallation": {
+      "accessScopes": [
+        {
+          "handle": "write_products"
+        },
+        {
+          "handle": "write_inventory"
+        },
+        {
+          "handle": "write_publications"
+        },
+        {
+          "handle": "write_discounts"
+        },
+        {
+          "handle": "read_products"
+        },
+        {
+          "handle": "read_inventory"
+        },
+        {
+          "handle": "read_publications"
+        },
+        {
+          "handle": "read_discounts"
+        }
+      ]
+    },
+    "productsCount": {
+      "count": 18,
+      "precision": "EXACT"
+    },
+    "productVariantsCount": {
+      "count": 27,
+      "precision": "EXACT"
+    }
+  },
+  "locations": [
+    {
+      "id": "gid://shopify/Location/76682035263"
+    },
+    {
+      "id": "gid://shopify/Location/76682002495"
+    }
+  ],
+  "publications": [
+    {
+      "id": "gid://shopify/Publication/152115052607",
+      "autoPublish": false,
+      "channels": {
+        "nodes": [
+          {
+            "id": "gid://shopify/Channel/152115052607",
+            "name": "Online Store"
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false
+        }
+      }
+    },
+    {
+      "id": "gid://shopify/Publication/152115118143",
+      "autoPublish": false,
+      "channels": {
+        "nodes": [
+          {
+            "id": "gid://shopify/Channel/152115118143",
+            "name": "Point of Sale"
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false
+        }
+      }
+    },
+    {
+      "id": "gid://shopify/Publication/152115150911",
+      "autoPublish": false,
+      "channels": {
+        "nodes": [
+          {
+            "id": "gid://shopify/Channel/152115150911",
+            "name": "Shop"
+          }
+        ],
+        "pageInfo": {
+          "hasNextPage": false
+        }
+      }
+    }
+  ],
+  "throttle": {
+    "maximumAvailable": 2000,
+    "currentlyAvailable": 1994,
+    "restoreRate": 100
+  },
+  "schema": {
+    "checked_at": "2026-11-10T16:50:01.918Z",
+    "api_version": "2026-07",
+    "schema_sha256": "a2873075cec8166db9339355f4f21514d75e5fb142b1e570ae52fd72482fd895",
+    "operations_sha256": "95f27477fd2339ca0546f9a486fe1bb068b467a958e1afc2e83f5b420992f63e",
+    "validated_operations": [
+      "preflight",
+      "locations",
+      "publications",
+      "products",
+      "product",
+      "byHandle",
+      "setProduct",
+      "updateProduct",
+      "publish",
+      "unpublish",
+      "collections",
+      "createCollection",
+      "collectionMembers",
+      "addCollectionProducts",
+      "discount",
+      "createDiscount",
+      "updateDiscount",
+      "inventory",
+      "setInventory",
+      "updatePrice"
+    ],
+    "method": "Full live Admin API introspection; GraphQL parse/validate of every operation and variable coercion before every subsequent request. Shopify custom scalar semantic validation remains server-side."
+  },
+  "product_read": {
+    "verified": true,
+    "operation": "SeedProduct",
+    "product_id": "gid://shopify/Product/8272124018751",
+    "requested_query_cost": 102,
+    "observed_variant_count": 1,
+    "baseline_has_more_variants": false,
+    "baseline_has_more_inventory_levels": false,
+    "checked_at": "2026-11-10T16:50:02.568Z",
+    "scope": "Exact seeded-product read shape and requested cost tested on one existing product; existing product pagination may continue and is not a complete baseline inventory audit."
+  },
+  "scope_limitations": [
+    "Location.name denied: requires read_locations or read_markets_home",
+    "Location.isActive denied: requires read_locations",
+    "No additional scope requested; attributes require separately recorded Shopify Admin UI evidence"
+  ],
+  "mutations_executed": 0
+}

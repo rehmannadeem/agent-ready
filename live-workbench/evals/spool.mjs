@@ -15,8 +15,8 @@ export function fileModelTransport(directory,{timeoutMs=120000,pollMs=250}={}){
   const start=Date.now();
   while(Date.now()-start<timeoutMs){
    try{const response=JSON.parse(await readFile(join(directory,id+'.response.json'),'utf8'));
-    if(response.reservation_id!==id||response.model!==request.model||response.model_calls!==1||response.error)throw new Error('MODEL_BRIDGE_REJECTED');
-    return {text:response.text,usage:response.usage,executionId:response.execution_id};
+    if(response.reservation_id!==id||response.model!==request.model||response.model_calls!==1)throw new Error('MODEL_BRIDGE_REJECTED');
+    return {text:response.text,usage:response.usage,executionId:response.execution_id,error:response.error,stopReason:response.stop_reason};
    }catch(e){if(e.code!=='ENOENT')throw e;}
    await sleep(pollMs);
   }

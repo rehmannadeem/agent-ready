@@ -1,26 +1,30 @@
 # Stage 6 — Validate
 
-**INCOMPLETE / BLOCKED. Gate 6 has not passed. Stop before Ship.**
+**IN PROGRESS. Gate 6 has not passed. Stop before Ship.**
 
-| Check | Measured result | Evidence |
+| Check | Measured result | Evidence / remaining work |
 |---|---|---|
-| Deterministic code tests | **149/149 passed**, zero failed/skipped | evidence/deterministic-tests-2026-11-10.txt and .json |
-| Syntax | 32 files checked, all passed | Same JSON |
-| Actual local Cloudflare runtime | **11/11 passed**: auth, seven tools, separate sessions, persistent rate state after restart, redacted logs | evidence/local-runtime-2026-11-10.json |
-| Actual private evaluation entry | **8/8 passed** after correcting workerd empty-body/Node-header handling; initial failure retained | evidence/eval-private-runtime-2026-11-10.json and eval-private-runtime-initial-2026-11-10.json |
-| Read-only merchant identity | Named Basic development store, USD, 18 products / 27 variants; no write scopes in runtime credential | evidence/preflight-ui-2026-11-10.json |
-| Runtime publication eligibility read | ACCESS_DENIED for missing read_publications; draft addition not granted | Same evidence |
-| Generated catalogue | 318 products / 3,266 variants; 300 intended eligible / 3,248 variants | ../catalogue/seed-v1.sha256.json |
-| Live seed and duplicate-free live rerun | **NOT RUN** | Seed owner Install pending |
-| Scenario plan | 25 × 3 = 75; five iterations; USD10 ceiling | evidence/scenario-plan-2026-11-10.json |
-| Live scenario conversations | **0/75 run**; pass rate unavailable | No evaluation usage |
-| Live safety-critical scenarios | **NOT RUN** | S05/S19/S20/S21 remain mandatory 3/3 |
-| Twenty-session commerce load | **NOT RUN** | Harness implemented; no latency/error metrics claimed |
-| Live simulations and restoration | **NOT RUN** | Controller and guards tested with mocks |
-| Model use | Zero calls, zero tokens, USD0.00 | Helper remains inactive/unexecuted |
+| Deterministic code tests | 153/153 passed on the intermediate tree | Final rerun required after current fixes; prior checkpoint149/149 retained |
+| Prior syntax checks | 32 files passed | evidence/deterministic-tests-2026-11-10.json |
+| Actual local Cloudflare runtime | 11/11 passed | evidence/local-runtime-2026-11-10.json; outbound fetch blocked in this test |
+| Private evaluation entry | 8/8 passed after interoperability fix | evidence/eval-private-runtime-2026-11-10.json; initial failure retained |
+| Windows runtime readiness | 10/10 passed | Sanitized evidence import in progress |
+| Live read-only commerce smoke | 3/3 passed: Admin catalogue, UCP search, exact product lookup | Runner Pro, USD79; no mutation/model call |
+| Runtime credential isolation | Exact read_products/read_publications; customer and order reads ACCESS_DENIED | evidence/runtime-isolation-2026-11-10.json |
+| Seed preflight | Correct development store, USD, unchanged18/27 baseline, approved scopes; all20 pinned operations valid; query cost102 | Completed before first write; fresh UI evidence supplements location IDs without adding location scope |
+| Generated catalogue | 318 products /3266 variants;300 intended eligible /3248 variants | ../catalogue/seed-v1.sha256.json |
+| Live seed | First owned draft created;19/43 total; complete content reconciliation passed after timestamp changed | Remaining seed and duplicate-free rerun in progress |
+| Scenario plan | 25×3=75, five iterations | Owner USD10 ceiling; secondary funded ceiling USD1.90 |
+| Live scenarios | 0/75 run at this checkpoint | Full suite pending verified seed |
+| Safety-critical scenarios | NOT RUN | S05/S19/S20/S21 require3/3 |
+| Twenty-session commerce load | NOT RUN | No latency/error metrics claimed |
+| Live simulations/restoration | NOT RUN | Separate controller preparation in progress |
+| Model transport | One successful smoke, execution592;51 input+18 output tokens;USD0.0000141 | [Native usage](../evals/helper-smoke-evidence.json) reconciled into canonical ledger; no retry |
 
-The actual local-runtime test uses the real workerd engine and SQLite Durable Objects with an outbound-fetch blocker. It proves runtime/session/logging behavior, not a successful Shopify commerce request. Tests using fake store responses are labelled separately. The private S21 inspection path is local-only and independently authenticated; its mocked tests do not count as live S21 acceptance.
+Both Shopify apps are installed. The shared SupportOps app remains unchanged; its abandoned permission draft was discarded. Cloudflare credentials now reference Armans Shopping Runtime v1; candidate source has not been deployed. No customer/order data was read.
 
-Before paid calls: install seed app; full live pinned-schema preflight and cost probe; explicit existing location/publication selection; seed and verify; authorize runtime read_publications; configure local runtime; verify Gateway balance and single-call usage; wire private controller and inspection. Use one pinned budget ledger/run ID for all diagnostics and evaluation runs. No automatic model retry, iteration increase or erased failure.
+The location API exposes IDs under the approved seed scopes but restricts additional fields. Fresh read-only Shopify Admin UI observations are matched to those exact IDs and store. Toronto's shipping remains Off with zero rates; this limitation is recorded rather than silently changed. GraphQL16.15.0 is pinned after17.1.0 rejected unrelated schema deprecation metadata; all20 operations then validated without bypassing schema validation.
 
-A completed mechanical scenario remains PENDING_REVIEW until its transcript/tool evidence is reviewed. All first attempts remain in the 75-run denominator. Final Gate 6 acceptance requires at least 68/75 and all safety-critical repetitions, plus restoration, bounded-load and security evidence.
+The first seed write was followed by a Shopify timestamp change. The guard stopped. Read-only reconciliation verified every expected draft field, all16 variant IDs/options/prices, both-location inventory and no publications. A narrowly guarded created-phase reconciliation is being tested before continuation; actual content drift must still stop execution.
+
+A completed mechanical scenario remains PENDING_REVIEW until its transcript/tool evidence is reviewed. All first attempts remain in the75-run denominator. Final acceptance requires at least68/75 and every safety-critical repetition, plus restoration, bounded-load and security evidence. Do not increase iterations, reset the ledger, retry an unknown model/mutation outcome, merge, or ship.

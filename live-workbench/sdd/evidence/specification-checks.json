@@ -1,0 +1,89 @@
+{
+  "checked_at": "2026-11-10T15:13:37.848108+00:00",
+  "scope": "Document QA only; no application tests or Shopify mutations",
+  "checks": {
+    "stage_documents": true,
+    "unique_25_scenarios": true,
+    "published_product_count": true,
+    "published_variant_count": true,
+    "all_product_count": true,
+    "all_variant_count": true,
+    "pass_threshold": true,
+    "selected_tools_match": true,
+    "advertised_count": true,
+    "relative_links_resolve": true,
+    "cost_arithmetic": true,
+    "S12_expiry_target_aligned": true
+  },
+  "all_passed": true,
+  "missing_links": [],
+  "scenario_runs_executed": 0,
+  "evaluation_model_spend_usd": 0,
+  "stage_2_review": {
+    "catalogue_contract_review": "No material corrections; arithmetic and tool names checked",
+    "workflow_security_review": "One expiry-target inconsistency found and corrected before commit"
+  },
+  "files_reviewed": [
+    {
+      "path": "01-INTENT.md",
+      "sha256": "3e42985f3a8d6a5a0b85f8b08ee0466f8b50afa96dd500b35d3b34607352aa19"
+    },
+    {
+      "path": "02-SPECIFY.md",
+      "sha256": "733194974aed1c58f52299ae88e8b72bf3af4a18e1da4d1d5b1962973b6f0084"
+    },
+    {
+      "path": "03-PLAN.md",
+      "sha256": "bad60db0f50217fdc6fdcab9fca86fb8cd043a53d0b6184dd2885c9d8c99de68"
+    },
+    {
+      "path": "04-TASKS.md",
+      "sha256": "e6e119fb5edc7ce636bcbb20256f5d20f1f6fd7376c2a1983eee1081d9111c29"
+    },
+    {
+      "path": "05-IMPLEMENT.md",
+      "sha256": "65d939b45c65223047bf11d5c0e686f5b9a86d91f4817b518e84383ecbb7a06c"
+    },
+    {
+      "path": "06-VALIDATE.md",
+      "sha256": "0866b4749588296e7128a05874d2931a3594c685c2acae99cc283334d75d5fb3"
+    },
+    {
+      "path": "07-SHIP.md",
+      "sha256": "42ed9abed6d5547e2c72ab2fcd38aa458533beb36b36dbcc3efe2e083ea5323e"
+    },
+    {
+      "path": "CATALOGUE-SPEC.md",
+      "sha256": "02b78593ee20bef3c90c8f9dcd3d82a34cb8991cac331b00135f866178d3827c"
+    },
+    {
+      "path": "COST-AND-MEMORY.md",
+      "sha256": "96b7d1368b65b22850d88617f0062e7db7acc5ce76a1c15ad5337c5b7af24c3f"
+    },
+    {
+      "path": "GATE-2-REPORT.md",
+      "sha256": "a7072c0973e458ef4a503d727826b47346ea61122aeb2f4cb53d8d76a5538e5b"
+    },
+    {
+      "path": "MCP-CONTRACT.md",
+      "sha256": "a3caf49fff977998912c3169f9500e8c14ad4136c6d6187fe22a90f617147ee1"
+    },
+    {
+      "path": "README.md",
+      "sha256": "1ef211fa823048c2dfba428a316a01225b5e4f6b63ff051adec6acc1b0f9ab8f"
+    },
+    {
+      "path": "SCENARIO-MATRIX.md",
+      "sha256": "05546408d04cf14507cc10fe88f450c10ed60071b83ec47396325111a226113f"
+    },
+    {
+      "path": "SHOPIFY-LIMITS.md",
+      "sha256": "f56568ea33f7fb4b0450692871dc98eb4b7c643aefd39662f6d2339269769ca1"
+    },
+    {
+      "path": "evidence/shopify-mcp-tools-2026-11-10.json",
+      "sha256": "66a3b107b451ff1c2d588b3c3b30bcb80d8bab66ba264775b3657694d4138714"
+    }
+  ],
+  "verification_note": "Initial document checker needed to accept the safety-critical asterisk suffix and wait for its own evidence file to exist; final checks below pass. No application test was executed."
+}

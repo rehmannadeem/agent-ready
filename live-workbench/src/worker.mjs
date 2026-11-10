@@ -1,40 +1,13 @@
-import { handleCommerce } from './commerce.mjs';
-// Admin operations remain read-only; the UCP adapter supports test carts only.
-export const CATALOG_QUERY = `query WorkbenchCatalog($search: String!) {
-  shop { name currencyCode }
-  products(first: 5, query: $search) {
-    nodes {
-      id title handle status
-      variants(first: 10) { nodes { id title price } pageInfo { hasNextPage } }
-    }
-    pageInfo { hasNextPage }
-  }
-}`;
-
-const VERSION = '0.2.0';
-const MAX_BYTES = 262144;
-const CACHE_SECONDS = 30;
-const tokenCache = new Map();
+import { handleCommerce, TOOLS } from './commerce.mjs';
+import { authenticateCommerce } from './session-security.mjs';
+import { readCatalog, CATALOG_QUERY, CatalogError, storeHost } from './catalog.mjs';
+export { readCatalog, CATALOG_QUERY, storeHost } from './catalog.mjs';
+export { ArmansSessionState } from './session-state.mjs';
+const VERSION='0.3.0-candidate';
+const MAX_BYTES=262144;
 export class SafeError extends Error {
-  constructor(code, message, status = 502) { super(message); this.code = code; this.status = status; }
+  constructor(code,message,status=502){super(message);this.code=code;this.status=status;}
 }
-
-export function storeHost(env) {
-  const host = env.SHOPIFY_STORE || '';
-  if (!/^[a-z0-9][a-z0-9-]*\.myshopify\.com$/.test(host)) {
-    throw new SafeError('CONFIGURATION', 'A valid Shopify store domain must be configured.', 503);
-  }
-  return host;
-}
-
-export function productHandle(env) {
-  const handle = env.CATALOG_HANDLE || '';
-  if (!/^[a-z0-9][a-z0-9-]{0,150}$/.test(handle)) {
-    throw new SafeError('CONFIGURATION', 'A demo product handle must be configured.', 503);
-  }
-  return handle;
-}
-
 async function boundedText(response, limit = MAX_BYTES) {
   if (Number(response.headers.get('content-length')) > limit) {
     await response.body?.cancel();
@@ -62,78 +35,6 @@ async function request(url, init, fetcher) {
   } catch {
     throw new SafeError('UPSTREAM_UNREACHABLE', 'The upstream service did not respond. Try again shortly.');
   }
-}
-
-async function readJSON(response) {
-  try { return JSON.parse(await boundedText(response)); }
-  catch (error) {
-    if (error instanceof SafeError) throw error;
-    throw new SafeError('UPSTREAM_INVALID_JSON', 'The upstream service returned invalid JSON.');
-  }
-}
-
-function checkStatus(response, service) {
-  if (response.status === 429) throw new SafeError('RATE_LIMITED', `${service} is limiting requests. Wait before retrying.`, 429);
-  if ([401, 403].includes(response.status)) throw new SafeError('SHOPIFY_AUTH', 'Shopify rejected access. Check the installed app and its credentials.', 503);
-  if (!response.ok) throw new SafeError('UPSTREAM_HTTP', `${service} returned HTTP ${response.status}.`);
-}
-
-async function getToken(env, fetcher) {
-  const host = storeHost(env);
-  if (!env.SHOPIFY_CLIENT_ID || !env.SHOPIFY_CLIENT_SECRET) {
-    throw new SafeError('SETUP_REQUIRED', 'Add SHOPIFY_CLIENT_ID and SHOPIFY_CLIENT_SECRET as Cloudflare secrets to connect the live catalog.', 503);
-  }
-  const key = `${host}:${env.SHOPIFY_CLIENT_ID}`;
-  const existing = tokenCache.get(key);
-  if (existing && existing.expires > Date.now()) return existing.token;
-  const response = await request(`https://${host}/admin/oauth/access_token`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'application/json' },
-    body: new URLSearchParams({ grant_type: 'client_credentials', client_id: env.SHOPIFY_CLIENT_ID, client_secret: env.SHOPIFY_CLIENT_SECRET }).toString()
-  }, fetcher);
-  checkStatus(response, 'Shopify authentication');
-  const data = await readJSON(response);
-  if (typeof data.access_token !== 'string' || !data.access_token || !Number.isFinite(data.expires_in) || data.expires_in <= 0) {
-    throw new SafeError('SHOPIFY_AUTH', 'Shopify did not return a usable access token.', 503);
-  }
-  tokenCache.set(key, { token: data.access_token, expires: Date.now() + Math.max(0, data.expires_in - 120) * 1000 });
-  return data.access_token;
-}
-
-export async function readCatalog(env, fetcher = fetch) {
-  const host = storeHost(env);
-  const handle = productHandle(env);
-  const version = env.SHOPIFY_API_VERSION;
-  if (!/^20\d{2}-(01|04|07|10)$/.test(version || '')) throw new SafeError('CONFIGURATION', 'Set a supported Shopify API version.', 503);
-  const token = await getToken(env, fetcher);
-  const response = await request(`https://${host}/admin/api/${version}/graphql.json`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-Shopify-Access-Token': token },
-    body: JSON.stringify({ query: CATALOG_QUERY, variables: { search: `handle:${handle}` } })
-  }, fetcher);
-  if (response.status === 401) tokenCache.delete(`${host}:${env.SHOPIFY_CLIENT_ID}`);
-  checkStatus(response, 'Shopify catalog');
-  const payload = await readJSON(response);
-  if (Array.isArray(payload.errors) && payload.errors.length) {
-    const throttled = payload.errors.some(e => e.extensions?.code === 'THROTTLED');
-    throw new SafeError(throttled ? 'RATE_LIMITED' : 'SHOPIFY_QUERY_ERROR', throttled ? 'Shopify is limiting requests. Wait before retrying.' : 'Shopify could not complete the catalog query. Check the app scope and API version.', throttled ? 429 : 502);
-  }
-  if (!Array.isArray(payload.data?.products?.nodes) || !payload.data?.shop?.name) {
-    throw new SafeError('SHOPIFY_RESPONSE_SHAPE', 'Shopify did not return the expected catalog structure.');
-  }
-  // Explicit projection: this endpoint never returns the raw API payload or credentials.
-  const products = payload.data.products.nodes.filter(p => p?.handle === handle).map(p => ({
-    id: p.id, title: p.title, handle: p.handle, status: p.status,
-    product_url: `https://${host}/products/${encodeURIComponent(p.handle)}`,
-    variants: (p.variants?.nodes || []).map(v => ({ id: v.id, title: v.title, price: v.price })),
-    more_variants: p.variants?.pageInfo?.hasNextPage === true
-  }));
-  return {
-    source: 'Shopify Admin API', environment: 'development store', observed_at: new Date().toISOString(),
-    store: host, shop_name: payload.data.shop.name, currency: payload.data.shop.currencyCode,
-    product_filter: handle, products, more_products: payload.data.products.pageInfo?.hasNextPage === true,
-    limitation: 'Admin catalog access does not prove public storefront access, agent discovery, checkout or payment support.'
-  };
 }
 
 const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -185,32 +86,41 @@ function json(data, status = 200, extra = {}) {
   }});
 }
 
-export async function handleRequest(req, env, ctx = {}, fetcher = fetch, cache = null) {
-  const url = new URL(req.url);
-  const commerce = await handleCommerce(req, env, fetcher);
-  if (commerce) return commerce;
-  if (!['GET','HEAD'].includes(req.method)) return json({ error: 'METHOD_NOT_ALLOWED' }, 405, { Allow: 'GET, HEAD' });
-  if (url.pathname === '/.well-known/ucp') return json({ error: 'NOT_A_COMMERCE_SERVICE', message: 'This application inspects commerce profiles. It does not implement a UCP merchant service.' }, 404);
-  if (!url.pathname.startsWith('/api/')) return env.ASSETS ? env.ASSETS.fetch(req) : new Response('Not found', { status: 404 });
-  if (url.search) return json({ error: 'QUERY_NOT_SUPPORTED', message: 'This preview inspects only its configured store and product.' }, 400);
-  if (!['/api/health','/api/catalog','/api/discovery'].includes(url.pathname)) return json({ error: 'NOT_FOUND' }, 404);
-  try {
-    if (url.pathname === '/api/health') return json({ service: 'Armans.AI Agent-Ready Live', version: VERSION, environment: 'development store preview', store: storeHost(env), catalog_configured: Boolean(env.SHOPIFY_CLIENT_ID && env.SHOPIFY_CLIENT_SECRET), evidence_scope: 'Health only; shopping acceptance is recorded separately.', shopping_tools: ['search_catalog','create_cart','get_cart','cancel_cart'], payment_operations_enabled: false });
-    const key = new Request(`${url.origin}${url.pathname}`, { method: 'GET' });
-    const existing = cache ? await cache.match(key) : null;
-    if (existing) { const result = new Response(existing.body, existing); result.headers.set('X-Workbench-Cache','HIT'); result.headers.set('Cache-Control','no-store'); return result; }
-    const data = url.pathname === '/api/catalog' ? await readCatalog(env, fetcher) : await inspectDiscovery(env, fetcher);
-    const result = json(data, 200, { 'X-Workbench-Cache': 'MISS' });
-    if (cache && ctx.waitUntil) {
-      const stored = new Response(JSON.stringify(data), { headers: { 'Content-Type':'application/json; charset=utf-8', 'Cache-Control': `public, max-age=${CACHE_SECONDS}` } });
-      ctx.waitUntil(cache.put(key, stored));
+export async function handleRequest(req,env,ctx={},fetcher=fetch,cache=null){
+  const url=new URL(req.url);
+  const commerce=await handleCommerce(req,env,fetcher);
+  if(commerce)return commerce;
+  if(url.pathname==='/api/catalog'){
+    try{
+      const principal=await authenticateCommerce(req,env);
+      if(!['GET','HEAD'].includes(req.method))return json({error:'METHOD_NOT_ALLOWED'},405,{Allow:'GET, HEAD'});
+      const data=await readCatalog(env,fetcher,url.searchParams,principal);
+      return json(data,200,{'X-Workbench-Cache':'BYPASS'});
+    }catch(error){
+      if(error instanceof CatalogError||typeof error?.code==='string'&&Number.isInteger(error?.status))return json({error:error.code,message:error.message,observed_at:new Date().toISOString()},error.status);
+      return json({error:'INTERNAL_ERROR',message:'Catalog visibility could not be verified.'},500);
     }
-    return result;
-  } catch (error) {
-    if (error instanceof SafeError) return json({ error: error.code, message: error.message, observed_at: new Date().toISOString() }, error.status);
-    return json({ error: 'INTERNAL_ERROR', message: 'The check failed. No readiness conclusion was produced.' }, 500);
+  }
+  if(!['GET','HEAD'].includes(req.method))return json({error:'METHOD_NOT_ALLOWED'},405,{Allow:'GET, HEAD'});
+  if(url.pathname==='/.well-known/ucp')return json({error:'NOT_A_COMMERCE_SERVICE',message:'This application inspects commerce profiles. It does not implement a UCP merchant service.'},404);
+  if(!url.pathname.startsWith('/api/'))return env.ASSETS?env.ASSETS.fetch(req):new Response('Not found',{status:404});
+  if(url.search)return json({error:'QUERY_NOT_SUPPORTED',message:'Only catalog browsing accepts query parameters.'},400);
+  if(!['/api/health','/api/discovery'].includes(url.pathname))return json({error:'NOT_FOUND'},404);
+  try{
+    if(url.pathname==='/api/health')return json({service:'Armans.AI Agent-Ready Live',version:VERSION,environment:'development store validation candidate',store:storeHost(env),catalog_configured:Boolean(env.SHOPIFY_CLIENT_ID&&env.SHOPIFY_CLIENT_SECRET&&env.SHOPIFY_PUBLICATION_ID),evidence_scope:'Health only; scenario results are recorded separately.',shopping_tools:TOOLS.map(t=>t.name),browser_actions_require_authenticated_session:true,payment_operations_enabled:false});
+    return json(await inspectDiscovery(env,fetcher),200,{'X-Workbench-Cache':'BYPASS'});
+  }catch(error){
+    if(error instanceof SafeError||error instanceof CatalogError)return json({error:error.code,message:error.message,observed_at:new Date().toISOString()},error.status);
+    return json({error:'INTERNAL_ERROR',message:'The check failed. No readiness conclusion was produced.'},500);
   }
 }
-
-export default { fetch(req, env, ctx) { return handleRequest(req, env, ctx, fetch, caches.default); } };
-
+export default {async fetch(req,env,ctx){
+  const started=Date.now();const response=await handleRequest(req,env,ctx);
+  // No URL query, user text, payload, headers, cart IDs or tokens enter logs.
+  if(env.OBSERVABILITY_ENABLED==='true'){
+    const pathname=new URL(req.url).pathname;
+    const route=['/api/catalog','/api/shop','/api/mcp','/api/health','/api/discovery','/agent-profile.json'].includes(pathname)?pathname:'asset';
+    console.info(JSON.stringify({event:'request',route,method:req.method,status:response.status,duration_ms:Date.now()-started,correlation:crypto.randomUUID()}));
+  }
+  return response;
+}};

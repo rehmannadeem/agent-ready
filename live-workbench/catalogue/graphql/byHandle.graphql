@@ -1,0 +1,1 @@
+query SeedProductByHandle($query:String!){products(first:2,query:$query){nodes{id handle status tags updatedAt}}}

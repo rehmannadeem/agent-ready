@@ -1,0 +1,1 @@
+query SeedCollections($after:String){collections(first:50,after:$after,query:"handle:armans-seed-v1-*"){nodes{id handle title}pageInfo{hasNextPage endCursor}}}

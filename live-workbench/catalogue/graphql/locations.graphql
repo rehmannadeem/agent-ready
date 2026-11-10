@@ -1,0 +1,1 @@
+query SeedLocations($after:String){locations(first:50,after:$after){nodes{id name isActive fulfillsOnlineOrders address{countryCode}}pageInfo{hasNextPage endCursor}}}

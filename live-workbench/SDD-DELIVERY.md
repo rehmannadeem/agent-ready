@@ -1,3 +1,25 @@
+# Armans.AI Agent-Ready Live — current seven-stage delivery
+
+10 November 2026 · development-store candidate · **Gate 2 approved; Gate 6 incomplete; Ship not authorized**.
+
+| Stage | Evidence | Status |
+|---|---|---|
+| 1 Intent | sdd/01-INTENT.md | Recorded |
+| 2 Specify | sdd/02-SPECIFY.md | Owner approved with six conditions |
+| 3 Plan | sdd/03-PLAN.md | Recorded |
+| 4 Tasks | sdd/04-TASKS.md | Recorded |
+| 5 Implement | sdd/05-IMPLEMENT.md | Local candidate; seed awaiting installation |
+| 6 Validate | sdd/06-VALIDATE.md | Deterministic/runtime evidence; live suite not run |
+| 7 Ship | sdd/07-SHIP.md | Not authorized |
+
+Current state: [stop report](sdd/GATE-6-REPORT.md). The existing Worker and hosted chat remain the previous deployed baseline. Code on this branch is not a deployment. PR #1 is open; no merge or production deployment has occurred.
+
+---
+
+## Historical baseline record — 9 November 2026
+
+The following preserves the earlier single-product demonstration and must not be treated as acceptance evidence for the scaled candidate.
+
 # Armans.AI Agent-Ready Live — specification and delivery record
 
 Date: 9 November 2026. Environment: Karachi Kicks SupportOps Lab, a Shopify development store.

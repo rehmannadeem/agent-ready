@@ -1,0 +1,85 @@
+{
+  "observed_at": "2026-11-10T16:01:59.362Z",
+  "id": "McTDlGb8oc3hZ5gl",
+  "name": "Armans Scale Eval — single model call",
+  "active": false,
+  "activeVersionId": null,
+  "versionId": "55919eaf-7b14-468e-8402-9c783f2787f3",
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "saveExecutionProgress": false,
+    "saveManualExecutions": true,
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "none",
+    "executionTimeout": 90
+  },
+  "nodes": [
+    {
+      "name": "Evaluation input",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.2,
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "armans-scale-eval-single-call-20261110",
+        "authentication": "n8nOAuth2",
+        "requireExecuteAccess": true,
+        "responseMode": "lastNode",
+        "options": {
+          "oauthClient": "bearer"
+        }
+      },
+      "credential_types": []
+    },
+    {
+      "name": "Validate input bounds",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "maxTries": 1,
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "const items=$input.all();\nif(items.length!==1)throw new Error('ONE_ITEM_REQUIRED');\nconst b=items[0].json.body;\nif(!b || typeof b.system!=='string' || typeof b.prompt!=='string' || typeof b.reservation_id!=='string')throw new Error('INVALID_INPUT');\nif(!/^[a-f0-9-]{36}$/.test(b.reservation_id))throw new Error('INVALID_RESERVATION');\nconst bytes=Buffer.byteLength(b.system,'utf8')+Buffer.byteLength(b.prompt,'utf8');\nif(bytes>23000 || !b.prompt.trim())throw new Error('INPUT_BOUND_EXCEEDED');\nif(b.model!=='claude-haiku-5-5' || b.max_output_tokens!==2000)throw new Error('MODEL_BOUND_MISMATCH');\nreturn [{json:{system:b.system,prompt:b.prompt,reservation_id:b.reservation_id,input_utf8_bytes:bytes}}];"
+      },
+      "credential_types": []
+    },
+    {
+      "name": "One Haiku invocation",
+      "type": "@n8n/n8n-nodes-langchain.anthropic",
+      "typeVersion": 1,
+      "maxTries": 1,
+      "parameters": {
+        "resource": "text",
+        "operation": "message",
+        "modelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "claude-haiku-5-5"
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "user",
+              "content": "={{ $json.prompt }}"
+            }
+          ]
+        },
+        "addAttachments": false,
+        "simplify": false,
+        "options": {
+          "system": "={{ $json.system }}",
+          "maxTokens": 2000,
+          "promptCaching": "disabled",
+          "codeExecution": false,
+          "webSearch": false,
+          "maxToolsIterations": 1
+        }
+      },
+      "credential_types": []
+    }
+  ],
+  "paid_execution_performed_by_this_agent": false,
+  "architecture": "Inactive single native model invocation; local controlled loop; not hosted AI Agent equivalence",
+  "credential_note": "Workflow readback does not expose credential metadata. Managed Gateway attachment was selected at creation; availability/balance and one-call usage must be verified before full evaluation.",
+  "execution_verification": "NOT_RUN"
+}

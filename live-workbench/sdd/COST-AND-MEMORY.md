@@ -1,3 +1,19 @@
+# Current approved evaluation envelope — 10 November 2026
+
+**Gate 2 approved. USD 10 hard cap; first full suite stays at five iterations.** Eight iterations are not authorized and require measured exhaustion plus fresh owner approval.
+
+The signed-in n8n [service-pricing page](https://app.n8n.cloud/service-pricing) now confirms Haiku 5.5 rates of **USD 0.10 input / USD 0.50 output per million tokens** for the bounded short prompts. The listed >100,000-input-token rates are USD 0.50 / USD 2.50; this harness does not permit that tier. Gateway remaining balance is still unverified; no purchase or top-up has been made.
+
+The approved 360-turn × 5-call envelope is 1,800 calls, at most 24,000 input and 2,000 output tokens each: USD 6.12 plus 30% contingency = **USD 7.956**. See [evaluation implementation](../evals/README.md) for per-call reservations, actual usage reconciliation and fail-closed unknown outcomes. Input uses a conservative UTF-8 byte bound plus framing reserve, not a claim of exact pre-call tokenization. Actual input/output tokens are recorded from the provider after each call.
+
+**Current measured evaluation usage: zero calls, zero tokens, USD 0.00.** Full evaluation waits on installed seed app, verified catalogue, runtime publication access, trusted cross-session test hook, Gateway balance and live helper verification. No approval flags may be marked verified without evidence.
+
+The local evaluation controller retains up to 20 prior interactions and authoritative cart state remains in session-owned Durable Objects. The existing published n8n chat still has memory 8 and five iterations; it is unchanged. The separate inactive single-call helper does not establish that hosted-chat integration has been fixed.
+
+---
+
+The following Stage 2 research is retained as a **historical snapshot**. Its Gate 2 pending status, unverified Gateway tariff and proposed eight-iteration estimate have been superseded by the current decision above.
+
 # Stage 2 research — model cost, memory and session requirements
 
 Checked: **10 November 2026 (Asia/Karachi)**. Scope: specification only; stop at Gate 2.

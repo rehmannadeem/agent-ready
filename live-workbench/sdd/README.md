@@ -1,23 +1,19 @@
-# Realistic Shopify catalogue — approval pack
+# Realistic Shopify catalogue — development candidate
 
-**10 November 2026 · Asia/Karachi · Stages 1–2 only · Gate 2 awaiting Nadeem**
+**10 November 2026 · Asia/Karachi · Gate 2 approved · Stage 5 implemented locally; Stage 6 incomplete**
 
-Branch: `feat/realistic-catalogue-20261110`, based on `a813eaedf2bc1e5b37ce958415c0ae944aca7726` (PR #1 head verified today). These documents specify future work; no scale feature is implemented by this change.
+Branch: `feat/realistic-catalogue-20261110`, based on PR #1 head `a813eaedf2bc1e5b37ce958415c0ae944aca7726`. PR #1 remains open. No production deployment or merge is authorized or performed.
 
-Start with [Gate 2 report](GATE-2-REPORT.md), then [Intent](01-INTENT.md) and [Specification](02-SPECIFY.md).
-
-| Stage | Record | Current status / exit gate |
+| Stage | Record | Status |
 |---|---|---|
-| 1 Intent | [01-INTENT](01-INTENT.md) | Prepared; business scope stated. |
-| 2 Specify | [02-SPECIFY](02-SPECIFY.md) | Prepared with explicit unresolved preconditions; **Gate 2 pending**. |
-| 3 Plan | [03-PLAN](03-PLAN.md) | Not started; Gate 2 required. |
-| 4 Tasks | [04-TASKS](04-TASKS.md) | Not started; approved architecture required. |
-| 5 Implement | [05-IMPLEMENT](05-IMPLEMENT.md) | Not started; reviewed task set and Gate 2 required. |
-| 6 Validate | [06-VALIDATE](06-VALIDATE.md) | Not started; budget and implementation prerequisites; stop at Gate 6. |
-| 7 Ship | [07-SHIP](07-SHIP.md) | Not started; explicit **approve ship** required. |
+| 1 Intent | [01-INTENT](01-INTENT.md) | Recorded |
+| 2 Specify | [02-SPECIFY](02-SPECIFY.md) | Approved with the six owner conditions |
+| 3 Plan | [03-PLAN](03-PLAN.md) | Brief architecture recorded |
+| 4 Tasks | [04-TASKS](04-TASKS.md) | Traced task set recorded |
+| 5 Implement | [05-IMPLEMENT](05-IMPLEMENT.md) | Local candidate; live seed blocked on authorization |
+| 6 Validate | [06-VALIDATE](06-VALIDATE.md) | Deterministic/runtime checks; live 75-run suite not run |
+| 7 Ship | [07-SHIP](07-SHIP.md) | Not authorized; stop at Gate 6 |
 
-Specification appendices: [Catalogue](CATALOGUE-SPEC.md), [25 scenarios](SCENARIO-MATRIX.md), [live tool contract](MCP-CONTRACT.md), [limits and permissions](SHOPIFY-LIMITS.md), [cost and memory](COST-AND-MEMORY.md).
+Start with [current stop report](GATE-6-REPORT.md). Catalogue seeding, live commerce, all critical scenario repetitions and bounded load must still be measured before Gate 6 can pass. The [Gate 2 report](GATE-2-REPORT.md) is the historical specification checkpoint.
 
-Evidence: [read-only merchant tools/list](evidence/shopify-mcp-tools-2026-11-10.json). No mutation or model evaluation was performed to prepare this pack. The prior runtime and RELEASE.json remain unchanged.
-
-Nadeem is the approval authority. Claude reviews this report against the repository; that review does not itself authorize store writes, billing, merges or deployment.
+Appendices: [catalogue](CATALOGUE-SPEC.md), [scenarios](SCENARIO-MATRIX.md), [merchant tools](MCP-CONTRACT.md), [limits](SHOPIFY-LIMITS.md), [current cost decision](COST-AND-MEMORY.md).

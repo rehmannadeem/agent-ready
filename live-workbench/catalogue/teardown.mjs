@@ -1,0 +1,8 @@
+import {fileURLToPath} from 'node:url';
+import path from 'node:path';
+import {STORE,TAGS,canonical} from './generate.mjs';
+import {adminFromEnvironment,paginate} from './admin.mjs';
+import {loadManifest,DEFAULT_MANIFEST} from './seed.mjs';
+export function selectTeardown(products,manifest){if(manifest.store!==STORE)throw Error('MANIFEST_STORE_MISMATCH');const owned=Object.values(manifest.products||{});return products.map(product=>{const entry=owned.find(p=>p.id===product.id&&p.handle===product.handle);const eligible=!!entry&&product.handle.startsWith('armans-seed-v1-')&&TAGS.every(tag=>product.tags?.includes(tag));return {id:product.id,handle:product.handle,selected:eligible,reason:eligible?'both ownership tags plus recorded ID and handle match':'refused: missing ownership tags or manifest match'};});}
+export async function main(){if(process.argv.includes('--apply'))throw Error('LIVE_TEARDOWN_NOT_AUTHORIZED');const manifest=await loadManifest(process.env.SEED_MANIFEST_PATH||DEFAULT_MANIFEST);const admin=await adminFromEnvironment();const identity=await admin.query('preflight');if(identity.shop.myshopifyDomain!==STORE||identity.shop.plan.partnerDevelopment!==true)throw Error('STORE_MISMATCH');const products=await paginate(admin,'products','products');console.log(canonical({mode:'DRY_RUN_ONLY',store:STORE,selection:selectTeardown(products,manifest),collections:Object.values(manifest.collections),discounts:Object.values(manifest.discounts),deleted:0}));}
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(e=>{console.error(e.message);process.exitCode=1;});

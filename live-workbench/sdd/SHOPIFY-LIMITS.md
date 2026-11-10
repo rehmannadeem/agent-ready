@@ -1,3 +1,5 @@
+> **Current Gate 2 decision, 10 November 2026:** only write_products, write_inventory, write_publications and write_discounts are approved for the separate seed app. **Do not request write_locations or create a location.** The optional location proposal below is historical and superseded. Actual read-only runtime API preflight confirms Basic development store, USD, 18 products / 27 variants, bucket 2,000 and restore rate 100 points/second. Seed preflight must repeat these checks with the seed credential before any writes.
+
 # Shopify limits and permissions — Stage 2 research
 Checked: **10 November 2026 (Asia/Karachi)**. Intended Admin API: **2026-07**.
 Scope: read-only documentation research for **318 synthetic products / approximately 3,266 variants**: 300 shopper-eligible products plus 10 draft, 5 archived and 3 publication-exclusion specimens. No store queries, mutations, credentials, deployments, model calls or load tests were performed by this research task.

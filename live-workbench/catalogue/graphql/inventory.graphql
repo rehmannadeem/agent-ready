@@ -1,0 +1,1 @@
+query SeedInventory($id:ID!,$locationId:ID!){inventoryItem(id:$id){id tracked inventoryLevel(locationId:$locationId){id quantities(names:["available"]){name quantity}updatedAt}}}

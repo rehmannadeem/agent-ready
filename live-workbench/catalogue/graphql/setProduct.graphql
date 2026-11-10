@@ -1,0 +1,1 @@
+mutation SeedProductSet($input:ProductSetInput!,$identifier:ProductSetIdentifiers){productSet(input:$input,identifier:$identifier,synchronous:true){product{id handle updatedAt variants(first:50){nodes{id sku inventoryItem{id}}pageInfo{hasNextPage}}}userErrors{field message code}}}

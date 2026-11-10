@@ -1,0 +1,56 @@
+{
+  "observed_date": "2026-11-10",
+  "timezone": "Asia/Karachi",
+  "method": "Read-only signed-in Shopify admin inspection",
+  "store": "karachi-kicks-supportops-lab.myshopify.com",
+  "store_name": "Karachi Kicks SupportOps Lab",
+  "plan_visible": "Basic Development store",
+  "currency_visible": "USD",
+  "active_markets_visible": [
+    "United States",
+    "Canada"
+  ],
+  "product_rows_visible": 18,
+  "full_variant_count": 27,
+  "locations_visible": [
+    "Shop location",
+    "My Custom Location",
+    "Snow City Warehouse"
+  ],
+  "existing_products_preserved": true,
+  "api_preflight_status": "PENDING separate seed app installation; required before catalogue writes",
+  "seed_app_name": "Armans Catalogue Seed v1",
+  "seed_app_id": "445906452481",
+  "seed_app_scopes": [
+    "write_products",
+    "write_inventory",
+    "write_publications",
+    "write_discounts"
+  ],
+  "write_locations_requested": false,
+  "data_mutations_performed": 0,
+  "n8n_tariff": {
+    "source": "https://app.n8n.cloud/service-pricing",
+    "model": "claude-haiku-5-5",
+    "unit": "USD per 1M tokens",
+    "input": 0.1,
+    "output": 0.5,
+    "long_prompt_threshold_tokens": 100000,
+    "long_input": 0.5,
+    "long_output": 2.5
+  },
+  "evaluation_calls_performed": 0,
+  "api_runtime_preflight_at": "2026-11-10T15:52:35.528Z",
+  "api_shop_id": "gid://shopify/Shop/67450077247",
+  "api_product_count": 18,
+  "api_count_precision": "EXACT",
+  "api_version": "2026-07",
+  "runtime_read_scopes": [
+    "read_customers",
+    "read_orders",
+    "read_products"
+  ],
+  "runtime_publication_check": "ACCESS_DENIED: read_publications required; draft addition prepared, not released/granted",
+  "seed_install_status": "Owner Install click pending",
+  "gateway_balance_verified": false
+}

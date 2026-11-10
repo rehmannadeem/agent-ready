@@ -23,5 +23,24 @@
     "Development storefront requires its existing password",
     "Rendered checkout displays payments unavailable"
   ],
-  "production_ready": false
+  "production_ready": false,
+  "candidate": {
+    "date": "2026-11-10",
+    "branch": "feat/realistic-catalogue-20261110",
+    "status": "IMPLEMENTED_LOCALLY_LIVE_VALIDATION_BLOCKED",
+    "deployed": false,
+    "merged": false,
+    "gate2_approved": true,
+    "gate6_passed": false,
+    "seed_products_generated": 318,
+    "seed_variants_generated": 3266,
+    "seed_products_written": 0,
+    "model_evaluation_runs": 0,
+    "model_evaluation_usd": 0,
+    "runtime_checks_passed": 11,
+    "evidence": "sdd/GATE-6-REPORT.md",
+    "deterministic_tests_passed": 149,
+    "syntax_files_passed": 32,
+    "additional_private_runtime_checks_passed": 8
+  }
 }

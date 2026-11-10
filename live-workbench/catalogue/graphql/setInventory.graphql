@@ -1,0 +1,1 @@
+mutation SeedInventorySet($input:InventorySetQuantitiesInput!,$key:String!){inventorySetQuantities(input:$input) @idempotent(key:$key){inventoryAdjustmentGroup{createdAt}userErrors{field message code}}}

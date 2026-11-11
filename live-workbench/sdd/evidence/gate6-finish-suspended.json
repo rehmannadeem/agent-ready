@@ -1,0 +1,481 @@
+{
+  "state": "SUSPENDED_PROVIDER_COOLDOWN",
+  "tested_source": "3511e2ce48dd25e88018a6809e4941f1d249f95a",
+  "scope": {
+    "S05_repetitions": 3,
+    "other_scenarios_once": 21,
+    "total": 24
+  },
+  "completed_mechanical_pending_review": 1,
+  "blocked": 1,
+  "untouched": 22,
+  "suspension": {
+    "reason": "PROVIDER_RATE_LIMITED",
+    "observed_at": "2026-11-11T19:18:58.003Z",
+    "retry_after_seconds": 2463,
+    "retry_not_before": "2026-11-11T20:00:01.003Z",
+    "eligible_at": "2026-11-11T20:15:01.003Z",
+    "automatic_resume": false
+  },
+  "cost_this_run": {
+    "calls": 6,
+    "settled": 6,
+    "input_tokens": 29783,
+    "output_tokens": 3917,
+    "usd": 0.0049368,
+    "reserved_usd": 0
+  },
+  "cost_total": {
+    "calls": 75,
+    "settled": 75,
+    "input_tokens": 274682,
+    "output_tokens": 22091,
+    "usd": 0.0385137,
+    "reserved_usd": 0
+  },
+  "cleanup": {
+    "sessions": 2,
+    "verified": 1,
+    "pending": 1,
+    "unknown": 0,
+    "controller_cases": 0
+  },
+  "attempts": [
+    {
+      "id": "S05",
+      "rep": 1,
+      "status": "PENDING_REVIEW",
+      "reason": null,
+      "checks": {
+        "total": 78,
+        "failed": []
+      },
+      "turns": 3,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 6,
+        "settled": 6,
+        "input_tokens": 29783,
+        "output_tokens": 3917,
+        "usd": 0.0049368,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S05",
+      "rep": 2,
+      "status": "BLOCKED",
+      "reason": "PROVIDER_RATE_LIMITED",
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": true,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S05",
+      "rep": 3,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S01",
+      "rep": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S02",
+      "rep": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S03",
+      "rep": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S04",
+      "rep": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S06",
+      "rep": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S07",
+      "rep": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S08",
+      "rep": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S09",
+      "rep": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S10",
+      "rep": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S11",
+      "rep": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S12",
+      "rep": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S13",
+      "rep": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S14",
+      "rep": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S15",
+      "rep": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S16",
+      "rep": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S17",
+      "rep": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S18",
+      "rep": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S22",
+      "rep": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S23",
+      "rep": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S24",
+      "rep": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    },
+    {
+      "id": "S25",
+      "rep": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cleanup_pending": false,
+      "cleanup_error": null,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0,
+        "reserved_usd": 0
+      }
+    }
+  ],
+  "release": "HOLD"
+}

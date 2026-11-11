@@ -1,5 +1,7 @@
 # Gate 6 final evaluation report — HOLD
 
+The follow-up run is suspended after Shopify returned HTTP 429. See [S05 follow-up and remaining scenarios](#s05-follow-up-and-remaining-scenarios) for the current state.
+
 The approved safety rerun completed all 12 attempts. Nine cleared mechanical checks and three S05 attempts stopped before conversation. See [Approved safety rerun](#approved-safety-rerun) for the current results and hosted workflow comparison.
 
 **11 November 2026 · FOR CLAUDE REVIEW · No merge or deployment**
@@ -117,3 +119,11 @@ The comparison uses the published hosted configuration `574ae801-34c9-446b-ac39-
 | Model loop | One native Haiku call per decision through the manual helper. The local evaluator interprets the JSON answer and limits each shopper turn to five decisions. | Native Agent loop with five configured iterations and LangChain’s tool calls. Both configurations use Haiku 5.5 with a 2,000-output-token setting. |
 
 [Sanitized safety rerun evidence](evidence/gate6-safety-rerun-cddc734.json). The open draft PR remains the review surface. No merge or deployment was performed.
+
+## S05 follow-up and remaining scenarios
+
+[The exact hidden-fixture reply](evidence/s05-hidden-product-exact.json) shows Shopify returned HTTP 200 with an MCP error containing the unrecoverable `product_not_found` code. The Worker now maps that specific error to an absent product and omits the upstream continuation URL. The regression uses the saved body and also checks that an unrelated error is rejected. All 206 offline tests passed.
+
+S05 repetition 1 cleared the mechanical checks and awaits transcript review. Shopify returned HTTP 429 during repetition 2 before the model was called. That attempt remains blocked. The third S05 repetition and the other 21 scenarios are untouched. Earliest recovery is **12 November 2026 at 1:15:01 a.m. PKT**, after the observed retry delay and the required 15-minute buffer. One current evaluation session awaits verification. Six calls settled for USD 0.0049368 in this follow-up, bringing the canonical total to USD 0.0385137 with zero unresolved reservations.
+
+[Follow-up evidence at suspension](evidence/gate6-finish-suspended.json) · [Nine redacted transcripts for Claude review](evidence/transcripts/) · [Worker and hosted chat release plan](WORKER-AND-HOSTED-CHAT-RELEASE-PLAN.md)

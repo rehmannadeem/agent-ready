@@ -5,6 +5,7 @@ import {BUDGET,BudgetLedger,invokeBudgeted,dollars} from './budget.mjs';
 import {SCENARIOS,materializeScenario,suitePlan,prioritizeRuns} from './scenarios.mjs';
 import {TOOLS,validateTool} from '../src/commerce.mjs';
 import {applyReviews,recoverInterruptedRuns,summarizeReport} from './review.mjs';
+import {slotKey,EVALUATION_DEADLINE,finalizeDeadline} from './launch-policy.mjs';
 import {catalogReferenceForMemory,observationsForModel} from './model-context.mjs';
 
 const allowed=new Set(TOOLS.map(t=>t.name));
@@ -37,7 +38,7 @@ export function isLiveRateLimit(result){return result?.fault_injection!==true&&(
 export function createRateLimitGuard(){
  let suspension=null;
  return {get:()=>suspension,check(){if(suspension)throw Object.assign(Error('PROVIDER_RATE_LIMITED'),{suspension,code:'RATE_LIMITED'});},observe(result){
-  if(!suspension&&isLiveRateLimit(result)){const seconds=result.retry_after_seconds;suspension={reason:'PROVIDER_RATE_LIMITED',observed_at:new Date().toISOString(),...(Number.isInteger(seconds)&&seconds>=0&&seconds<=86400?{retry_after_seconds:seconds,retry_not_before:new Date(Date.now()+seconds*1000).toISOString()}:{}),automatic_resume:false};}
+  if(!suspension&&isLiveRateLimit(result)){const seconds=result.retry_after_seconds;suspension={reason:'PROVIDER_RATE_LIMITED',observed_at:new Date().toISOString(),...(Number.isInteger(seconds)&&seconds>=0&&seconds<=86400?{retry_after_seconds:seconds,retry_not_before:new Date(Date.now()+seconds*1000).toISOString(),eligible_at:new Date(Date.now()+(seconds+900)*1000).toISOString()}:{}),automatic_resume:false};}
  }};
 }
 export function createWorkerClient({baseUrl,headersForSession,fetcher=fetch,beforeRequest=async()=>{},observeResult=()=>{}}){
@@ -51,7 +52,7 @@ export function createWorkerClient({baseUrl,headersForSession,fetcher=fetch,befo
   const start=performance.now();let response;
   try{response=await fetcher(new URL('/api/mcp',u),{method:'POST',redirect:'error',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:randomUUID(),method:'tools/call',params:{name,arguments:args}}),signal:AbortSignal.timeout(30000)});}
   catch{return {error:'TOOL_OUTCOME_UNKNOWN',message:'The tool response was not received; do not retry a mutation.',ambiguous:mutations.has(name),latency_ms:Math.round(performance.now()-start)};}
-  let p;try{const body=await response.text();if(Buffer.byteLength(body)>524288)throw Error();p=JSON.parse(body);}catch{const rejected={error:response.status===429?'RATE_LIMITED':'INVALID_TOOL_RESPONSE',http_status:response.status,ambiguous:mutations.has(name),latency_ms:Math.round(performance.now()-start)};observeResult(rejected);return rejected;}
+  let p;try{const body=await response.text();if(Buffer.byteLength(body)>524288)throw Error();p=JSON.parse(body);}catch{const rejected={error:response.status===429?'RATE_LIMITED':'INVALID_TOOL_RESPONSE',http_status:response.status,ambiguous:response.status!==429&&mutations.has(name),latency_ms:Math.round(performance.now()-start)};observeResult(rejected);return rejected;}
   let result=p.result?.structuredContent;
   if(!result&&p.result?.content?.[0]?.text){try{result=JSON.parse(p.result.content[0].text);}catch{}}
   observeResult({...result,http_status:response.status});
@@ -60,9 +61,10 @@ export function createWorkerClient({baseUrl,headersForSession,fetcher=fetch,befo
  }};
 }
 
-export async function runTurn({message,history,currentState,session,client,ledger,modelTransport,system,scenario,repetition,turn,onEvent=()=>{}}){
+export async function runTurn({message,history,currentState,session,client,ledger,modelTransport,system,scenario,repetition,turn,onEvent=()=>{},beforeModel=()=>{}}){
  const observations=[],events=[];let mutationOutcomeUnknown=currentState.mutation_outcome_unknown===true;
  for(let iteration=1;iteration<=BUDGET.maxIterations;iteration++){
+  await beforeModel();
   const prompt=JSON.stringify({tools:TOOLS,history:history.slice(-20),current_state:currentState,shopper_message:message,observations:observationsForModel(observations),iteration,maximum_iterations:5});
   const model=await invokeBudgeted({ledger,transport:modelTransport,system,prompt,label:{scenario,repetition,turn,iteration}});
   const modelEvent={kind:'model',turn,iteration,reservation_id:model.reservationId,execution_id:model.executionId,usage:model.usage,cost_usd:dollars(model.actualNanoUsd),provider_stop_reason:model.stopReason,output_error:model.error};events.push(modelEvent);await onEvent(modelEvent);
@@ -140,7 +142,8 @@ export function summarizeSelection(runs,ids){
  const selected=runs.filter(r=>ids.includes(r.id)),count=status=>selected.filter(r=>r.status===status).length;
  return {authorized_attempts:selected.length,passed:count('PASSED'),mechanical_pass_pending_human_review:count('PENDING_REVIEW'),failed:count('FAILED'),blocked:count('BLOCKED'),not_run:count('NOT_RUN'),running:count('RUNNING'),out_of_scope:runs.length-selected.length,out_of_scope_not_run:runs.filter(r=>!ids.includes(r.id)&&r.status==='NOT_RUN').length};
 }
-export async function runSuite({oracle,adapter,modelTransport,outputDir,approval,system,only,priority=[],reviewResults={}}){
+export function summarizeSlots(runs,slots){const keys=new Set(slots.map(slotKey));return summarizeSelection(runs.map(r=>({...r,id:keys.has(slotKey(r))?'selected':'excluded'})),['selected']);}
+export async function runSuite({oracle,adapter,modelTransport,outputDir,approval,system,only,slots,priority=[],reviewResults={},now=()=>Date.now()}){
  for(const k of ['owner_approved','gateway_tariff_verified','gateway_balance_confirmed','single_call_transport_verified','worker_preflight_passed','seed_verified'])if(approval?.[k]!==true)throw Error('PREFLIGHT_REQUIRED:'+k);
  if(approval.max_usd!==10||approval.max_iterations!==5||approval.model!==BUDGET.model)throw Error('APPROVED_BOUNDS_MISMATCH');
  if(typeof adapter.createSession!=='function'||typeof adapter.client?.callTool!=='function')throw Error('TRUSTED_SESSION_ADAPTER_REQUIRED');
@@ -151,26 +154,32 @@ export async function runSuite({oracle,adapter,modelTransport,outputDir,approval
  catch(e){if(e.code!=='ENOENT')throw e;report={schema_version:1,evaluation_run_id:approval.evaluation_run_id,environment:'development store, synthetic catalogue',execution_architecture:'local controlled tool loop + single-call n8n model helper; NOT hosted n8n Agent equivalence',model:BUDGET.model,max_iterations:5,max_output_tokens:2000,seed_sha256:oracle.digest,created_at:new Date().toISOString(),runs:prioritizeRuns(suitePlan(),priority),execution_priority:priority,billing:approval.tariff_evidence||'n8n Gateway pricing verified 2026-11-10'};}
  if(report.suspension)throw Error('SUSPENDED_SUITE_OPERATOR_RECOVERY_REQUIRED');
  const selectedIds=only||SCENARIOS.map(s=>s.id);
+ const selectedSlots=slots||report.runs.filter(r=>selectedIds.includes(r.id)).map(({id,repetition})=>({id,repetition}));
+ if(!Array.isArray(selectedSlots)||new Set(selectedSlots.map(slotKey)).size!==selectedSlots.length||selectedSlots.some(r=>!SCENARIOS.some(s=>s.id===r.id)||![1,2,3].includes(r.repetition)))throw Error('INVALID_SCENARIO_SLOTS');
+ const selectedKeys=new Set(selectedSlots.map(slotKey));
  if(!Array.isArray(selectedIds)||new Set(selectedIds).size!==selectedIds.length||selectedIds.some(id=>!SCENARIOS.some(s=>s.id===id)))throw Error('INVALID_SCENARIO_SELECTION');
- report.execution_scope={scenario_ids:selectedIds,authorized_attempts:report.runs.filter(r=>selectedIds.includes(r.id)).length,suite_denominator:75,excluded_attempts:report.runs.filter(r=>!selectedIds.includes(r.id)).length};
+ if(report.execution_scope?.slots&&JSON.stringify(report.execution_scope.slots)!==JSON.stringify(selectedSlots))throw Error('PERSISTED_SLOT_SCOPE_MISMATCH');
+ report.execution_scope={scenario_ids:[...new Set(selectedSlots.map(r=>r.id))],slots:selectedSlots,authorized_attempts:selectedSlots.length,suite_denominator:75,excluded_attempts:75-selectedSlots.length};
  recoverInterruptedRuns(report);await save(path,report);
  await ledger.assertNoUnresolved();
  let stop=false;
  for(const row of report.runs){
-  if(row.status!=='NOT_RUN'||(only&&!only.includes(row.id)))continue;
+  if(row.status!=='NOT_RUN'||!selectedKeys.has(slotKey(row)))continue;
+  try{adapter.assertRequestWindow?.();}catch(e){if(e.message==='EVALUATION_DEADLINE_REACHED'){report.deadline_reached=true;break;}throw e;}
   const spec=SCENARIOS.find(s=>s.id===row.id);const missing=spec.hooks.filter(h=>!adapter.capabilities?.includes(h));
   if(missing.length){Object.assign(row,{status:'BLOCKED',reason:'Missing approved controller/companion checks: '+missing.join(', ')});await save(path,report);continue;}
   let session,context={},history=[],state={},restore;
   try{
+   Object.assign(row,{status:'RUNNING',started_at:new Date().toISOString(),turns:[]});await save(path,report);
    for(const f of spec.fixtures)oracle.productId(f);
    session=await adapter.createSession({scenario:row.id,repetition:row.repetition});
-   const prep=await adapter.prepareScenario?.({spec,session,oracle,client:adapter.client})||{};context=prep.context||{};state=prep.currentState||{};restore=prep.restore;
+   const prep=await adapter.prepareScenario?.({spec,repetition:row.repetition,session,oracle,client:adapter.client})||{};context=prep.context||{};state=prep.currentState||{};restore=prep.restore;
    const materialized=materializeScenario(spec,oracle,context);if(materialized.turns.length>spec.maxTurns)throw Error('SCENARIO_TURN_LIMIT');
    Object.assign(row,{status:'RUNNING',started_at:new Date().toISOString(),session_correlation:createHash('sha256').update(String(session.correlation||session.sid||randomUUID())).digest('hex').slice(0,16),turns:[],initial_state:redact(state)});await save(path,report);
    for(let t=0;t<materialized.turns.length;t++){
-    await adapter.beforeTurn?.({spec,session,oracle,context,turn:t+1,previous:row.turns.at(-1)});
+    await adapter.beforeTurn?.({spec,repetition:row.repetition,session,oracle,context,turn:t+1,previous:row.turns.at(-1)});
     const message=materialized.turns[t];const turn={number:t+1,message,events:[]};row.turns.push(turn);
-    const result=await runTurn({message,history,currentState:state,session,client:adapter.client,ledger,modelTransport,system,scenario:row.id,repetition:row.repetition,turn:t+1,onEvent:async event=>{turn.events.push(redact(event));await save(path,report);}});
+    const result=await runTurn({message,history,currentState:state,session,client:adapter.client,ledger,modelTransport,system,scenario:row.id,repetition:row.repetition,turn:t+1,beforeModel:adapter.assertRequestWindow,onEvent:async event=>{turn.events.push(redact(event));await save(path,report);}});
     state=result.currentState;Object.assign(turn,{response:result.message,iterations:result.iterations,error:result.error});
     history.push({user:message,assistant:result.message||'Turn did not complete; do not infer success.'});
     if(result.error)break;
@@ -179,16 +188,16 @@ export async function runSuite({oracle,adapter,modelTransport,outputDir,approval
    const extra=await adapter.assertScenario?.({spec,run:row,session,oracle,context,currentState:state})||[];row.checks.push(...extra);
    if(spec.hooks.length&&!extra.length)row.checks.push(check('companion_evidence_supplied',false,'Controller hooks require scenario-specific evidence assertions.'));
    row.status=row.checks.some(c=>!c.pass)?'FAILED':'PENDING_REVIEW';
-  }catch(e){const suspension=adapter.getSuspension?.()||e.suspension;if(suspension){report.suspension=suspension;row.status='BLOCKED';row.reason='PROVIDER_RATE_LIMITED';stop=true;}else{row.status=/^(BUDGET_|MODEL_USAGE_|MISSING_OR_UNEXPECTED_USAGE|PROVIDER_BOUND|INPUT_BOUND)/.test(e.message)?'BLOCKED':'FAILED';row.reason=e.message;stop=row.status==='BLOCKED';}}
+  }catch(e){const suspension=adapter.getSuspension?.()||e.suspension;if(suspension){report.suspension=suspension;row.status='BLOCKED';row.reason='PROVIDER_RATE_LIMITED';stop=true;}else{row.status=/^(EVALUATION_DEADLINE_REACHED|BUDGET_|MODEL_USAGE_|MISSING_OR_UNEXPECTED_USAGE|PROVIDER_BOUND|INPUT_BOUND)/.test(e.message)?'BLOCKED':'FAILED';row.reason=e.message;stop=row.status==='BLOCKED'||e.message==='EVALUATION_DEADLINE_REACHED';}}
   finally{
    const cleanupErrors=[];
-   if(report.suspension){row.cleanup_pending=true;row.restoration_pending=true;if(session)await writeFile(join(outputDir,'suspended-session.local.json'),JSON.stringify({scenario:row.id,repetition:row.repetition,session,reason:'PROVIDER_RATE_LIMITED'},null,2),{mode:0o600});}
+   if(report.suspension||row.reason==='EVALUATION_DEADLINE_REACHED'){row.cleanup_pending=true;row.restoration_pending=true;if(session)await writeFile(join(outputDir,'suspended-session.local.json'),JSON.stringify({scenario:row.id,repetition:row.repetition,session,reason:row.reason},null,2),{mode:0o600});}
    else {
    try{if(restore)await restore();}catch(e){cleanupErrors.push('RESTORE:'+e.message);}
    try{if(state.mutation_outcome_unknown)throw Error('CART_OUTCOME_UNKNOWN_OPERATOR_RECOVERY_REQUIRED');await adapter.cleanup?.({spec,session,oracle,client:adapter.client});}catch(e){cleanupErrors.push('CLEANUP:'+e.message);}
    if(cleanupErrors.length){row.status='FAILED';row.cleanup_error=cleanupErrors.join('; ');stop=true;}
    }
-   if(adapter.getSuspension?.()){report.suspension=adapter.getSuspension();row.status='BLOCKED';row.reason='PROVIDER_RATE_LIMITED';row.cleanup_pending=true;row.restoration_pending=true;stop=true;if(session)await writeFile(join(outputDir,'suspended-session.local.json'),JSON.stringify({scenario:row.id,repetition:row.repetition,session,reason:'PROVIDER_RATE_LIMITED'},null,2),{mode:0o600});}
+   if(adapter.getSuspension?.()){report.suspension=adapter.getSuspension();row.status='BLOCKED';row.reason='PROVIDER_RATE_LIMITED';row.cleanup_pending=true;row.restoration_pending=true;stop=true;if(session)await writeFile(join(outputDir,'suspended-session.local.json'),JSON.stringify({scenario:row.id,repetition:row.repetition,session,reason:row.reason},null,2),{mode:0o600});}
    row.stopped_at=new Date().toISOString();await save(path,report);
   }
   if(stop)break;
@@ -200,6 +209,7 @@ export async function runSuite({oracle,adapter,modelTransport,outputDir,approval
   row.cost={model_calls:calls.length,input_tokens:settled.reduce((n,r)=>n+r.usage.input_tokens,0),output_tokens:settled.reduce((n,r)=>n+r.usage.output_tokens,0),confirmed_usd:dollars(settled.reduce((n,r)=>n+r.actualNanoUsd,0)),reserved_unknown_usd:dollars(calls.filter(r=>r.status!=='settled').reduce((n,r)=>n+r.reserveNanoUsd,0))};
  }
  applyReviews(report,reviewResults);summarizeReport(report);
- report.selected_summary=summarizeSelection(report.runs,selectedIds);
+ if(report.deadline_reached)finalizeDeadline(report,{now:now()});
+ report.selected_summary=summarizeSlots(report.runs,selectedSlots);
  report.updated_at=new Date().toISOString();await save(path,report);return report;
 }

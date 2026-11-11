@@ -1,42 +1,36 @@
-# Agent Shopping Readiness Scorecard
+# Armans.AI shopping assistant — client review scorecard
 
-**FOR CLAUDE REVIEW — 11 November 2026 — Gate 6 pending the revised critical-only evaluation; not passed.**
+**11 November 2026 · Development candidate · Evaluation pending**
 
-Store: Karachi Kicks SupportOps Lab. Synthetic catalogue on a real Shopify development store; no production client, orders, payments or customer-data handling.
+An AI shopping assistant connected to a real Shopify development store with synthetic products. This is not a production customer deployment.
 
-| Evidence | Result |
+| Area | Verified evidence |
 |---|---|
-| Seeded catalogue | 318 products / 3,266 variants; 300 eligible products / 3,248 eligible variants |
-| Collections and discounts | 15 collections and four discounts verified |
-| Idempotent seed rerun | 318 skipped unchanged; zero Shopify Admin mutation requests |
-| Original catalogue | All 18 products / 27 variants unchanged |
-| Teardown preview | 318 owned products selected; 18 originals refused; zero deletions |
-| Deterministic code tests | 176/176 passed on 11 November; prior Windows simulation focused checks 34/34 passed |
-| Runtime readiness | Local 11/11 baseline + 8/8 inspection; Windows 10/10 passed |
-| Live read-only commerce | 3/3 catalogue/search/lookup smoke checks passed |
-| Runtime least privilege | Only `read_products` and `read_publications`; customer/order access denied |
-| Browser cart smoke | p001 Black/10, quantity 1, USD 79: create/get/cancel/absence passed |
-| First load attempt, 10 November | **Failed: 1/20 passed**; 19 search business-postcondition failures; no HTTP/tool errors or throttles |
-| Load recovery, 11 November | All 20 old carts confirmed absent; 25/25 diagnostic searches passed |
-| Load retest | Stopped after 76/80 requests: all 20 search/create/cancel acknowledgements passed; 14 cart absences verified, six pending |
-| Retest outcome | 14 full sessions passed, two failed verification reads, four incomplete; upstream HTTP 429 / `RATE_LIMITED` |
-| Recovery after cooldown | First of six absence reads returned HTTP 429 at 13:00:51.304 UTC; other five NOT_RUN; all six absences remain unconfirmed |
-| Latest provider cooldown | Recorded 3550s; owner now forbids store requests before 19:15 PKT on 11 November |
-| Revised selected evaluation | **0/12 attempted**; S05/S19/S20/S21 ×3 only; other 63 out of scope |
-| Safety-critical S05/S19/S20/S21 | Not run live; earliest start19:15 PKT, five iterations, ten-second pacing |
-| Model spend | USD 0.0000141 transport smoke; funded stop USD 1.90; owner ceiling USD 10 |
-| Candidate source deployment | None; only the authorized Cloudflare credential change |
+| Catalogue | 318 seeded products, 3,266 variants, 15 collections and four discounts |
+| Existing data protection | Original 18 products / 27 variants unchanged; repeat seeding made zero Admin mutations |
+| Access control | Separate runtime app has only `read_products` and `read_publications`; customer/order access denied |
+| Shopping workflow | One browser cart completed create, read, cancel and verified absence; no purchase or payment |
+| Code checks | 200/200 deterministic tests passed at the recorded checkpoint |
+| Live load evidence | First attempt passed 1/20 sessions; cause of 19 search failures remains unknown. Retest passed all 20 search/create/cancel acknowledgements, then throttled; 14 absences verified, six unconfirmed |
+| AI evaluation | Results pending; no AI scenario acceptance claimed |
+| Recorded model cost | USD 0.0000141 transport smoke; USD 1.90 funded stop within USD 10 owner ceiling |
 
-The earlier load failure remains part of the evidence. Its historical cause is unproven; a later pass must not erase it. No functional search fix or production-reliability claim is made from the successful diagnostics.
+## What remains to be demonstrated
 
-Revised owner scope: run only S05, S19, S20 and S21, three repetitions each (12 attempts), no earlier than 19:15 PKT on 11 November. Use five iterations and ten-second shared pacing; stop at the first 429. Do not run the other 63 attempts or another load test.
+The current evaluation plan has **33 attempt slots**: four safety-critical scenarios repeated three times, then the other 21 scenarios once. It uses five agent iterations per turn and ten-second request spacing. On HTTP 429, it pauses for the provider's `Retry-After` plus 15 minutes. The cutoff is **12 November 2026, 18:00 PKT**. This does not complete the original 75-attempt evaluation.
 
-The six old cart absence checks are removed as a prerequisite. Record: **cancellation acknowledged, absence unconfirmed; carts expire**. No expiry or absence is claimed as independently verified. Do not read or cancel those six carts again for this run.
+| Final result — awaiting evidence | Status |
+|---|---|
+| Attempted / 33 | Pending |
+| Mechanical successes / failures / not run | Pending |
+| Safety-critical repetitions / 12 | Pending |
+| Human transcript acceptance | Pending review |
+| Final model cost and restoration checks | Pending |
 
-All 176 offline code tests passed, including the restricted launch policy. Mechanical success remains PENDING_REVIEW until human acceptance. The critical subset cannot establish full 75-case acceptance. No merge, production deployment, authentication change, order or payment is authorized. PR #1 remains open.
+## Production limitations
 
-UCP merchant requests currently use anonymous access; the isolated Shopify Admin credential is a separate authentication path. The three-second evaluator spacing is a precaution, not a merchant-quota guarantee.
+Anonymous UCP access was throttled during 20 overlapping sessions with serialized HTTP requests. Authenticated agent access is required before production; it has not been implemented, and development-store eligibility is unconfirmed. Cancellation was acknowledged for six carts whose absence remains unconfirmed; expiry is not verified.
 
-The live load finding is **anonymous UCP throttled during the 20-overlapping-session test**. HTTP requests were serialized, not 20 simultaneous network calls. This remains an unresolved production risk; a further load pass is not a criterion to rerun under the revised scope. Authenticated agent access is required before production and has not been configured or proven.
+Orders, payments, customer handling, production capacity and AI-platform listing are not proven. Production session-state configuration is also incomplete. Gate 6 has not passed. No merge or production deployment is authorized.
 
-[Final read-only recovery evidence](sdd/evidence/load-six-absence-after-cooldown-2026-11-11.json): one read, zero mutations and zero model calls. Source checkpoint `3538249ea82e0726086be8c247df76b8ebc0ab34`. No new authentication configuration was applied.
+See [technical evidence](sdd/GATE-6-REPORT.md). SupportOps remains unchanged. Final review must retain failures and unfinished tests.

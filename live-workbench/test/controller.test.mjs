@@ -37,9 +37,9 @@ test('all four mutations use fixed types and required turns; model values cannot
   await c.beforeTurn({spec:sp,session:s,turn,context:{target:'wrong-store'},model_arguments:{price:1}});assert.equal(calls[0].type,type);assert.deepEqual(Object.keys(calls[0]).sort(),['action','journal_token','seed_sha256','store','type']);await prep.restore();
  }
 });
-test('unknown apply is never retried and its restoration is attempted on cleanup',async()=>{
+test('unknown apply is never retried or restored without reconciliation',async()=>{
  const calls=[];const c=createController({oracle,client},{runSimulation:async r=>{calls.push(r);if(r.action==='apply')throw Error('UPSTREAM_UNKNOWN');return receipt(r);}}),s=session(),sp=spec('S16','stock_zero_before_turn2');
- const prep=await c.prepareScenario({spec:sp,session:s});await assert.rejects(()=>c.beforeTurn({spec:sp,session:s,turn:2}),/UPSTREAM_UNKNOWN/);await assert.rejects(()=>c.beforeTurn({spec:sp,session:s,turn:2}),/SIMULATION_ALREADY_ATTEMPTED/);await prep.restore();assert.deepEqual(calls.map(r=>r.action),['apply','restore']);
+ const prep=await c.prepareScenario({spec:sp,session:s});await assert.rejects(()=>c.beforeTurn({spec:sp,session:s,turn:2}),/UPSTREAM_UNKNOWN/);await assert.rejects(()=>c.beforeTurn({spec:sp,session:s,turn:2}),/SIMULATION_ALREADY_ATTEMPTED/);await assert.rejects(()=>prep.restore(),/SIMULATION_OUTCOME_REQUIRES_RECONCILIATION/);assert.deepEqual(calls.map(r=>r.action),['apply']);
 });
 test('conflicting restoration is surfaced and never reported restored',async()=>{
  const c=createController({oracle,client},{runSimulation:async r=>{if(r.action==='restore')throw Error('RESTORE_REFUSED_CONCURRENT_CHANGE');return receipt(r);}}),s=session(),sp=spec('S18','unpublish_before_turn2');
@@ -107,4 +107,26 @@ test('controller child shares manifest lock through auth and simulation; overlap
   let authenticated=0,mutations=0;const deps={loadManifest:async()=>({store:STORE,seed_sha256:HASH,completed_at:'2026-11-10'}),adminFactory:async()=>{authenticated++;return{};},simulate:async()=>{mutations++;entered();await new Promise(r=>{release=r;});return {type:'publication',phase:'applied',resource_id:'gid://shopify/Product/1',before:{publications:{one:true}},after:{publications:{one:false}},guard:'snapshot'};}};
   const first=executeChild(request,config,deps);await wait;await assert.rejects(()=>executeChild(request,config,deps),/MANIFEST_LOCKED/);assert.equal(authenticated,1);assert.equal(mutations,1);release();await first;
  }finally{await rm(dir,{recursive:true,force:true});}
+});
+
+test('durable applied simulation is restored after process replacement without applying again',async()=>{
+ const dir=await mkdtemp(join(tmpdir(),'controller-recovery-'));const controllerRecoveryPath=join(dir,'recovery.json'),calls=[];
+ try{const dependencies={runSimulation:async r=>{calls.push(r);return receipt(r);}},s=session('durable'),sp=spec('S17','price_change_before_turn2');
+ const first=createController({oracle,client,controllerRecoveryPath},dependencies);await first.prepareScenario({spec:sp,session:s,repetition:2});await first.beforeTurn({spec:sp,session:s,turn:2});
+ const second=createController({oracle,client,controllerRecoveryPath},dependencies);await second.recover('S17:2');await second.recover('S17:2');assert.deepEqual(calls.map(r=>r.action),['apply','restore']);
+ }finally{await rm(dir,{recursive:true,force:true});}
+});
+test('restoration throttle preserves hint and stops before further recovery calls',async()=>{
+ const calls=[],c=createController({oracle,client},{runSimulation:async r=>{calls.push(r);if(r.action==='restore')throw Object.assign(Error('RATE_LIMIT_STOP'),{retry_after_seconds:77});return receipt(r);}}),s=session('throttled'),sp=spec('S17','price_change_before_turn2');
+ const prep=await c.prepareScenario({spec:sp,session:s});await c.beforeTurn({spec:sp,session:s,turn:2});await assert.rejects(prep.restore,e=>e.code==='RATE_LIMITED'&&e.retry_after_seconds===77);await assert.rejects(prep.restore,/SIMULATION_OUTCOME_REQUIRES_RECONCILIATION/);assert.equal(calls.length,2);
+});
+
+test('child observes persisted cooldown and deadline before auth and each Admin query',async()=>{
+ const request={action:'restore',type:'price',journal_token:'b'.repeat(32),seed_sha256:HASH,store:STORE};
+ const config={owner_approved:true,store:STORE,seed_sha256:HASH,seed_manifest_path:join(tmpdir(),'manifest.json'),journal_dir:tmpdir(),execution_deadline:'2026-11-12T13:00:00Z',request_not_before:'2026-11-11T14:15:00Z'};
+ let auth=0,queries=0,clock=Date.parse('2026-11-11T14:00:00Z');
+ const deps={now:()=>clock,withManifestLock:async(p,fn)=>fn({manifestFile:p}),loadManifest:async()=>({store:STORE,seed_sha256:HASH,completed_at:'yes'}),adminFactory:async()=>{auth++;return {query:async()=>{queries++;clock=Date.parse(config.execution_deadline);}};},simulate:async admin=>{await admin.query('first');await admin.query('forbidden');}};
+ await assert.rejects(()=>executeChild(request,config,deps),/PROVIDER_COOLDOWN_ACTIVE/);assert.equal(auth,0);
+ clock=Date.parse('2026-11-12T12:59:00Z');await assert.rejects(()=>executeChild(request,config,deps),/EXECUTION_DEADLINE_REACHED/);assert.equal(auth,1);assert.equal(queries,1);
+ await assert.rejects(()=>executeChild(request,config,deps),/EXECUTION_DEADLINE_REACHED/);assert.equal(auth,1);
 });

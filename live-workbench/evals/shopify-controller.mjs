@@ -1,7 +1,7 @@
 // Owner-controlled evaluation hooks. Shopify write credentials exist only in a
 // short-lived child process. Nothing here is a browser or model-callable tool.
 import {spawn} from 'node:child_process';
-import {readFile,mkdir} from 'node:fs/promises';
+import {readFile,mkdir,writeFile,rename} from 'node:fs/promises';
 import {randomUUID} from 'node:crypto';
 import {dirname,resolve,isAbsolute,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -14,6 +14,8 @@ const safeCode=e=>String(e?.code||e?.message||'CONTROLLER_FAILED').match(/^[A-Z]
 const check=(name,pass,detail)=>({name,pass:Boolean(pass),...(detail?{detail}:{})});
 const fingerprint=cart=>JSON.stringify({currency:cart?.currency,lines:(cart?.line_items||[]).map(l=>({id:l.item?.id,quantity:l.quantity,price:l.item?.price})).sort((a,b)=>a.id.localeCompare(b.id)),totals:cart?.totals||[],discounts:cart?.discounts||{}});
 function safeError(code){return new Error(code);}
+const throttled=e=>/^RATE_LIMIT|^PROVIDER_RATE_LIMITED/.test(e?.code||e?.message||'');
+function carryError(e){const out=safeError(safeCode(e));if(throttled(e)){out.code='RATE_LIMITED';const value=e.retry_after_seconds??Number(String(e.message).match(/retry_after=(\d+)/)?.[1]);if(Number.isInteger(value)&&value>=0&&value<=86400)out.retry_after_seconds=value;}return out;}
 function projectedError(result){
  let value=result?.body;
  if(value?.result?.structuredContent)value=value.result.structuredContent;
@@ -45,7 +47,7 @@ export function createSimulationRunner(configPath,{spawnImpl=spawn,timeoutMs=120
    // Do not forward child stderr: upstream errors could contain sensitive values.
    child.stderr.on('data',()=>{});
    child.on('close',code=>{
-    if(code!==0){let parsed;try{parsed=JSON.parse(out);}catch{}finish(safeError(parsed?.error&&/^[A-Z][A-Z0-9_]{2,100}$/.test(parsed.error)?parsed.error:'CONTROLLER_CHILD_FAILED'));return;}
+    if(code!==0){let parsed;try{parsed=JSON.parse(out);}catch{}const error=safeError(parsed?.error&&/^[A-Z][A-Z0-9_]{2,100}$/.test(parsed.error)?parsed.error:'CONTROLLER_CHILD_FAILED');if(parsed?.retry_after_seconds!==undefined)error.retry_after_seconds=parsed.retry_after_seconds;finish(carryError(error));return;}
     let parsed;try{parsed=JSON.parse(out);}catch{finish(safeError('CONTROLLER_CHILD_INVALID_RESPONSE'));return;}
     if(parsed?.type!==request.type||parsed?.phase!==(request.action==='apply'?'applied':'restored')||parsed?.journal_token!==request.journal_token){finish(safeError('CONTROLLER_CHILD_RECEIPT_MISMATCH'));return;}
     finish(null,parsed);
@@ -68,30 +70,40 @@ function receipt(journal,request){
  output.restored_verified=journal.phase==='restored';return output;
 }
 /** Exported for deterministic child-boundary tests; called only by --child. */
-export async function executeChild(request,config,{adminFactory,loadManifest,simulate,withManifestLock}={}){
+export async function executeChild(request,config,{adminFactory,loadManifest,simulate,withManifestLock,now=Date.now}={}){
  if(config?.owner_approved!==true||config.store!==STORE||request.store!==STORE||config.seed_sha256!==request.seed_sha256||!TYPES.has(request.type)||!['apply','restore'].includes(request.action)||!/^[a-f0-9]{32}$/.test(request.journal_token||''))throw safeError('CONTROLLER_APPROVAL_MISMATCH');
  if(!isAbsolute(config.seed_manifest_path||'')||!isAbsolute(config.journal_dir||''))throw safeError('CONTROLLER_PATH_CONFIGURATION');
  if(!adminFactory){({adminFromEnvironment:adminFactory}=await import('../catalogue/admin.mjs'));}
  if(!loadManifest){({loadManifest}=await import('../catalogue/seed.mjs'));}
  if(!simulate){({simulate}=await import('../simulate/scenarios.mjs'));}
  if(!withManifestLock){({withManifestLock}=await import('../catalogue/process-lock.mjs'));}
+ const checkWindow=()=>{if(config.execution_deadline!==undefined&&(!Number.isFinite(Date.parse(config.execution_deadline))||now()>=Date.parse(config.execution_deadline)))throw safeError('EXECUTION_DEADLINE_REACHED');if(config.request_not_before!==undefined&&(!Number.isFinite(Date.parse(config.request_not_before))||now()<Date.parse(config.request_not_before)))throw safeError('PROVIDER_COOLDOWN_ACTIVE');};
+ checkWindow();
  return withManifestLock(config.seed_manifest_path,async lock=>{
+ checkWindow();
  const manifest=await loadManifest(lock.manifestFile);
  if(manifest.store!==STORE||manifest.seed_sha256!==request.seed_sha256||!manifest.completed_at||manifest.pending)throw safeError('COMPLETED_MATCHING_SEED_REQUIRED');
  const secret=config.seed||{};
  // Explicit object, not process.env: no inherited runtime credential fallback.
+ checkWindow();
  const admin=await adminFactory({SHOPIFY_STORE:STORE,...(secret.access_token?{SEED_ACCESS_TOKEN:secret.access_token}:{}),...(secret.client_id?{SEED_CLIENT_ID:secret.client_id}:{}),...(secret.client_secret?{SEED_CLIENT_SECRET:secret.client_secret}:{})});
+ if(typeof admin.fetcher==='function'){const fetcher=admin.fetcher.bind(admin);admin.fetcher=async(...args)=>{checkWindow();return fetcher(...args);};}
+ if(typeof admin.query==='function'){const query=admin.query.bind(admin);admin.query=async(...args)=>{checkWindow();return query(...args);};}
+ checkWindow();
  await mkdir(config.journal_dir,{recursive:true,mode:0o700});
  const journal=await simulate(admin,request.type,manifest,{restore:request.action==='restore',journalFile:join(config.journal_dir,`${request.type}-${request.journal_token}.json`),manifestFile:lock.manifestFile});
  return receipt(journal,request);
  });
 }
 
-export function createController({oracle,client,createSession,rawRequest,headersForSession,controllerConfigPath,getPrivateCartId}={},dependencies={}){
+export function createController({oracle,client,createSession,rawRequest,headersForSession,controllerConfigPath,controllerRecoveryPath,getPrivateCartId}={},dependencies={}){
  if(oracle?.seed?.store!==STORE||typeof client?.callTool!=='function')throw safeError('CONTROLLER_RUNTIME_CONFIGURATION');
  const runner=dependencies.runSimulation||(controllerConfigPath?createSimulationRunner(controllerConfigPath):null);
  const privateResolver=dependencies.resolvePrivateCartId||getPrivateCartId;
- const states=new Map();
+ const states=new Map();let durableLoaded=false;
+ async function loadDurable(){if(durableLoaded)return;durableLoaded=true;if(!controllerRecoveryPath)return;try{const data=JSON.parse(await readFile(controllerRecoveryPath,'utf8'));if(data.store!==STORE||data.seed_sha256!==oracle.digest)throw safeError('CONTROLLER_RECOVERY_MISMATCH');for(const state of data.cases||[])states.set(state.ownerSid,state);}catch(e){if(e.code!=='ENOENT')throw e;}}
+ async function persist(){if(!controllerRecoveryPath)return;await mkdir(dirname(controllerRecoveryPath),{recursive:true,mode:0o700});const tmp=controllerRecoveryPath+'.tmp';await writeFile(tmp,JSON.stringify({store:STORE,seed_sha256:oracle.digest,cases:[...states.values()]},null,2),{mode:0o600});await rename(tmp,controllerRecoveryPath);}
+
  const simulationCapabilities=runner?Object.keys(HOOKS):[];
  const crossAvailable=typeof privateResolver==='function'&&typeof createSession==='function'&&typeof rawRequest==='function'&&typeof headersForSession==='function';
  const available=[...simulationCapabilities,...(crossAvailable?['setup_cross_session_cart','cross_session_companion_checks']:[])];
@@ -103,16 +115,17 @@ export function createController({oracle,client,createSession,rawRequest,headers
    const cancel=await client.callTool('cancel_cart',{},state.victim);if(cancel.error)throw safeError('VICTIM_CART_CLEANUP_UNCONFIRMED');
    const verify=await client.callTool('get_cart',{},state.victim);if(verify.error||!['no_current_cart','not_found'].includes(verify.status))throw safeError('VICTIM_CART_CLEANUP_UNCONFIRMED');
   }
-  state.victimCleaned=true;
+  state.victimCleaned=true;await persist();
  }
- async function restoreState(state){
+ async function restoreState(state,{includeVictim=true}={}){
   const failures=[];
   for(const pending of [...state.simulations].reverse()){
    if(pending.restored)continue;
-   try{const restored=await runner({...pending.request,action:'restore'});if(restored.phase!=='restored'||restored.restored_verified!==true)throw safeError('RESTORE_UNCONFIRMED');pending.restored=true;state.evidence.push(check(`${pending.request.type}_original_snapshot_restored`,true));}
-   catch(e){failures.push(safeCode(e));}
+   if(pending.phase&&pending.phase!=='applied')throw safeError('SIMULATION_OUTCOME_REQUIRES_RECONCILIATION');
+   try{pending.phase='restoring';await persist();const restored=await runner({...pending.request,action:'restore'});if(restored.phase!=='restored'||restored.restored_verified!==true)throw safeError('RESTORE_UNCONFIRMED');pending.restored=true;pending.phase='restored';await persist();state.evidence.push(check(`${pending.request.type}_original_snapshot_restored`,true));}
+   catch(e){if(throttled(e))throw carryError(e);failures.push(safeCode(e));}
   }
-  try{await cleanupVictim(state);}catch(e){failures.push(safeCode(e));}
+  try{if(includeVictim)await cleanupVictim(state);}catch(e){if(throttled(e))throw carryError(e);failures.push(safeCode(e));}
   if(failures.length)throw safeError('CONTROLLER_RESTORATION_REQUIRED_'+failures.join('_'));
  }
  async function verifyVictim(state){
@@ -146,14 +159,15 @@ export function createController({oracle,client,createSession,rawRequest,headers
  }
  return {
   capabilities:available,
-  async prepareScenario({spec,session}){
+  async prepareScenario({spec,session,repetition=1}){
+   await loadDurable();
    if(states.has(session.sid))throw safeError('CONTROLLER_SESSION_ALREADY_PREPARED');
    if(spec.hooks.some(h=>capabilities.includes(h)&&!available.includes(h)))throw safeError('CONTROLLER_CAPABILITY_UNAVAILABLE');
-   const state={specId:spec.id,evidence:[],simulations:[],victim:null};states.set(session.sid,state);
+   const state={specId:spec.id,repetition,case_id:spec.id+':'+repetition,ownerSid:session.sid,evidence:[],simulations:[],victim:null};states.set(session.sid,state);await persist();
    try{
     const context={};
     if(spec.hooks.includes('setup_cross_session_cart')){
-     state.victim=await createSession({scenario:'S21-victim'});
+     state.victim=await createSession({scenario:'S21-victim'});await persist();
      if(state.victim.sid===session.sid||state.victim.store!==STORE)throw safeError('VICTIM_SESSION_NOT_ISOLATED');
      const variant=oracle.variant('trail_black_10',{Size:'10',Colour:'Black'});state.victimVariant=variant.id;
      const cart=await client.callTool('create_cart',{line_items:[{variant_id:variant.id,quantity:1}]},state.victim);
@@ -167,7 +181,7 @@ export function createController({oracle,client,createSession,rawRequest,headers
      if(spec.hooks.includes('cross_session_companion_checks'))await companions(state,session);
     }
     return {context,restore:()=>restoreState(state)};
-   }catch(e){try{await restoreState(state);}catch{throw safeError('CONTROLLER_PREPARE_AND_RESTORATION_FAILED');}throw safeError(safeCode(e));}
+   }catch(e){if(throttled(e))throw carryError(e);try{await restoreState(state);}catch(restoreError){if(throttled(restoreError))throw carryError(restoreError);throw safeError('CONTROLLER_PREPARE_AND_RESTORATION_FAILED');}throw carryError(e);}
   },
   async beforeTurn({spec,session,turn}){
    const state=states.get(session.sid);if(!state)throw safeError('CONTROLLER_NOT_PREPARED');
@@ -176,9 +190,9 @@ export function createController({oracle,client,createSession,rawRequest,headers
     const request={action:'apply',type:setting.type,journal_token:randomUUID().replaceAll('-',''),store:STORE,seed_sha256:oracle.digest};
     // Register restoration BEFORE sending any write. Unknown apply outcomes
     // retain their journal and restoration is attempted, never blindly retried.
-    const pending={request,restored:false};state.simulations.push(pending);
+    const pending={request,restored:false,phase:'applying'};state.simulations.push(pending);await persist();
     pending.receipt=await runner(request);
-    if(pending.receipt.phase!=='applied')throw safeError('SIMULATION_APPLY_UNCONFIRMED');
+    if(pending.receipt.phase!=='applied')throw safeError('SIMULATION_APPLY_UNCONFIRMED');pending.phase='applied';await persist();
     state.evidence.push(check(`${setting.type}_simulation_applied`,true,pending.receipt.guard));
    }
   },
@@ -201,7 +215,8 @@ export function createController({oracle,client,createSession,rawRequest,headers
    }
    return checks;
   },
-  async cleanup({session}){const state=states.get(session.sid);if(!state)return;await restoreState(state);states.delete(session.sid);}
+  async recover(caseId){await loadDurable();const matching=[...states.values()].filter(s=>s.case_id===caseId);for(const state of matching){await restoreState(state,{includeVictim:false});await persist();}return {restored:true,cases:matching.length};},
+  async cleanup({session}){const state=states.get(session.sid);if(!state)return;await restoreState(state);states.delete(session.sid);await persist();}
  };
 }
 
@@ -210,4 +225,4 @@ async function childMain(){
  const request=JSON.parse(input),config=JSON.parse(await readFile(process.argv[3],'utf8'));
  const result=await executeChild(request,config);process.stdout.write(JSON.stringify(result));
 }
-if(process.argv[1]&&resolve(process.argv[1])===FILE&&process.argv[2]==='--child')childMain().catch(e=>{process.stdout.write(JSON.stringify({error:safeCode(e)}));process.exitCode=1;});
+if(process.argv[1]&&resolve(process.argv[1])===FILE&&process.argv[2]==='--child')childMain().catch(e=>{process.stdout.write(JSON.stringify({error:safeCode(e),...(carryError(e).retry_after_seconds!==undefined?{retry_after_seconds:carryError(e).retry_after_seconds}:{})}));process.exitCode=1;});

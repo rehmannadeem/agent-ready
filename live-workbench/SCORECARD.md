@@ -2,7 +2,9 @@
 
 **11 November 2026 · Development test run complete · HOLD · FOR CLAUDE REVIEW**
 
-This project connects a shopping assistant to a real Shopify development store using synthetic products. **AI behaviour not yet assessed because of a test-tool defect.** The original run counts below describe the test harness outcomes.
+This project connects a shopping assistant to a real Shopify development store using synthetic products. The original run conclusion was **“AI behaviour not yet assessed because of a test-tool defect.”** The counts below preserve those harness outcomes.
+
+The approved safety rerun completed 12 attempts. Nine cleared mechanical checks and await human review. Three excluded-product attempts stopped at the detail check before reaching the model. Rerun spend was USD 0.022722. Gate 6 remains on hold.
 
 | Result | Recorded outcome |
 |---|---|
@@ -23,6 +25,6 @@ The run used five iterations per turn and ten-second shared pacing. Recorded out
 
 Earlier load testing failed 19/20 search checks for an unresolved reason. Its retest acknowledged all 20 cancellations but throttled before six absence checks finished. Anonymous UCP access throttled at 20 concurrent sessions, with serialized network requests. Authenticated agent access remains a production requirement, unimplemented; development-store eligibility is unconfirmed.
 
-**Decision: hold at Gate 6.** Review the offline fixes and test results before authorizing the 12 safety attempts. Payments, orders, production customer handling and production capacity remain unproven. No merge or deployment has occurred for this candidate.
+**Decision: hold at Gate 6.** Review the nine transcripts and resolve the excluded-product detail check. Payments, orders, production customer handling and production capacity remain unproven. No merge or deployment has occurred for this candidate.
 
 [Technical evidence](sdd/GATE-6-REPORT.md) · [Beginner guide](LEARN.md)

@@ -1,6 +1,6 @@
-# Development candidate stop report — Gate 6 blocked
+# Development candidate report — Gate 6 pending
 
-11 November 2026 · Asia/Karachi · FOR CLAUDE REVIEW · BLOCKED BY PROVIDER COOLDOWN
+11 November 2026 · Asia/Karachi · FOR CLAUDE REVIEW · CLEANUP AND EVALUATION PENDING
 
 ## 1. Summary
 
@@ -10,7 +10,7 @@ The first 20-session load attempt failed 19 search business checks. Its evidence
 
 ## 2. Stage and gate status
 
-Stages 1–2 were approved with the owner's six conditions; Stages 3–4 are recorded briefly. Stage 5 is implemented. Stage 6 is **blocked by provider cooldown; Gate 6 has not passed**. Stop at Gate 6: no merge, ship, production source deployment or iteration increase.
+Stages 1–2 were approved with the owner's six conditions; Stages 3–4 are recorded briefly. Stage 5 is implemented. Stage 6 remains **pending cleanup and evaluation; Gate 6 has not passed**. Stop at Gate 6: no merge, ship, production source deployment or iteration increase.
 
 ## 3. Changes and branch
 
@@ -33,7 +33,7 @@ Branch `feat/realistic-catalogue-20261110`; saved checkpoint [`014e40e2c7cfabd2f
 - [Recovery diagnostics](evidence/load-readonly-diagnosis-2026-11-11.json): 25/25 searches passed today; all 20 sessions from the **original** load had no cart.
 - [Load retest](evidence/load-retest-2026-11-11.json) preserves the original 80-request workload and exact assertions. All 20 searches, creations and cancellation acknowledgements passed. It stopped at `SUSTAINED_THROTTLE` after 76 requests: **14 full sessions passed, two verification reads failed and four sessions remained incomplete**. No business-check failure occurred; two upstream throttles occurred. Client HTTP p50/p95: 1,436/2,029 ms. These are end-to-end request measurements, not isolated Shopify latency.
 - Two subsequent read-only recovery checks did not establish all absences. The [second recovery](evidence/load-retest-cleanup-second-2026-11-11.json) confirmed 14 empty sessions, then returned HTTP 429 / `RATE_LIMITED`, `Retry-After: 2249`. **Six retest cart absences remain unconfirmed**, despite all 20 cancellation acknowledgements. This is not evidence that six carts are active; it is missing cleanup confirmation.
-- Evaluator pacing is now shared across ordinary and companion requests at 3,000 ms minimum spacing, with bounded Retry-After propagation. The 44 focused tests passed locally and on Windows. Full code suite: 172/172 passed. A persistent throttle stop blocks subsequent model/tool calls and restart until operator recovery; pending cleanup/restoration is recorded. No slower load or model suite was executed.
+- Evaluator pacing is now shared across ordinary and companion requests at 3,000 ms minimum spacing, with bounded Retry-After propagation. The 44 focused tests passed locally and on Windows. Full code suite: 173/173 passed after priority ordering; the earlier 172/172 result remains historical evidence. A persistent throttle stop blocks subsequent model/tool calls and restart until operator recovery; pending cleanup/restoration is recorded. No slower load or model suite was executed.
 - [Model transport smoke, execution 592](../evals/helper-smoke-evidence.json): one successful call. Full AI scenarios **0/75 attempted** at this checkpoint; no pass rate or safety-critical acceptance claim.
 
 ## 5. Constraints and observed issues
@@ -46,7 +46,7 @@ The historical load failure is **unexplained**: the first report did not record 
 
 [Shopify’s agent authentication and rate-limiting documentation](https://shopify.dev/docs/agents/profiles/auth-and-rate-limiting) states that merchant limits vary by tier and tool and can change; clients must honor `Retry-After`. No fixed numeric merchant quota is assumed. Three-second evaluator spacing reduces request pressure but does **not** guarantee avoidance of the provider’s limit.
 
-Current `src/commerce.mjs` UCP requests send Content-Type/Accept headers and use **anonymous UCP access**, which has the lowest documented limits. The separate read-only Shopify Admin credential does not authenticate those UCP requests. This is a remaining production limitation, not a reason to add customer/order scopes or alter the shared SupportOps app during this task. No UCP authentication or scope change was made.
+Current `src/commerce.mjs` UCP requests send Content-Type/Accept headers and use **anonymous UCP access**, which has the lowest documented limits. The separate read-only Shopify Admin credential does not authenticate those UCP requests. Authenticated agent access is required before production and has not been configured or proven. This does not require adding customer/order scopes or altering the shared SupportOps app during this task. No UCP authentication or scope change was made.
 
 Only Online Store publication is selected. Toronto inventory location has Shipping Off / zero rates; shipping settings were not changed. Runtime context is US/USD. Development-store orders, payments, production customer handling and AI-platform listing are outside the verified results.
 
@@ -58,20 +58,20 @@ The first suite remains 75 attempts at **five iterations**. Owner ceiling: **USD
 
 ## 7. Remaining work
 
-No further merchant or model requests are scheduled. The cooldown deadline is conservatively based on a remote clock reading after the response: recorded **12:23:00.893 UTC**, plus 2,249 seconds and a five-second safety margin gives **13:00:34.893 UTC / 18:00:34.893 PKT on 11 November 2026**. The original response timestamp was not captured, so this is a conservative earliest retry time, not a promised completion time.
+The recorded cooldown deadline is conservatively based on a remote clock reading after the response: recorded **12:23:00.893 UTC**, plus 2,249 seconds and a five-second safety margin gives **13:00:34.893 UTC / 18:00:34.893 PKT on 11 November 2026**. The original response timestamp was not captured, so this is a conservative earliest retry time, not a promised completion time.
 
-After the provider permits access, first verify absence for the six pending cart sessions using read-only recovery. Do not repeat their cancellation blindly. Complete bounded-load acceptance before starting the 75 first attempts, accounting for every model call and verifying simulation restoration. Review all transcripts against the observed merchant responses. Mechanical successes remain **PENDING_REVIEW** until human acceptance; a model or assistant self-score is not acceptance evidence. Preserve every first attempt and report NOT_RUN/BLOCKED cases explicitly.
+After the provider permits access, first verify absence for the six pending cart sessions using read-only recovery. Do not repeat their cancellation blindly. The owner has directed **no further load run**. Record the live finding as **anonymous UCP throttled during the 20-overlapping-session test**, with serialized HTTP requests rather than 20 simultaneous network calls. It remains an unresolved production risk, not a load criterion to rerun. Once the six absences are confirmed, execute the full 75 first attempts: S05, S19, S20 and S21 with all three repetitions first (12 attempts), then the remaining 63. Keep five iterations, shared 3,000 ms request spacing, the USD 10 owner cap and stricter USD 1.90 funded stop. Account for every model call and verify simulation restoration. These cleanup and evaluation outcomes remain pending. Review all transcripts against the observed merchant responses. Mechanical successes remain **PENDING_REVIEW** until human acceptance; a model or assistant self-score is not acceptance evidence. Preserve every first attempt and report NOT_RUN/BLOCKED cases explicitly.
 
 ## 8. Owner action
 
-No further Install click is required. Both apps are installed, and the owner authorized completion on 11 November. Execution is paused at the provider cooldown. Existing authorization remains; no new permission is needed for read-only cleanup after the cooldown. No automatic follow-up has been scheduled. Do not request changes to the shared SupportOps app. No merge, ship, production deployment, budget increase or iteration increase is authorized.
+No further Install click is required. Both apps are installed, and the owner authorized completion on 11 November. The revised owner scope authorizes six read-only absence checks after the provider cooldown, followed by the full 75-attempt suite with the safety-critical repetitions first. No further load run is authorized. Existing authorization remains; no new login, credential or permission is needed for that recovery. This report does not claim those steps have executed. Do not request changes to the shared SupportOps app. No merge, ship, production deployment, budget increase or iteration increase is authorized.
 
 ## 9. UPDATE OBSIDIAN
 
 Suggested note: `Agent-Ready Live — Project Log`. Exact existing vault filename is unverified; do not edit the vault automatically.
 
-`2026-11-11 — Gate 6 BLOCKED by provider cooldown. Seed318/3266,15collections,4discounts verified; zero-write rerun and baseline18/27 unchanged. First load1/20 passed; cause unknown. Retest20search/create/cancel acknowledgements passed,14absences verified,6pending; stopped76/80requests on upstream429. Retry-After2249s; earliest conservative retry18:00:34.893PKT; nothing scheduled. AI0/75, costUSD0.0000141, five iterations, fundedUSD1.90/ownerUSD10. PR1 open; no merge or source deployment.`
+`2026-11-11 — Gate 6 pending cleanup and evaluation. Seed318/3266,15collections,4discounts verified; zero-write rerun and baseline18/27 unchanged. First load1/20 passed; cause unknown. Retest20search/create/cancel acknowledgements passed,14absences verified,6pending; stopped76/80requests on upstream429. Retry-After2249s; earliest conservative retry18:00:34.893PKT. Revised scope: no further load; six read-only absence checks then75 attempts, critical12 first; outcomes pending. Anonymous UCP throttled with20overlapping sessions/serializedHTTP; authenticated agent access required before production. AI0/75, costUSD0.0000141, five iterations, fundedUSD1.90/ownerUSD10. PR1 open; no merge or source deployment.`
 
 ## 10. Gate 6 blockers
 
-Provider cooldown, six unconfirmed retest cart absences, bounded-load acceptance, all 75 scenario attempts, human transcript acceptance, safety-critical repetitions and simulation restoration remain outstanding. Gate 6 is not passed by seeding, a smoke test or deterministic tests alone. The production Wrangler configuration lacks the local evaluation's `SESSION_STATE` binding; this remains an unauthorized Gate 7 deployment blocker. Both failed load attempts are preserved. This stop report makes no full-suite or Gate 6 acceptance claim; any later continuation must append its own evidence without replacing these results.
+Six unconfirmed retest cart absences, all 75 scenario attempts, human transcript acceptance, safety-critical repetitions and simulation restoration remain outstanding. Honor the recorded provider cooldown before recovery. No further load run is in scope; anonymous UCP throttling remains an unresolved production risk and authenticated agent access is a production requirement. Gate 6 is not passed by seeding, a smoke test or deterministic tests alone. The production Wrangler configuration lacks the local evaluation's `SESSION_STATE` binding; this remains an unauthorized Gate 7 deployment blocker. Both failed load attempts are preserved. This stop report makes no full-suite or Gate 6 acceptance claim; any later continuation must append its own evidence without replacing these results.

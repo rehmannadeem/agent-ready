@@ -27,7 +27,7 @@
   "candidate": {
     "date": "2026-11-11",
     "branch": "feat/realistic-catalogue-20261110",
-    "status": "GATE6_BLOCKED_PROVIDER_COOLDOWN",
+    "status": "GATE6_PENDING_CLEANUP_AND_EVALUATION",
     "deployed": false,
     "merged": false,
     "gate2_approved": true,
@@ -39,7 +39,7 @@
     "model_evaluation_usd": 1.41e-05,
     "runtime_checks_passed": 11,
     "evidence": "sdd/GATE-6-REPORT.md",
-    "deterministic_tests_passed": 172,
+    "deterministic_tests_passed": 173,
     "syntax_files_passed": 32,
     "additional_private_runtime_checks_passed": 8,
     "seed_status": "VERIFIED_SEED_AND_IDEMPOTENT_RERUN",
@@ -58,7 +58,7 @@
     "runtime_order_access": "ACCESS_DENIED",
     "cloudflare_credentials_switched": true,
     "source_deployed": false,
-    "deterministic_tests_status": "172/172 passed on 2026-11-11; provider suspension and request pacing included",
+    "deterministic_tests_status": "173/173 passed on 2026-11-11 after priority ordering; previous 172/172 result retained as historical evidence",
     "source_checkpoint": "014e40e2c7cfabd2f7a366139bc08cb28e537c67",
     "browser_cart_smoke": "PASS: p001 Black/10 quantity1 USD79 create/get/cancel/verified absence; separate from75scenario suite",
     "credential_change_cloudflare_version": "1da0a93d-088b-4f40-8885-24629753a0e9",
@@ -138,10 +138,30 @@
     },
     "evaluation_pacing_ms": 3000,
     "evaluation_pacing_tests_passed": 44,
-    "current_full_unit_test_count": "Awaiting root final verification",
+    "current_full_unit_test_count": 173,
     "ucp_authentication": "Anonymous merchant UCP requests; isolated Admin credential is separate",
     "rate_limit_source": "https://shopify.dev/docs/agents/profiles/auth-and-rate-limiting",
     "rate_limit_qualification": "Merchant limits vary by tier/tool and may change; three-second spacing does not guarantee avoidance; honor provider Retry-After",
-    "provider_suspension_guard": "Implemented and tested; prevents automatic restart and further dispatch after live throttling"
+    "provider_suspension_guard": "Implemented and tested; prevents automatic restart and further dispatch after live throttling",
+    "load_scope": "No further load run by owner direction; preserve both attempts and unresolved production risk",
+    "load_finding": "Anonymous UCP throttled during 20-overlapping-session test; HTTP requests were serialized, not 20 simultaneous network calls",
+    "production_authenticated_agent_access": "REQUIRED_NOT_CONFIGURED_OR_PROVEN",
+    "evaluation_execution_plan": {
+      "status": "PENDING_READ_ONLY_CLEANUP",
+      "required_absence_checks": 6,
+      "total_first_attempts": 75,
+      "priority_scenarios": [
+        "S05",
+        "S19",
+        "S20",
+        "S21"
+      ],
+      "priority_repetitions_each": 3,
+      "priority_attempts": 12,
+      "remaining_attempts": 63,
+      "max_iterations": 5,
+      "request_spacing_ms": 3000,
+      "human_acceptance": "PENDING_REVIEW after mechanical success"
+    }
   }
 }

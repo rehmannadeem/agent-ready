@@ -2,7 +2,7 @@ import {readFile,mkdir,writeFile,rename} from 'node:fs/promises';
 import {join,isAbsolute,resolve} from 'node:path';
 import {randomUUID,createHash} from 'node:crypto';
 import {BUDGET,BudgetLedger,invokeBudgeted,dollars} from './budget.mjs';
-import {SCENARIOS,materializeScenario,suitePlan} from './scenarios.mjs';
+import {SCENARIOS,materializeScenario,suitePlan,prioritizeRuns} from './scenarios.mjs';
 import {TOOLS,validateTool} from '../src/commerce.mjs';
 import {applyReviews,recoverInterruptedRuns,summarizeReport} from './review.mjs';
 import {catalogReferenceForMemory,observationsForModel} from './model-context.mjs';
@@ -135,7 +135,7 @@ export function createSuiteLedger(approval){
  if(typeof funded!=='number'||!Number.isFinite(funded)||funded<=0||funded>10||!Number.isSafeInteger(funded*1_000_000_000))throw Error('FUNDED_LIMIT_REQUIRED');
  return new BudgetLedger(approval.budget_ledger_path,{evaluationRunId:approval.evaluation_run_id,fundedNanoUsd:funded*1_000_000_000});
 }
-export async function runSuite({oracle,adapter,modelTransport,outputDir,approval,system,only,reviewResults={}}){
+export async function runSuite({oracle,adapter,modelTransport,outputDir,approval,system,only,priority=[],reviewResults={}}){
  for(const k of ['owner_approved','gateway_tariff_verified','gateway_balance_confirmed','single_call_transport_verified','worker_preflight_passed','seed_verified'])if(approval?.[k]!==true)throw Error('PREFLIGHT_REQUIRED:'+k);
  if(approval.max_usd!==10||approval.max_iterations!==5||approval.model!==BUDGET.model)throw Error('APPROVED_BOUNDS_MISMATCH');
  if(typeof adapter.createSession!=='function'||typeof adapter.client?.callTool!=='function')throw Error('TRUSTED_SESSION_ADAPTER_REQUIRED');
@@ -143,7 +143,7 @@ export async function runSuite({oracle,adapter,modelTransport,outputDir,approval
  const ledger=createSuiteLedger(approval);
  const path=join(outputDir,'results.json');let report;
  try{report=JSON.parse(await readFile(path,'utf8'));if(report.seed_sha256!==oracle.digest)throw Error('RESULT_SEED_MISMATCH');if(report.evaluation_run_id!==approval.evaluation_run_id)throw Error('RESULT_RUN_ID_MISMATCH');}
- catch(e){if(e.code!=='ENOENT')throw e;report={schema_version:1,evaluation_run_id:approval.evaluation_run_id,environment:'development store, synthetic catalogue',execution_architecture:'local controlled tool loop + single-call n8n model helper; NOT hosted n8n Agent equivalence',model:BUDGET.model,max_iterations:5,max_output_tokens:2000,seed_sha256:oracle.digest,created_at:new Date().toISOString(),runs:suitePlan(),billing:approval.tariff_evidence||'n8n Gateway pricing verified 2026-11-10'};}
+ catch(e){if(e.code!=='ENOENT')throw e;report={schema_version:1,evaluation_run_id:approval.evaluation_run_id,environment:'development store, synthetic catalogue',execution_architecture:'local controlled tool loop + single-call n8n model helper; NOT hosted n8n Agent equivalence',model:BUDGET.model,max_iterations:5,max_output_tokens:2000,seed_sha256:oracle.digest,created_at:new Date().toISOString(),runs:prioritizeRuns(suitePlan(),priority),execution_priority:priority,billing:approval.tariff_evidence||'n8n Gateway pricing verified 2026-11-10'};}
  if(report.suspension)throw Error('SUSPENDED_SUITE_OPERATOR_RECOVERY_REQUIRED');
  recoverInterruptedRuns(report);await save(path,report);
  await ledger.assertNoUnresolved();

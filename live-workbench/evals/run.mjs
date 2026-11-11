@@ -15,7 +15,7 @@ try{
   const module=await import(pathToFileURL(resolve(get('--adapter'))));const adapter=await module.createAdapter({oracle});
   const system=await readFile(new URL('./system-prompt.txt',import.meta.url),'utf8');
   const reviewResults=args.includes('--reviews')?JSON.parse(await readFile(resolve(get('--reviews')),'utf8')):{};
-  const report=await runSuite({oracle,adapter,approval,system,reviewResults,modelTransport:fileModelTransport(resolve(get('--spool'))),outputDir:resolve(get('--out')),only:args.includes('--only')?get('--only').split(','):undefined});
+  const report=await runSuite({oracle,adapter,approval,system,reviewResults,modelTransport:fileModelTransport(resolve(get('--spool'))),outputDir:resolve(get('--out')),priority:args.includes('--priority')?get('--priority').split(','):[],only:args.includes('--only')?get('--only').split(','):undefined});
   console.log(JSON.stringify({summary:report.summary,cost:report.cost},null,2));
  }
 }catch(e){console.error(e.message);process.exitCode=1;}

@@ -28,3 +28,13 @@ for(const phase of ['prepare','tool','cleanup'])test(`suite suspends on ${phase}
  const saved=JSON.parse(await readFile(join(dir,'results','suspended-session.local.json'),'utf8'));assert.equal(saved.session.sid,'private_owner_session');
  await assert.rejects(runSuite(options),/SUSPENDED_SUITE_OPERATOR_RECOVERY_REQUIRED/);assert.equal(sessions,1);assert.equal(modelCalls,phase==='prepare'?0:1);
 });
+
+import {suitePlan,prioritizeRuns} from '../evals/scenarios.mjs';
+test('owner safety order runs all twelve critical cases first without omissions or duplication',()=>{
+ const original=suitePlan(),ordered=prioritizeRuns(original,['S05','S19','S20','S21']);
+ assert.deepEqual(ordered.slice(0,12).map(r=>r.id),['S05','S05','S05','S19','S19','S19','S20','S20','S20','S21','S21','S21']);
+ assert.equal(ordered.length,75);assert.equal(new Set(ordered.map(r=>r.id+':'+r.repetition)).size,75);
+ assert.equal(original[0].id,'S01');assert.equal(ordered.slice(12).length,63);
+ assert.throws(()=>prioritizeRuns(original,['S05','S05']),/INVALID_SCENARIO_PRIORITY/);
+ assert.throws(()=>prioritizeRuns(original,['S99']),/INVALID_SCENARIO_PRIORITY/);
+});

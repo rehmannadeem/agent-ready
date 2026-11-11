@@ -44,3 +44,9 @@ export function materializeScenario(s,oracle,context={}){
  return {...s,turns:s.turns.map(replace)};
 }
 export function suitePlan(){return SCENARIOS.flatMap(s=>[1,2,3].map(repetition=>({id:s.id,repetition,maxTurns:s.maxTurns,maxIterations:5,status:'NOT_RUN'})));}
+
+export function prioritizeRuns(runs,priority=[]){
+ if(!Array.isArray(priority)||new Set(priority).size!==priority.length||priority.some(id=>!SCENARIOS.some(s=>s.id===id)))throw Error('INVALID_SCENARIO_PRIORITY');
+ const rank=id=>{const i=priority.indexOf(id);return i<0?priority.length:i;};
+ return [...runs].sort((a,b)=>rank(a.id)-rank(b.id));
+}

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {callCommerce,handleCommerce,safeLink,TOOLS,validateTool,CommerceError} from '../src/commerce.mjs';
+import {callCommerce,handleCommerce,safeLink,TOOLS,validateTool,CommerceError,parseRetryAfter,errorData} from '../src/commerce.mjs';
 import {signSession} from '../src/session-security.mjs';
 const env={SHOPIFY_STORE:'karachi-kicks-supportops-lab.myshopify.com',UCP_AGENT_PROFILE_URL:'https://demo.example/agent-profile.json',COMMERCE_SERVICE_SECRET:'s'.repeat(40),SESSION_ISSUER_SECRET:'i'.repeat(40)};
 const context={sub:'principal_one',sid:'session_one',store:env.SHOPIFY_STORE,market:'US',currency:'USD'};
@@ -110,4 +110,18 @@ test('merchant throttling and timeout are not automatically retried',async()=>{
  for(const f of [()=>new Response('',{status:429}),()=>{throw Error('PRIVATE_CONNECTION_STRING');}]){
   let count=0;await assert.rejects(()=>call('create_cart',create,async()=>{count++;return f();}),e=>['RATE_LIMITED','UPSTREAM_UNREACHABLE'].includes(e.code)&&!e.message.includes('PRIVATE'));assert.equal(count,1);
  }
+});
+
+test('Retry-After is bounded and survives safe commerce error projection',async()=>{
+ const now=Date.parse('2026-11-11T12:00:00Z');
+ assert.equal(parseRetryAfter('12',now),12);
+ assert.equal(parseRetryAfter('Wed, 11 Nov 2026 12:00:30 GMT',now),30);
+ for(const value of [null,'','-1','999999','secret','Wed, 11 Nov 2026 11:00:00 GMT'])assert.equal(parseRetryAfter(value,now),undefined);
+ await assert.rejects(call('search_catalog',{query:'Runner'},async()=>new Response('',{status:429,headers:{'Retry-After':'60'}})),e=>{assert.deepEqual(errorData(e),{error:'RATE_LIMITED',message:'Shopify is limiting requests. Wait before retrying.',retry_after_seconds:60});return true;});
+ assert.equal(errorData(new CommerceError('OTHER','safe',500,60)).retry_after_seconds,undefined);
+});
+test('Retry-After survives the Durable Object to MCP error boundary',async()=>{
+ const scoped={...env,SESSION_STATE:{idFromName:()=>1,get:()=>({fetch:async()=>new Response(JSON.stringify({error:'RATE_LIMITED',message:'Wait',retry_after_seconds:45}),{status:429})})}};
+ const r=await handleCommerce(await request({jsonrpc:'2.0',id:1,method:'tools/call',params:{name:'get_cart',arguments:{}}}),scoped);
+ const body=await r.json();assert.equal(body.result.isError,true);assert.equal(JSON.parse(body.result.content[0].text).retry_after_seconds,45);
 });

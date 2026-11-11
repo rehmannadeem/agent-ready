@@ -1,0 +1,19 @@
+{
+  "recorded_at": "2026-11-11T12:31:36.646741+00:00",
+  "command": "npm test",
+  "environment": "Linux candidate checkout",
+  "tests": 172,
+  "passed": 172,
+  "failed": 0,
+  "cancelled": 0,
+  "skipped": 0,
+  "live_requests": 0,
+  "model_calls": 0,
+  "checks": [
+    "Retry-After parsing and propagation",
+    "Shared request pacing",
+    "Persistent suite suspension on live rate limits",
+    "No automatic model/tool/cleanup continuation after suspension"
+  ],
+  "limitation": "Offline tests do not establish live load or AI scenario acceptance."
+}

@@ -21,7 +21,12 @@ export const TOOLS=[
  {name:'update_cart',description:'Replace the full desired line-item list, or replace discount codes, in this session’s current cart. Read it first; preserve all intended items. Omitted line_items or discount_codes preserve existing values. Empty codes clear discounts; empty lines remove all items. No payment or order.',inputSchema:schema({line_items:linesSchema,discount_codes:codesSchema})},
  {name:'cancel_cart',description:'Request cancellation of this session’s cart. Read get_cart afterward to verify absence. No cart ID input.',inputSchema:schema({})}
 ];
-export class CommerceError extends Error{constructor(code,message,status=502){super(message);this.code=code;this.status=status;}}
+export class CommerceError extends Error{constructor(code,message,status=502,retryAfterSeconds){super(message);this.code=code;this.status=status;if(Number.isInteger(retryAfterSeconds)&&retryAfterSeconds>=0&&retryAfterSeconds<=86400)this.retry_after_seconds=retryAfterSeconds;}}
+export function parseRetryAfter(value,now=Date.now()){
+ if(typeof value!=='string'||value.length>128||!value.trim())return undefined;
+ const text=value.trim(),seconds=/^\d+$/.test(text)?Number(text):Math.ceil((Date.parse(text)-now)/1000);
+ return Number.isFinite(seconds)&&seconds>=0&&seconds<=86400?seconds:undefined;
+}
 const fail=(message='The requested input is invalid.')=>{throw new CommerceError('INVALID_INPUT',message,400);};
 const productId=v=>typeof v==='string'&&/^gid:\/\/shopify\/Product\/\d+$/.test(v);
 const variantId=v=>typeof v==='string'&&/^gid:\/\/shopify\/ProductVariant\/\d+$/.test(v);
@@ -109,7 +114,7 @@ export async function callCommerce(name,args,env,fetcher=fetch,context={},gates=
  if(['create_cart','update_cart','cancel_cart'].includes(name)&&context.beforeMutation)await context.beforeMutation();
  let response;
  try{response=await fetcher(`https://${host(env)}/api/ucp/mcp`,{method:'POST',redirect:'manual',signal:AbortSignal.timeout(20000),headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:crypto.randomUUID(),method:'tools/call',params:{name,arguments:arguments_}})});}catch{throw new CommerceError('UPSTREAM_UNREACHABLE','Shopify did not respond. The outcome of a change is unknown; do not retry it automatically.');}
- if(response.status===429)throw new CommerceError('RATE_LIMITED','Shopify is limiting requests. Wait before retrying.',429);
+ if(response.status===429)throw new CommerceError('RATE_LIMITED','Shopify is limiting requests. Wait before retrying.',429,parseRetryAfter(response.headers.get('retry-after')));
  if([401,403].includes(response.status))throw new CommerceError('ACCESS_BLOCKED','Shopify requires additional access for this operation.',503);
  if(!response.ok)throw new CommerceError('UPSTREAM_HTTP',`Shopify returned HTTP ${response.status}.`);
  const payload=await boundedJSON(response);let data=payload.result?.structuredContent;
@@ -141,7 +146,7 @@ export async function callCommerce(name,args,env,fetcher=fetch,context={},gates=
  return result;
 }
 export function json(data,status=200){return new Response(JSON.stringify(data),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'}});}
-export function errorData(e){return {error:typeof e?.code==='string'?e.code:'INTERNAL_ERROR',message:typeof e?.code==='string'?e.message:'The shopping operation failed safely.'};}
+export function errorData(e){return {error:typeof e?.code==='string'?e.code:'INTERNAL_ERROR',message:typeof e?.code==='string'?e.message:'The shopping operation failed safely.',...(e?.code==='RATE_LIMITED'&&Number.isInteger(e.retry_after_seconds)&&e.retry_after_seconds>=0&&e.retry_after_seconds<=86400?{retry_after_seconds:e.retry_after_seconds}:{})};}
 export async function handleCommerce(req,env,fetcher=fetch){
  const url=new URL(req.url);
  if(url.pathname==='/agent-profile.json'){
@@ -171,7 +176,7 @@ export async function handleCommerce(req,env,fetcher=fetch){
   const stub=env.SESSION_STATE.get(env.SESSION_STATE.idFromName(await sessionKey(principal)));
   const resultResponse=await stub.fetch(new Request('https://session.internal/operate',{method:'POST',headers:{'Content-Type':'application/json',Authorization:req.headers.get('authorization'),'X-Armans-Session':req.headers.get('x-armans-session')},body:JSON.stringify({name,arguments:args})}));
   const result=await boundedJSON(resultResponse);
-  if(!resultResponse.ok){const e=new CommerceError(result.error||'STATE_FAILED',result.message||'Session operation failed safely.',resultResponse.status);throw e;}
+  if(!resultResponse.ok){const e=new CommerceError(result.error||'STATE_FAILED',result.message||'Session operation failed safely.',resultResponse.status,result.retry_after_seconds);throw e;}
   return json(mcp?{jsonrpc:'2.0',id,result:{content:[{type:'text',text:JSON.stringify(result)}],structuredContent:result,isError:false}}:result);
  }catch(e){const data=errorData(e);return json(mcp?{jsonrpc:'2.0',id,result:{content:[{type:'text',text:JSON.stringify(data)}],isError:true}}:data,mcp?200:e.status||500);}
 }

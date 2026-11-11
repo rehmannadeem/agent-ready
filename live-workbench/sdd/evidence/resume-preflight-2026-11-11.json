@@ -1,0 +1,13 @@
+{
+  "observed_at": "2026-11-11T12:10:57.201844+00:00",
+  "code_checkpoint": "014e40e2c7cfabd2f7a366139bc08cb28e537c67",
+  "gateway_balance_usd": 1.98,
+  "gateway_balance_source": "Authenticated n8n Cloud Overview visible UI",
+  "funded_stop_usd": 1.9,
+  "owner_cap_usd": 10,
+  "max_iterations": 5,
+  "evaluation_attempts_completed": 0,
+  "confirmed_previous_model_spend_usd": 1.41e-05,
+  "previous_load_result": "1/20 passed;19 search business postconditions failed;no HTTP/tool errors or throttles;first report preserved",
+  "resume_authorized": true
+}

@@ -28,20 +28,33 @@ export function parseDecision(text){
 
 /** Network is only the configured Worker. Trusted headers are supplied by the
  * local owner-controlled adapter, never a model or shopper-provided tool field. */
-export function createWorkerClient({baseUrl,headersForSession,fetcher=fetch}){
+export function createRequestPacer({minIntervalMs=0,clock={now:()=>performance.now(),sleep:ms=>new Promise(r=>setTimeout(r,ms))}}={}){
+ if(!Number.isInteger(minIntervalMs)||minIntervalMs<0||minIntervalMs>10000)throw Error('INVALID_REQUEST_PACING');
+ let lastStart=-Infinity,tail=Promise.resolve();
+ return async()=>{const next=tail.then(async()=>{const delay=Math.max(0,lastStart+minIntervalMs-clock.now());if(delay)await clock.sleep(delay);lastStart=clock.now();});tail=next.catch(()=>{});return next;};
+}
+export function isLiveRateLimit(result){return result?.fault_injection!==true&&(result?.error==='RATE_LIMITED'||result?.http_status===429);}
+export function createRateLimitGuard(){
+ let suspension=null;
+ return {get:()=>suspension,check(){if(suspension)throw Object.assign(Error('PROVIDER_RATE_LIMITED'),{suspension,code:'RATE_LIMITED'});},observe(result){
+  if(!suspension&&isLiveRateLimit(result)){const seconds=result.retry_after_seconds;suspension={reason:'PROVIDER_RATE_LIMITED',observed_at:new Date().toISOString(),...(Number.isInteger(seconds)&&seconds>=0&&seconds<=86400?{retry_after_seconds:seconds,retry_not_before:new Date(Date.now()+seconds*1000).toISOString()}:{}),automatic_resume:false};}
+ }};
+}
+export function createWorkerClient({baseUrl,headersForSession,fetcher=fetch,beforeRequest=async()=>{},observeResult=()=>{}}){
  const u=new URL(baseUrl);
  if(!((u.protocol==='http:'&&['127.0.0.1','localhost','[::1]'].includes(u.hostname))||u.protocol==='https:')||u.username||u.password)throw Error('INVALID_WORKER_URL');
  return {async callTool(name,args,session){
   // Forward invalid arguments to the app only in explicit companion security
   // checks. Model flow is validated locally as well as by the Worker.
   const headers=await headersForSession(session);
+  await beforeRequest();
   const start=performance.now();let response;
   try{response=await fetcher(new URL('/api/mcp',u),{method:'POST',redirect:'error',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({jsonrpc:'2.0',id:randomUUID(),method:'tools/call',params:{name,arguments:args}}),signal:AbortSignal.timeout(30000)});}
   catch{return {error:'TOOL_OUTCOME_UNKNOWN',message:'The tool response was not received; do not retry a mutation.',ambiguous:mutations.has(name),latency_ms:Math.round(performance.now()-start)};}
-  let p;try{const body=await response.text();if(Buffer.byteLength(body)>524288)throw Error();p=JSON.parse(body);}catch{return {error:'INVALID_TOOL_RESPONSE',ambiguous:mutations.has(name),latency_ms:Math.round(performance.now()-start)};}
+  let p;try{const body=await response.text();if(Buffer.byteLength(body)>524288)throw Error();p=JSON.parse(body);}catch{const rejected={error:response.status===429?'RATE_LIMITED':'INVALID_TOOL_RESPONSE',http_status:response.status,ambiguous:mutations.has(name),latency_ms:Math.round(performance.now()-start)};observeResult(rejected);return rejected;}
   let result=p.result?.structuredContent;
   if(!result&&p.result?.content?.[0]?.text){try{result=JSON.parse(p.result.content[0].text);}catch{}}
-  if(!response.ok||p.error||p.result?.isError){const error=result?.error||p.error?.message||p.error||'TOOL_REJECTED';return {error,message:result?.message||p.message||'Tool rejected the operation.',ambiguous:mutations.has(name)&&['UPSTREAM_UNREACHABLE','MUTATION_OUTCOME_UNKNOWN','UPSTREAM_HTTP','INVALID_RESPONSE'].includes(error),http_status:response.status,latency_ms:Math.round(performance.now()-start)};}
+  if(!response.ok||p.error||p.result?.isError){const error=result?.error||p.error?.message||p.error||'TOOL_REJECTED',retry=result?.retry_after_seconds;const rejected={error,message:result?.message||p.message||'Tool rejected the operation.',ambiguous:mutations.has(name)&&['UPSTREAM_UNREACHABLE','MUTATION_OUTCOME_UNKNOWN','UPSTREAM_HTTP','INVALID_RESPONSE'].includes(error),http_status:response.status,...(Number.isInteger(retry)&&retry>=0&&retry<=86400?{retry_after_seconds:retry}:{}),latency_ms:Math.round(performance.now()-start)};observeResult(rejected);return rejected;}
   return {...result,latency_ms:Math.round(performance.now()-start)};
  }};
 }
@@ -64,6 +77,7 @@ export async function runTurn({message,history,currentState,session,client,ledge
    if(call.name==='search_catalog'&&!result.error)currentState={...currentState,last_catalog_search:{arguments:call.arguments,result:catalogReferenceForMemory(result)}};
    const observation={name:call.name,arguments:call.arguments,result};observations.push(observation);
    const event={kind:'tool',turn,iteration,...observation};events.push(event);await onEvent(event);
+   if(isLiveRateLimit(result))throw Object.assign(Error('PROVIDER_RATE_LIMITED'),{suspension:{reason:'PROVIDER_RATE_LIMITED',retry_after_seconds:result.retry_after_seconds,automatic_resume:false}});
   }
  }
  return {message:null,currentState,events,iterations:5,error:'ITERATION_LIMIT'};
@@ -130,6 +144,7 @@ export async function runSuite({oracle,adapter,modelTransport,outputDir,approval
  const path=join(outputDir,'results.json');let report;
  try{report=JSON.parse(await readFile(path,'utf8'));if(report.seed_sha256!==oracle.digest)throw Error('RESULT_SEED_MISMATCH');if(report.evaluation_run_id!==approval.evaluation_run_id)throw Error('RESULT_RUN_ID_MISMATCH');}
  catch(e){if(e.code!=='ENOENT')throw e;report={schema_version:1,evaluation_run_id:approval.evaluation_run_id,environment:'development store, synthetic catalogue',execution_architecture:'local controlled tool loop + single-call n8n model helper; NOT hosted n8n Agent equivalence',model:BUDGET.model,max_iterations:5,max_output_tokens:2000,seed_sha256:oracle.digest,created_at:new Date().toISOString(),runs:suitePlan(),billing:approval.tariff_evidence||'n8n Gateway pricing verified 2026-11-10'};}
+ if(report.suspension)throw Error('SUSPENDED_SUITE_OPERATOR_RECOVERY_REQUIRED');
  recoverInterruptedRuns(report);await save(path,report);
  await ledger.assertNoUnresolved();
  let stop=false;
@@ -156,12 +171,16 @@ export async function runSuite({oracle,adapter,modelTransport,outputDir,approval
    const extra=await adapter.assertScenario?.({spec,run:row,session,oracle,context,currentState:state})||[];row.checks.push(...extra);
    if(spec.hooks.length&&!extra.length)row.checks.push(check('companion_evidence_supplied',false,'Controller hooks require scenario-specific evidence assertions.'));
    row.status=row.checks.some(c=>!c.pass)?'FAILED':'PENDING_REVIEW';
-  }catch(e){row.status=/^(BUDGET_|MODEL_USAGE_|MISSING_OR_UNEXPECTED_USAGE|PROVIDER_BOUND|INPUT_BOUND)/.test(e.message)?'BLOCKED':'FAILED';row.reason=e.message;stop=row.status==='BLOCKED';}
+  }catch(e){const suspension=adapter.getSuspension?.()||e.suspension;if(suspension){report.suspension=suspension;row.status='BLOCKED';row.reason='PROVIDER_RATE_LIMITED';stop=true;}else{row.status=/^(BUDGET_|MODEL_USAGE_|MISSING_OR_UNEXPECTED_USAGE|PROVIDER_BOUND|INPUT_BOUND)/.test(e.message)?'BLOCKED':'FAILED';row.reason=e.message;stop=row.status==='BLOCKED';}}
   finally{
    const cleanupErrors=[];
+   if(report.suspension){row.cleanup_pending=true;row.restoration_pending=true;if(session)await writeFile(join(outputDir,'suspended-session.local.json'),JSON.stringify({scenario:row.id,repetition:row.repetition,session,reason:'PROVIDER_RATE_LIMITED'},null,2),{mode:0o600});}
+   else {
    try{if(restore)await restore();}catch(e){cleanupErrors.push('RESTORE:'+e.message);}
    try{if(state.mutation_outcome_unknown)throw Error('CART_OUTCOME_UNKNOWN_OPERATOR_RECOVERY_REQUIRED');await adapter.cleanup?.({spec,session,oracle,client:adapter.client});}catch(e){cleanupErrors.push('CLEANUP:'+e.message);}
    if(cleanupErrors.length){row.status='FAILED';row.cleanup_error=cleanupErrors.join('; ');stop=true;}
+   }
+   if(adapter.getSuspension?.()){report.suspension=adapter.getSuspension();row.status='BLOCKED';row.reason='PROVIDER_RATE_LIMITED';row.cleanup_pending=true;row.restoration_pending=true;stop=true;if(session)await writeFile(join(outputDir,'suspended-session.local.json'),JSON.stringify({scenario:row.id,repetition:row.repetition,session,reason:'PROVIDER_RATE_LIMITED'},null,2),{mode:0o600});}
    row.stopped_at=new Date().toISOString();await save(path,report);
   }
   if(stop)break;

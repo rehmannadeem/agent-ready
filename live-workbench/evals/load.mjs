@@ -39,6 +39,11 @@ function validateSession(s,now){
  if(!s||s.store!==TARGET_STORE||s.market!=='US'||s.currency!=='USD'||!['sub','sid'].every(k=>typeof s[k]==='string'&&/^[A-Za-z0-9_-]{8,128}$/.test(s[k]))||!Number.isInteger(s.iat)||!Number.isInteger(s.exp)||s.iat>Math.floor(now/1000)+30||s.exp<=Math.floor(now/1000)+180||s.exp-s.iat>3600)throw Error('LOAD_TRUSTED_SESSION_INVALID');
 }
 function timings(values){return{samples:values.length,p50_ms:percentile(values,.5),p95_ms:percentile(values,.95)};}
+export function searchObservation(result,fixture){
+ const products=Array.isArray(result?.products)?result.products:[],product=products.find(p=>p?.id===fixture.productId);
+ const variants=Array.isArray(product?.variants)?product.variants:[],variant=variants.find(v=>v?.id===fixture.variantId);
+ return{product_count:products.length,target_product_seen:Boolean(product),target_variant_seen:Boolean(variant),target_variant_available:variant?.availability?.available===true,target_variant_currency:/^[A-Z]{3}$/.test(variant?.price?.currency||'')?variant.price.currency:null,returned_product_ids:products.slice(0,10).map(p=>/^gid:\/\/shopify\/Product\/\d+$/.test(p?.id||'')?p.id:null)};
+}
 function terminal(row){return row.steps.search.status==='FAILED'||row.steps.create.status==='FAILED'&&row.cart_state==='none'||row.steps.verify_cancel.status!=='NOT_RUN'&&row.steps.verify_cancel.status!=='IN_PROGRESS';}
 function summarize(report){
  const rows=report.sessions,attempts=rows.flatMap(r=>Object.values(r.steps)).filter(s=>s.dispatched===true);
@@ -87,6 +92,7 @@ export async function runLoad({oracle,adapter,approval,dispatchIntervalMs=1100,f
   if(!result||typeof result!=='object'||Array.isArray(result))result={error:'INVALID_TOOL_RESPONSE',ambiguous:step==='create'||step==='cancel'};
   const ended=clock.now(),throttle=throttleKind(result),error=result.error?code(result):null;
   const record={status:'PASSED',dispatched:true,duration_ms:Math.max(0,ended-startedAt),started_at:new Date(startedAt).toISOString(),http_status:Number.isInteger(result.http_status)?result.http_status:null,throttle};
+  if(step==='search')record.search_observation=searchObservation(result,fixture);
   if(error){record.status='FAILED';record.tool_error=true;record.error=error;}
   else if(!accept(result)){record.status='FAILED';record.tool_error=false;record.error='BUSINESS_POSTCONDITION_FAILED';}
   row.steps[step]=record;

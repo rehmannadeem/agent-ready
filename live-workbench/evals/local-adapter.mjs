@@ -3,7 +3,7 @@ import {pathToFileURL} from 'node:url';
 import {resolve} from 'node:path';
 import {randomUUID} from 'node:crypto';
 import {signSession} from '../src/session-security.mjs';
-import {createWorkerClient} from './runner.mjs';
+import {createWorkerClient,createRequestPacer,createRateLimitGuard} from './runner.mjs';
 
 const absentCart=r=>r?.error==='NO_CURRENT_CART'||(!r?.error&&['not_found','no_current_cart'].includes(r?.status)&&Array.isArray(r.line_items)&&r.line_items.length===0);
 export async function cleanupCurrentCart(client,session){
@@ -30,14 +30,21 @@ export async function createAdapter({oracle}){
  const health=await healthResponse.json();if(!healthResponse.ok||health.store!==oracle.seed.store)throw Error('STORE_MISMATCH');
  const createSession=async()=>{const now=Math.floor(Date.now()/1000);return {sub:'armans_eval_owner',sid:'eval_'+randomUUID().replaceAll('-','_'),store:oracle.seed.store,market:'US',currency:'USD',iat:now,exp:now+3600};};
  const headersForSession=async s=>({Authorization:'Bearer '+config.service_secret,'X-Armans-Session':await signSession(s,config.session_issuer_secret)});
- const base=createWorkerClient({baseUrl:config.worker_url,headersForSession});
+ const guard=createRateLimitGuard(),pace=createRequestPacer({minIntervalMs:config.min_request_interval_ms??0});
+ const beforeRequest=async()=>{guard.check();await pace();guard.check();};
+ const base=createWorkerClient({baseUrl:config.worker_url,headersForSession,beforeRequest,observeResult:guard.observe});
  const rawRequest=async({session,body,headersOverride={},path='/api/mcp'})=>{
   if(!['/api/mcp','/api/shop'].includes(path))throw Error('COMPANION_PATH_NOT_ALLOWED');
   const headers={...await headersForSession(session),'Content-Type':'application/json',...headersOverride};
   for(const k of Object.keys(headers))if(headers[k]===null||headers[k]===undefined)delete headers[k];
+  await beforeRequest();
   const response=await fetch(new URL(path,config.worker_url),{method:'POST',redirect:'error',headers,body:JSON.stringify(body),signal:AbortSignal.timeout(30000)});
+  if(response.status===429){guard.observe({http_status:429});guard.check();}
   const text=await response.text();if(Buffer.byteLength(text)>524288)throw Error('COMPANION_RESPONSE_TOO_LARGE');
   let parsed;try{parsed=JSON.parse(text);}catch{throw Error('COMPANION_RESPONSE_INVALID');}
+  let result=parsed.result?.structuredContent;
+  if(!result&&parsed.result?.content?.[0]?.text){try{result=JSON.parse(parsed.result.content[0].text);}catch{}}
+  guard.observe({...result,http_status:response.status});guard.check();
   return {status:response.status,body:parsed};
  };
  const faults=new Map();
@@ -53,7 +60,7 @@ export async function createAdapter({oracle}){
  const checkpoints=new Map();
  function line(key,quantity=1){const v=oracle.variant(key,key.includes('shoe')?{Size:'10',Colour:'Black'}:{});return {variant_id:v.id,quantity};}
  const adapter={
-  client,capabilities:[...new Set([...capacities,...(controller.capabilities||[])])],
+  getSuspension:guard.get,client,capabilities:[...new Set([...capacities,...(controller.capabilities||[])])],
   createSession,
   async prepareScenario({spec,session}){
    let currentState={},context={},restore;
@@ -107,7 +114,7 @@ export async function createAdapter({oracle}){
    faults.delete(session.sid);
    const errors=[];
    try{await cleanupCurrentCart(base,session);}catch(e){errors.push(e.message);}
-   try{await controller.cleanup?.({session,oracle,client:base});}catch(e){errors.push(e.message);}
+   try{guard.check();await controller.cleanup?.({session,oracle,client:base});}catch(e){errors.push(e.message);}
    checkpoints.delete(session.sid);if(errors.length)throw Error(errors.join('; '));
   }
  };

@@ -1,25 +1,33 @@
 # Agent Shopping Readiness Scorecard
 
-**FOR CLAUDE REVIEW — live validation IN PROGRESS; Gate6 not passed.**
+**FOR CLAUDE REVIEW — 11 November 2026 — Gate 6 BLOCKED by provider cooldown; not passed.**
 
-Store: Karachi Kicks SupportOps Lab. Synthetic catalogue on a real Shopify development store; no production client, payments, orders or customer-data handling.
+Store: Karachi Kicks SupportOps Lab. Synthetic catalogue on a real Shopify development store; no production client, orders, payments or customer-data handling.
 
 | Evidence | Result |
 |---|---|
-| Catalogue generated |318 products /3266 variants;300 intended eligible products |
-| Catalogue seeded | 318 products / 3,266 variants verified; rerun skipped 318 with zero Admin mutation requests |
-| Deterministic code tests |162/162 after simulation cleanup guard patch; Windows focused checks pending |
-| Actual local Cloudflare runtime |11/11 baseline +8/8 private inspection checks passed |
-| Windows runtime readiness |10/10 passed |
-| Live read-only commerce |3/3 Admin catalogue/UCP search/exact lookup checks passed |
-| Runtime least privilege | Only read_products/read_publications; customer and order reads denied |
-| Browser cart smoke |Create/get/cancel/verified absence passed for p001 Black/10 quantity1 at USD79; not a scenario-suite result |
-| Scenario suite |0/75 at this checkpoint; pass rate unavailable |
-| Safety-critical S05/S19/S20/S21 |Not run live |
-| Twenty-session commerce load |Not run |
-| Model spend |USD0.0000141 transport smoke; funded stopUSD1.90; owner ceilingUSD10 |
-| Candidate production source deployment |None; Cloudflare credentials alone switched as authorized |
+| Seeded catalogue | 318 products / 3,266 variants; 300 eligible products / 3,248 eligible variants |
+| Collections and discounts | 15 collections and four discounts verified |
+| Idempotent seed rerun | 318 skipped unchanged; zero Shopify Admin mutation requests |
+| Original catalogue | All 18 products / 27 variants unchanged |
+| Teardown preview | 318 owned products selected; 18 originals refused; zero deletions |
+| Deterministic code tests | 172/172 passed on 11 November; prior Windows simulation focused checks 34/34 passed |
+| Runtime readiness | Local 11/11 baseline + 8/8 inspection; Windows 10/10 passed |
+| Live read-only commerce | 3/3 catalogue/search/lookup smoke checks passed |
+| Runtime least privilege | Only `read_products` and `read_publications`; customer/order access denied |
+| Browser cart smoke | p001 Black/10, quantity 1, USD 79: create/get/cancel/absence passed |
+| First load attempt, 10 November | **Failed: 1/20 passed**; 19 search business-postcondition failures; no HTTP/tool errors or throttles |
+| Load recovery, 11 November | All 20 old carts confirmed absent; 25/25 diagnostic searches passed |
+| Load retest | Stopped after 76/80 requests: all 20 search/create/cancel acknowledgements passed; 14 cart absences verified, six pending |
+| Retest outcome | 14 full sessions passed, two failed verification reads, four incomplete; upstream HTTP 429 / `RATE_LIMITED` |
+| Provider cooldown | `Retry-After: 2249` seconds; conservative earliest retry 18:00:34.893 PKT on 11 November; nothing scheduled |
+| AI scenario suite | **0/75 attempted**; pass rate unavailable |
+| Safety-critical S05/S19/S20/S21 | Not run live |
+| Model spend | USD 0.0000141 transport smoke; funded stop USD 1.90; owner ceiling USD 10 |
+| Candidate source deployment | None; only the authorized Cloudflare credential change |
 
-Implemented controls include session-owned carts, restricted operations, publication checks, uncertain-write stops and persistent budget reservations. These results do not establish platform listing or production reliability.
+The earlier load failure remains part of the evidence. Its historical cause is unproven; a later pass must not erase it. No functional search fix or production-reliability claim is made from the successful diagnostics.
 
-Remaining acceptance: Windows focused simulation-guard checks; bounded load; complete/review the75 scenarios at five iterations; simulation restoration; remaining scaled browser checks. Seed/idempotence are verified; baseline18 products/27 variants unchanged. Dry-run teardown selected318, refused18, deleted0. The separate n8n helper drives a controlled local loop; the published hosted-chat workflow is unchanged. Shared Armans SupportOps Connector is unchanged. PR1 remains open and unmerged.
+Remaining acceptance: after the provider cooldown, verify absence for the six pending carts, complete bounded-load acceptance, then execute all 75 first attempts at five iterations, verify simulation restoration and review the transcripts. No future execution is promised or scheduled. Shared evaluator request pacing was reduced to one request per 3,000 ms; 44 focused tests passed locally and on Windows. Full code suite: 172/172 passed. A persistent throttle stop now blocks subsequent model/tool calls and restart until operator recovery. Mechanical successes remain **PENDING_REVIEW** until human acceptance. The controlled local evaluator is distinct from the unchanged published hosted-chat workflow. Shared Armans SupportOps Connector is unchanged. PR #1 remains open and unmerged; stop at Gate 6.
+
+UCP merchant requests currently use anonymous access; the isolated Shopify Admin credential is a separate authentication path. The three-second evaluator spacing is a precaution, not a merchant-quota guarantee.

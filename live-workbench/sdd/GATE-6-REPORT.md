@@ -1,61 +1,77 @@
-# Development candidate progress report — Gate6 not passed
+# Development candidate stop report — Gate 6 blocked
 
-10 November 2026 · FOR CLAUDE REVIEW · IN PROGRESS
+11 November 2026 · Asia/Karachi · FOR CLAUDE REVIEW · BLOCKED BY PROVIDER COOLDOWN
 
 ## 1. Summary
 
-The dedicated runtime app is installed, verified and connected to the Worker through Cloudflare secrets. It can read products/publications and cannot read customers/orders. The seed app is installed and its read-only preflight passed. All 318 owned products / 3,266 variants are now seeded and verified; a complete rerun sent zero Admin mutation requests. One model transport smoke passed. The full75-scenario suite has not started at this checkpoint.
+Runtime isolation and catalogue seeding are complete. The separate runtime app can read products/publications and cannot read customers/orders. The verified seed contains 318 owned products / 3,266 variants, 15 collections and four discounts. Its rerun sent zero Shopify Admin mutation requests and preserved the original catalogue.
+
+The first 20-session load attempt failed 19 search business checks. Its evidence is retained. On resumption, all old carts were confirmed absent and 25 diagnostic searches passed. The unchanged load retest passed all 20 searches, cart creations and cancellation acknowledgements, but upstream throttling stopped final absence checks after 76/80 requests. Fourteen absences are verified and six remain unconfirmed. The provider returned `Retry-After: 2249` seconds. The full 75-scenario AI suite has not started.
 
 ## 2. Stage and gate status
 
-Stages1–2 approved with the owner's six conditions; Stages3–4 recorded briefly. Stage5 implemented; Stage6 live validation in progress. Gate6 has NOT passed. Stop at Gate6; Stage7, merge and production source deployment are not authorized.
+Stages 1–2 were approved with the owner's six conditions; Stages 3–4 are recorded briefly. Stage 5 is implemented. Stage 6 is **blocked by provider cooldown; Gate 6 has not passed**. Stop at Gate 6: no merge, ship, production source deployment or iteration increase.
 
 ## 3. Changes and branch
 
-Branch `feat/realistic-catalogue-20261110`; last pushed checkpoint `3c474a4ca9c6401ab37618a61708cdf3bbb166d5`. The current progress report and newest evidence await the next checkpoint. PR1 stays open and unmerged.
+Branch `feat/realistic-catalogue-20261110`; saved checkpoint [`014e40e2c7cfabd2f7a366139bc08cb28e537c67`](https://github.com/rehmannadeem/agent-ready/commit/014e40e2c7cfabd2f7a366139bc08cb28e537c67). This checkpoint adds recovery evidence, bounded search diagnostics, evaluator pacing and persistent provider suspension. [PR #1](https://github.com/rehmannadeem/agent-ready/pull/1) remains open and unmerged.
 
-Runtime: **Armans Shopping Runtime v1**, only `read_products,read_publications`, no webhook subscriptions. Shared **Armans SupportOps Connector** was not edited or released; its unsaved failed permission draft was discarded. Cloudflare's SHOPIFY_CLIENT_ID and SHOPIFY_CLIENT_SECRET now point to the separate runtime app. Cloudflare records version `1da0a93d-088b-4f40-8885-24629753a0e9`, deployment `d394ec92-a435-48f1-a46a-25d8cd90a17f`, with `source: wrangler` and `triggered_by: secret`. [Metadata evidence](evidence/cloudflare-credential-version-2026-11-10.json) supports a credential-only change; source bytes were not independently compared. No candidate source deployment was requested.
+**Armans Shopping Runtime v1** has only `read_products,read_publications` and no webhook subscriptions. Shared **Armans SupportOps Connector** was not edited or released; its unsaved failed permission draft was discarded. The Worker now uses the separate runtime application's Cloudflare secrets. Version `1da0a93d-088b-4f40-8885-24629753a0e9` and deployment `d394ec92-a435-48f1-a46a-25d8cd90a17f` identify `source: wrangler`, `triggered_by: secret`. [Metadata](evidence/cloudflare-credential-version-2026-11-10.json) supports the credential-only change; source bytes were not independently compared.
 
-Seed: **Armans Catalogue Seed v1**, approved four write scopes only. No write_locations or broader location scope requested. The seed's isolated credential is not used by the runtime. The separate n8n single-call helper supports a controlled local loop; the existing published hosted-chat workflow is unchanged.
+**Armans Catalogue Seed v1** retains only the four approved write scopes. No `write_locations` or broader location scope was requested. Its isolated credential is not used by the runtime. The separate n8n helper drives a controlled local evaluation loop; the published hosted-chat workflow is unchanged.
 
 ## 4. Evidence
 
-- After the simulation cleanup guard patch,162/162 deterministic tests passed in the agent run; Windows focused checks remain pending. Prior checkpoint3c474a4 passed157/157. Prior149-test and32-file syntax evidence retained.
-- Actual local runtime:11/11 baseline checks and8/8 private-inspection checks passed. These earlier tests blocked outbound fetch.
-- Windows runtime readiness:10/10 passed. Live read-only smoke:3/3 passed for Admin catalogue, UCP search and exact product lookup; Runner ProUSD79.
-- Browser cart smoke passed create → get → cancel → verified absence for p001, Black/10, quantity1, USD79. This had no model calls, orders or payment and is separate from the75-scenario suite. [Evidence](evidence/windows-browser-cart-smoke-2026-11-10.json), [created](evidence/windows-cart-created-2026-11-10.png), [cancelled](evidence/windows-cart-cancelled-2026-11-10.png).
-- [Independent code review](evidence/independent-candidate-review-2026-11-10.json) found no blocking defect in reviewed seed/session/budget changes. It is not human transcript acceptance.
-- [Runtime isolation](evidence/runtime-isolation-2026-11-10.json): product/publication access succeeds; customer/order access returns ACCESS_DENIED; no customer/order records read.
-- Seed preflight: correct development store, USD, baseline18products/27variants, exact approved scopes, all20 pinned operations validated, nested-read requested cost102. See [preflight](../catalogue/evidence/preflight-passed-2026-11-10.json) and [location attestation](../catalogue/evidence/location-ui-attestation-2026-11-10.json).
-- Generated318products/3266variants; intended300eligible/3248variants,10draft/5archived/3unpublished,15collections/fourdiscounts. JSON SHA256 `72955f4f280b995d0cd37e69b7f9f6e848ed51de18eacf9983be783653008e32`.
-- [Final seed verification](../catalogue/evidence/seed-final-verification-2026-11-10.json),17:52:14Z:318 owned products /3266 variants;300 shopper-eligible /3248 variants;15 collections/four discounts. Store totals336/3293. Full rerun skipped318 and sent **zero Admin mutation requests**. Exact baseline ID/handle/updatedAt comparison passed for all18 original products and27 variants; pending mutation is null.
-- [Dry-run teardown](../catalogue/evidence/teardown-preview-summary-2026-11-10.json) selected318 owned products, refused18 originals and deleted0. No live teardown was run.
-- Model transport smoke [execution 592](../evals/helper-smoke-evidence.json) succeeded once. Live scenarios0/75 at this checkpoint; no pass rate. Safety-critical and bounded-load acceptance remain pending.
+- **172/172 deterministic tests passed on 11 November**, followed by **34/34 focused Windows simulation checks** with matching source hashes. The product restoration guard tolerates timestamp-only changes only when full product state and journal integrity match; discount version checks remain strict.
+- Earlier actual local runtime checks: 11/11 baseline and 8/8 private inspection. Windows readiness: 10/10. Live read-only smoke: 3/3 for Admin catalogue, UCP search and exact lookup.
+- Browser cart smoke: p001, Black/10, quantity 1, USD 79; create → get → cancel → verified absence. No model calls, order or payment. [Evidence](evidence/windows-browser-cart-smoke-2026-11-10.json), [created cart](evidence/windows-cart-created-2026-11-10.png), [cancelled cart](evidence/windows-cart-cancelled-2026-11-10.png). This is separate from the AI suite.
+- [Runtime isolation](evidence/runtime-isolation-2026-11-10.json): product/publication access succeeds; customer/order access is `ACCESS_DENIED`. No customer/order records were read.
+- [Seed preflight](../catalogue/evidence/preflight-passed-2026-11-10.json): correct development store, USD, exact approved scopes, all 20 pinned operations validated, nested query requested cost 102. [Location attestation](../catalogue/evidence/location-ui-attestation-2026-11-10.json) records the read-only UI checks.
+- [Final seed verification](../catalogue/evidence/seed-final-verification-2026-11-10.json): 318 owned products / 3,266 variants; 300 eligible products / 3,248 variants; 15 collections and four discounts. Store totals 336 / 3,293. Rerun skipped 318 and sent **zero Admin mutations**. Original IDs, handles and timestamps match for all 18 baseline products, which still have exactly 27 variants. No pending mutation.
+- [Dry-run teardown](../catalogue/evidence/teardown-preview-summary-2026-11-10.json): 318 selected, 18 refused, zero deleted. No actual teardown.
+- [First load attempt](evidence/load-first-attempt-2026-11-10.json): **1/20 sessions passed**, 19 failed the search business postcondition; 23/80 requests attempted; zero HTTP/tool errors or throttles. Its only created cart was cancelled and absence verified. On 11 November, all 20 prior session carts were independently confirmed absent.
+- [Recovery diagnostics](evidence/load-readonly-diagnosis-2026-11-11.json): 25/25 searches passed today; all 20 sessions from the **original** load had no cart.
+- [Load retest](evidence/load-retest-2026-11-11.json) preserves the original 80-request workload and exact assertions. All 20 searches, creations and cancellation acknowledgements passed. It stopped at `SUSTAINED_THROTTLE` after 76 requests: **14 full sessions passed, two verification reads failed and four sessions remained incomplete**. No business-check failure occurred; two upstream throttles occurred. Client HTTP p50/p95: 1,436/2,029 ms. These are end-to-end request measurements, not isolated Shopify latency.
+- Two subsequent read-only recovery checks did not establish all absences. The [second recovery](evidence/load-retest-cleanup-second-2026-11-11.json) confirmed 14 empty sessions, then returned HTTP 429 / `RATE_LIMITED`, `Retry-After: 2249`. **Six retest cart absences remain unconfirmed**, despite all 20 cancellation acknowledgements. This is not evidence that six carts are active; it is missing cleanup confirmation.
+- Evaluator pacing is now shared across ordinary and companion requests at 3,000 ms minimum spacing, with bounded Retry-After propagation. The 44 focused tests passed locally and on Windows. Full code suite: 172/172 passed. A persistent throttle stop blocks subsequent model/tool calls and restart until operator recovery; pending cleanup/restoration is recorded. No slower load or model suite was executed.
+- [Model transport smoke, execution 592](../evals/helper-smoke-evidence.json): one successful call. Full AI scenarios **0/75 attempted** at this checkpoint; no pass rate or safety-critical acceptance claim.
 
-## 5. Shopify constraints and observed issues
+## 5. Constraints and observed issues
 
-API2026-07. Seed preflight measured bucket2000/restore100 and nested cost102. Pinning GraphQL16.15.0 resolved17.1.0 validation rejection of unrelated schema metadata; no validation bypass was used. Existing resource IDs and seeded ownership must remain matched.
+API `2026-07`; GraphQL `16.15.0`. Preflight measured bucket 2,000 / restore 100 and requested nested-read cost 102. No schema-validation bypass was used. Ownership, store identity and original catalogue checks remain mandatory.
 
-Location IDs came from the API; restricted name/status fields were confirmed through fresh read-only Admin UI observations and a strict store-bound attestation. Only Online Store publication is selected. Toronto location has Shipping Off/zero rates; no shipping settings were changed. The first product's post-create timestamp advanced with no seeded-field difference; created-phase reconciliation requires full exact draft comparison before continuation.
+Shopify product timestamps advanced asynchronously without content changes during seeding. Full-state guards now distinguish timestamp-only advancement from actual product, inventory or publication drift. Unknown mutation outcomes still stop execution. Discount timestamp guards remain strict because their read shape is narrower.
+
+The historical load failure is **unexplained**: the first report did not record the returned product/variant observations needed to identify its cause. Indexing, ranking or eventual consistency are hypotheses only. The later successful searches do not establish the historical cause or erase the first failure. The retest introduced a separate observed provider-throttling blocker.
+
+[Shopify’s agent authentication and rate-limiting documentation](https://shopify.dev/docs/agents/profiles/auth-and-rate-limiting) states that merchant limits vary by tier and tool and can change; clients must honor `Retry-After`. No fixed numeric merchant quota is assumed. Three-second evaluator spacing reduces request pressure but does **not** guarantee avoidance of the provider’s limit.
+
+Current `src/commerce.mjs` UCP requests send Content-Type/Accept headers and use **anonymous UCP access**, which has the lowest documented limits. The separate read-only Shopify Admin credential does not authenticate those UCP requests. This is a remaining production limitation, not a reason to add customer/order scopes or alter the shared SupportOps app during this task. No UCP authentication or scope change was made.
+
+Only Online Store publication is selected. Toronto inventory location has Shipping Off / zero rates; shipping settings were not changed. Runtime context is US/USD. Development-store orders, payments, production customer handling and AI-platform listing are outside the verified results.
 
 ## 6. Cost so far
 
-One transport smoke:51 input tokens,18 output tokens, zero cache tokens; **USD0.0000141** actual usage reconciled. No unknown reservation remains. Full suite is75 scenarios at five iterations. Owner ceiling remains **USD10**; current creditUSD1.98 led to a stricter **USD1.90 funded stop**, enforced on the same persistent ledger. No credit purchase or auto-topup change. No permission to increase to eight iterations.
+One transport smoke: **51 input + 18 output tokens**, zero cache tokens; **USD 0.0000141** reconciled. No unknown reservation remains. The persistent ledger and run identifier are retained across the interruption.
+
+The first suite remains 75 attempts at **five iterations**. Owner ceiling: **USD 10**. Gateway balance was rechecked at **USD 1.98** on 11 November; the stricter **USD 1.90 funded stop** remains in force. No credits were purchased and no eight-iteration run is authorized. [Resume preflight](evidence/resume-preflight-2026-11-11.json).
 
 ## 7. Remaining work
 
-Complete Windows focused checks for the simulation cleanup guard, run twenty logical-session bounded commerce load, then execute/review75 first attempts at five iterations; verify simulation restoration and remaining scaled browser checks. Seed and duplicate-free rerun are complete. A mechanical pass is PENDING_REVIEW until transcript/tool evidence is checked. Every first attempt stays in the denominator. Missing evidence remains NOT_RUN/BLOCKED, never a pass.
+No further merchant or model requests are scheduled. The cooldown deadline is conservatively based on a remote clock reading after the response: recorded **12:23:00.893 UTC**, plus 2,249 seconds and a five-second safety margin gives **13:00:34.893 UTC / 18:00:34.893 PKT on 11 November 2026**. The original response timestamp was not captured, so this is a conservative earliest retry time, not a promised completion time.
+
+After the provider permits access, first verify absence for the six pending cart sessions using read-only recovery. Do not repeat their cancellation blindly. Complete bounded-load acceptance before starting the 75 first attempts, accounting for every model call and verifying simulation restoration. Review all transcripts against the observed merchant responses. Mechanical successes remain **PENDING_REVIEW** until human acceptance; a model or assistant self-score is not acceptance evidence. Preserve every first attempt and report NOT_RUN/BLOCKED cases explicitly.
 
 ## 8. Owner action
 
-No further Install click is needed: both apps are installed. The executor continues within the approved scope. Any future decision must identify the exact blocked action; do not request modification of the shared SupportOps app. No merge, ship, production source deploy or iteration increase is authorized.
+No further Install click is required. Both apps are installed, and the owner authorized completion on 11 November. Execution is paused at the provider cooldown. Existing authorization remains; no new permission is needed for read-only cleanup after the cooldown. No automatic follow-up has been scheduled. Do not request changes to the shared SupportOps app. No merge, ship, production deployment, budget increase or iteration increase is authorized.
 
 ## 9. UPDATE OBSIDIAN
 
-Suggested note `Agent-Ready Live — Project Log`; exact existing vault filename has not been verified. Do not edit the vault automatically.
+Suggested note: `Agent-Ready Live — Project Log`. Exact existing vault filename is unverified; do not edit the vault automatically.
 
-`2026-11-10 — Gate6 IN_PROGRESS: dedicated runtime read_products/read_publications installed; customer/order access denied; Cloudflare credential-only switch completed. Seed preflight passed; 318products/3266variants verified; rerun318skipped with0Adminmutations; baseline18/27unchanged. Live read-only commerce3/3; one model smoke51input/18output,USD0.0000141;75suite pending,fiveiterations,fundedcapUSD1.90/ownerUSD10. PR1open,no merge/source deploy.`
+`2026-11-11 — Gate 6 BLOCKED by provider cooldown. Seed318/3266,15collections,4discounts verified; zero-write rerun and baseline18/27 unchanged. First load1/20 passed; cause unknown. Retest20search/create/cancel acknowledgements passed,14absences verified,6pending; stopped76/80requests on upstream429. Retry-After2249s; earliest conservative retry18:00:34.893PKT; nothing scheduled. AI0/75, costUSD0.0000141, five iterations, fundedUSD1.90/ownerUSD10. PR1 open; no merge or source deployment.`
 
-## 10. Gate6 blockers
+## 10. Gate 6 blockers
 
-Complete scenario attempts and transcript reviews, safety-critical3/3 repetitions, bounded-load metrics, simulation restoration and remaining scaled browser checks. Seed/idempotence verification is complete. Gate6 is not passed by installation, browser cart smoke, transport smoke or deterministic tests alone. Production Wrangler configuration lacks the SESSION_STATE binding present locally; this is a known Gate7 deployment blocker. Gate7 is unauthorized and the production configuration was not changed. This progress report must be refreshed from final evidence before the Gate6 stop handoff.
+Provider cooldown, six unconfirmed retest cart absences, bounded-load acceptance, all 75 scenario attempts, human transcript acceptance, safety-critical repetitions and simulation restoration remain outstanding. Gate 6 is not passed by seeding, a smoke test or deterministic tests alone. The production Wrangler configuration lacks the local evaluation's `SESSION_STATE` binding; this remains an unauthorized Gate 7 deployment blocker. Both failed load attempts are preserved. This stop report makes no full-suite or Gate 6 acceptance claim; any later continuation must append its own evidence without replacing these results.

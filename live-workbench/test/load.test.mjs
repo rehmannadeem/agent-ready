@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {runLoad,percentile,throttleKind,retryAfterMs} from '../evals/load.mjs';
+import {runLoad,percentile,throttleKind,retryAfterMs,searchObservation} from '../evals/load.mjs';
 const store='karachi-kicks-supportops-lab.myshopify.com',hash='a'.repeat(64),pid='gid://shopify/Product/1',vid='gid://shopify/ProductVariant/1';
 const approval={owner_approved:true,worker_preflight_passed:true,seed_verified:true,load_test_approved:true};
 const oracle={digest:hash,seed:{store},manifest:{store,seed_sha256:hash,completed_at:'2026-11-10',products:{p001:{phase:'verified'}}},product:()=>({fixture_id:'p001',title:'Runner',shopper_eligible:true,tags:['armans-synthetic','seed-v1']}),productId:()=>pid,variant:()=>({id:vid,tracked:true,quantity:28,inventory_policy:'DENY'})};
@@ -38,6 +38,12 @@ test('wrong store, seed, approval, interval or reused session stops before API d
 });
 test('search must observe exact eligible seeded variant; unrelated results cannot create a cart',async()=>{
  const s=setup(({name})=>name==='search_catalog'?{products:[]}:null),r=await runLoad(s.options);assert.equal(s.calls.length,20);assert.equal(r.summary.failed_sessions,20);assert.equal(r.summary.passed_sessions,0);assert.equal(r.summary.not_run_requests,60);assert.equal(r.summary.cleanup_failures.length,0);
+ assert.equal(r.sessions[0].steps.search.search_observation.target_product_seen,false);
+});
+test('search diagnostics preserve missing variant evidence without leaking arbitrary merchant fields',()=>{
+ const result={products:Array.from({length:20},()=>({id:pid,secret:'PRIVATE_VALUE',variants:[{id:vid,availability:{available:false},price:{currency:'USD'},continue_url:'PRIVATE_VALUE'}]}))};
+ const observation=searchObservation(result,{productId:pid,variantId:vid});assert.equal(observation.product_count,20);assert.equal(observation.returned_product_ids.length,10);assert.equal(observation.target_variant_seen,true);assert.equal(observation.target_variant_available,false);assert.doesNotMatch(JSON.stringify(observation),/PRIVATE_VALUE|continue_url|secret/);
+ assert.equal(searchObservation({products:[{id:pid,variants:[]}]},{productId:pid,variantId:vid}).target_variant_seen,false);
 });
 test('persistence failure before dispatch causes no merchant request and exposes interruption',async()=>{
  const s=setup();let saves=0;s.options.saveRecovery=async()=>{if(++saves===2)throw Error('disk full');};const r=await runLoad(s.options);assert.equal(s.calls.length,0);assert.equal(r.summary.attempted_requests,0);assert.equal(r.stop_reason,'HARNESS_INTERRUPTED_OPERATOR_REVIEW_REQUIRED');

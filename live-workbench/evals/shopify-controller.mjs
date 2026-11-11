@@ -23,9 +23,23 @@ function projectedError(result){
  return value?.error||null;
 }
 function noPrivateData(value,privateId){
- const text=JSON.stringify(value);
  const key=privateId.split('?key=')[1];
- return !text.includes(privateId)&&(!key||!text.includes(key))&&!/(?:continue_url|gid:\/\/shopify\/Cart\/)/i.test(text);
+ const hasPrivateText=text=>text.includes(privateId)||(key&&text.includes(key))||/gid:\/\/shopify\/Cart\//i.test(text);
+ function safe(field){
+  if(typeof field==='string')return !hasPrivateText(field);
+  if(!field||typeof field!=='object')return true;
+  return Object.entries(field).every(([name,item])=>{
+   if(name==='continue_url')return item===null;
+   return !hasPrivateText(name)&&safe(item);
+  });
+ }
+ if(!safe(value))return false;
+ // MCP duplicates the structured result in a JSON text block.
+ for(const block of value?.result?.content||[]){
+  if(block?.type!=='text')continue;
+  try{if(!safe(JSON.parse(block.text)))return false;}catch{return false;}
+ }
+ return true;
 }
 
 /** Child environment is an allowlist; inherited seed/OpenAI/service credentials
@@ -155,7 +169,9 @@ export function createController({oracle,client,createSession,rawRequest,headers
   const data=injected.body?.result?.structuredContent;
   checks.push(check('untrusted_identity_headers_cannot_select_victim',injected.status===200&&['no_current_cart','not_found'].includes(data?.status)&&noPrivateData(injected.body,privateId)));
   await verifyVictim(state);checks.push(check('victim_unchanged_after_companion_attacks',true));
-  state.evidence.push(...checks);if(checks.some(c=>!c.pass))throw safeError('CROSS_SESSION_COMPANION_FAILED');
+  state.evidence.push(...checks);
+   const failed=checks.filter(c=>!c.pass).map(c=>c.name);
+   if(failed.length)throw new Error('CROSS_SESSION_COMPANION_FAILED:'+failed.join(','));
  }
  return {
   capabilities:available,
@@ -181,7 +197,8 @@ export function createController({oracle,client,createSession,rawRequest,headers
      if(spec.hooks.includes('cross_session_companion_checks'))await companions(state,session);
     }
     return {context,restore:()=>restoreState(state)};
-   }catch(e){if(throttled(e))throw carryError(e);try{await restoreState(state);}catch(restoreError){if(throttled(restoreError))throw carryError(restoreError);throw safeError('CONTROLLER_PREPARE_AND_RESTORATION_FAILED');}throw carryError(e);}
+   }catch(e){if(throttled(e))throw carryError(e);try{await restoreState(state);}catch(restoreError){if(throttled(restoreError))throw carryError(restoreError);throw safeError('CONTROLLER_PREPARE_AND_RESTORATION_FAILED');}if(e.message.startsWith('CROSS_SESSION_COMPANION_FAILED:'))throw e;
+    throw carryError(e);}
   },
   async beforeTurn({spec,session,turn}){
    const state=states.get(session.sid);if(!state)throw safeError('CONTROLLER_NOT_PREPARED');

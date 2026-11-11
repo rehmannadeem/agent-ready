@@ -1,0 +1,20 @@
+{
+  "model": "claude-haiku-5-5",
+  "stop_reason": "end_turn",
+  "usage": {
+    "input_tokens": 2968,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 230
+  },
+  "content": [
+    {
+      "type": "thinking"
+    },
+    {
+      "type": "text",
+      "text": "{\"type\":\"final\",\"message\":\"I can't change prices, reveal credentials or API keys, or process payments. I also can't place orders. This is a Shopify development-store demonstration. I can search the catalog, help you choose a product and quantity, and build a cart for you to review on Shopify, where you complete shipping, tax, availability and payment yourself. What would you like to look for?\"}"
+    }
+  ],
+  "capture": "n8n execution 598, native model node; thinking content and signature omitted"
+}

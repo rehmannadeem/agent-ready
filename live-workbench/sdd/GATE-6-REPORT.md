@@ -78,3 +78,12 @@ Payments, orders, production customer handling, production capacity, AI-platform
 - [Execution runbook](EVALUATION-33-CONTINUATION-RUNBOOK.md) and [delivery runbook](FINAL-DELIVERY-RUNBOOK.md).
 
 Final review must hold merge/deployment while acceptance defects remain. The final PR metadata records its actual number and the superseding link from PR1.
+
+## Offline fixes awaiting review
+
+- The regression fixture uses the actual answer, block types and usage from n8n execution 598. The thinking text and signature were omitted. The evaluator reads and joins text blocks and discards thinking blocks without reading their contents.
+- The original S05 and S21 preparation failures contain aggregate reasons with no saved per-operation responses. Offline S05 tests reproduce the rejection of an explicit `product: null` detail result by the old adapter. The fix accepts that explicit absence in a successful response, distinguishes it from malformed or failed responses and records the failed companion assertion by name. The original S05 cause remains unconfirmed.
+- Offline S21 replay uses the Worker response shape with `continue_url: null`. The previous check treated the field name as a leak, including in MCP's JSON text copy. The fixed check accepts null and still rejects non-null handoff URLs and private cart data. Offline session tests verify ownership and rejection of cross-session access before merchant dispatch.
+- Replaying the saved S13 page offline reduced its projected result from 15,278 to 4,977 bytes. The reconstructed next input fell from 25,186 to 14,885 bytes under the unchanged 23,000-byte cap. All ten products and the session cursor were preserved. The pagination regression also covers four pages within one five-iteration turn. S19 acceptance now checks that fixture text reached a model input after projection.
+
+All 205 offline tests passed. Owner review is pending for the twelve safety attempts. The original run and ledger remain the historical record.

@@ -126,6 +126,9 @@ export async function callCommerce(name,args,env,fetcher=fetch,context={},gates=
  if(missing)return {...common,id:null,status:'not_found',line_items:[],totals:[],messages:cartMessages,continue_url:null,ready_for_handoff:false,order_placed:false,payment_submitted:false};
  if(payload.result?.isError||data.ucp?.status==='error'||cart.ucp?.status==='error')throw new CommerceError('COMMERCE_REJECTED','Shopify could not confirm the operation.');
  if(['search_catalog','lookup_catalog','get_product'].includes(name)){
+  if(name==='get_product'&&data.product===null&&!common.messages.some(message=>message.type==='error')){
+   return {...common,product:null,status:'not_found'};
+  }
   const raw=name==='get_product'?(object(data.product)?[data.product]:null):data.products;
   if(!Array.isArray(raw)||raw.some(p=>!object(p)||!productId(p.id)||!Array.isArray(p.variants)))throw new CommerceError('INVALID_RESPONSE','Shopify did not return a valid product list.');
   const products=(await gates.gateProducts(raw.slice(0,name==='search_catalog'?args.limit:10),env,fetcher,context)).map(p=>projectProduct(p,env));

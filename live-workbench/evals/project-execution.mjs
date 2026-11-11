@@ -15,7 +15,9 @@ export function projectModelExecution(envelope,{executionId,reservationId,workfl
  if(result?.model!=='claude-haiku-5-5')throw Error('NATIVE_MODEL_RESPONSE_UNEXPECTED');
  const u=result.usage;
  if(!Number.isSafeInteger(u?.input_tokens)||u.input_tokens<0||!Number.isSafeInteger(u?.output_tokens)||u.output_tokens<0||(u.cache_creation_input_tokens??0)!==0||(u.cache_read_input_tokens??0)!==0)throw Error('NATIVE_MODEL_USAGE_UNVERIFIED');
- const contentValid=Array.isArray(result.content)&&result.content.length>0&&result.content.every(c=>c.type==='text'&&typeof c.text==='string');
+ const textBlocks=Array.isArray(result.content)?result.content.filter(block=>block?.type==='text'):[];
+ const contentValid=textBlocks.length>0&&result.content.every(block=>
+  block?.type==='thinking'||block?.type==='redacted_thinking'||(block?.type==='text'&&typeof block.text==='string'));
  const error=result.stop_reason!=='end_turn'?'PROVIDER_STOP_REASON_'+String(result.stop_reason):!contentValid?'PROVIDER_CONTENT_UNEXPECTED':null;
- return {reservation_id:reservationId,execution_id:String(executionId),model:result.model,model_calls:1,text:contentValid?result.content.map(c=>c.text).join(''):'',stop_reason:result.stop_reason,...(error?{error}:{}),usage:{input_tokens:u.input_tokens,output_tokens:u.output_tokens,cache_creation_input_tokens:0,cache_read_input_tokens:0}};
+ return {reservation_id:reservationId,execution_id:String(executionId),model:result.model,model_calls:1,text:contentValid?textBlocks.map(block=>block.text).join(''):'',stop_reason:result.stop_reason,...(error?{error}:{}),usage:{input_tokens:u.input_tokens,output_tokens:u.output_tokens,cache_creation_input_tokens:0,cache_read_input_tokens:0}};
 }

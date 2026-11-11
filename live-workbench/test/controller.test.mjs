@@ -13,7 +13,7 @@ import {canonical,digest} from '../catalogue/generate.mjs';
 const STORE='karachi-kicks-supportops-lab.myshopify.com',HASH='a'.repeat(64),variant='gid://shopify/ProductVariant/1';
 const oracle={seed:{store:STORE},digest:HASH,variant:()=>({id:variant}),productId:()=> 'gid://shopify/Product/1'};
 const session=(sid='attacker_session')=>{const now=Math.floor(Date.now()/1000);return{sub:'operator_test',sid,store:STORE,market:'US',currency:'USD',iat:now,exp:now+600};};
-const noCart={status:'no_current_cart',line_items:[],totals:[],messages:[],ready_for_handoff:false};
+const noCart={status:'no_current_cart',line_items:[],totals:[],messages:[],ready_for_handoff:false,continue_url:null};
 const victimCart={status:'active',currency:'USD',line_items:[{item:{id:variant,title:'Runner',price:7900},quantity:1}],totals:[{type:'total',amount:7900}],discounts:{codes:[],applied:[]},messages:[],ready_for_handoff:true,continue_url:'https://'+STORE+'/checkout/PRIVATE_UNIT_KEY'};
 const spec=(id,hook)=>({id,hooks:Array.isArray(hook)?hook:[hook]});
 const receipt=request=>({type:request.type,phase:request.action==='apply'?'applied':'restored',journal_token:request.journal_token,resource_id:'gid://shopify/Product/1',variant_id:variant,before_value:7900,after_value:8900,guard:'snapshot guard',restored_verified:request.action==='restore'});
@@ -78,12 +78,12 @@ test('delegated simulation guards require both ownership tags and complete conte
  assert.doesNotThrow(()=>assertOwned({...entry,tags:['armans-synthetic','seed-v1']},entry));
  const current={product:{id:entry.id,updatedAt:'version1',price:'79.00'}};const journal={phase:'applied',before:current,before_sha256:digest(canonical(current)),after:current,after_sha256:digest(canonical(current))};assert.equal(restoreAllowed(current,journal),true);assert.equal(restoreAllowed({...current,product:{...current.product,updatedAt:'version2'}},journal),true);assert.equal(restoreAllowed(current,{...journal,phase:'applying'}),false);
 });
-function crossFixture({privateResolverFailure=false,rawFailure=false}={}){
+function crossFixture({privateResolverFailure=false,rawFailure=false,handoffLeak=false}={}){
  const env={SHOPIFY_STORE:STORE,COMMERCE_SERVICE_SECRET:'s'.repeat(40),SESSION_ISSUER_SECRET:'i'.repeat(40)};
  const attacker=session(),victim=session('victim_session');let victimExists=false;const calls=[],namespaceCalls=[];
  const client={async callTool(name,args,s){calls.push({name,sid:s.sid});if(s.sid===victim.sid){if(name==='create_cart'){victimExists=true;return structuredClone(victimCart);}if(name==='cancel_cart'){victimExists=false;return {...victimCart,status:'cancellation_requested',ready_for_handoff:false};}return victimExists?structuredClone(victimCart):{...noCart,status:'not_found'};}return noCart;}};
  const headersForSession=async s=>({Authorization:'Bearer '+env.COMMERCE_SERVICE_SECRET,'X-Armans-Session':await signSession(s,env.SESSION_ISSUER_SECRET)});
- const namespace={idFromName:x=>x,get:key=>({fetch:async()=>{namespaceCalls.push(key);assert.notEqual(key,await sessionKey(victim));return new Response(JSON.stringify(noCart),{headers:{'Content-Type':'application/json'}});}})};
+ const namespace={idFromName:x=>x,get:key=>({fetch:async()=>{namespaceCalls.push(key);assert.notEqual(key,await sessionKey(victim));return new Response(JSON.stringify(handoffLeak?{...noCart,continue_url:'https://example.invalid/checkout'}:noCart),{headers:{'Content-Type':'application/json'}});}})};
  const rawRequest=async({session:s,path='/api/mcp',body,headersOverride={}})=>{if(rawFailure)throw Error('NETWORK_FAILED');const headers=new Headers({...await headersForSession(s),'Content-Type':'application/json'});for(const [k,v]of Object.entries(headersOverride))headers.set(k,v);const r=await handleCommerce(new Request('http://127.0.0.1:8787'+path,{method:'POST',headers,body:JSON.stringify(body)}),{...env,SESSION_STATE:namespace});return {status:r.status,body:await r.json()};};
  const c=createController({oracle,client,createSession:async()=>victim,rawRequest,headersForSession,getPrivateCartId:async()=>{if(privateResolverFailure)throw Error('PRIVATE_HOOK_UNAVAILABLE');return 'gid://shopify/Cart/controlledvictim?key=PRIVATE_UNIT_KEY';}});
  return {c,attacker,victim,calls,namespaceCalls,sp:spec('S21',['setup_cross_session_cart','cross_session_companion_checks'])};
@@ -98,6 +98,12 @@ test('S21 partial preparation failure still cleans victim on private callback or
  for(const setting of [{privateResolverFailure:true},{rawFailure:true}]){
   const f=crossFixture(setting);await assert.rejects(()=>f.c.prepareScenario({spec:f.sp,session:f.attacker}));assert.equal(f.calls.filter(c=>c.name==='cancel_cart').length,1);
  }
+});
+test('S21 fails closed and reports the subcheck if the empty response carries a handoff URL',async()=>{
+ const f=crossFixture({handoffLeak:true});
+ await assert.rejects(()=>f.c.prepareScenario({spec:f.sp,session:f.attacker}),
+  {message:'CROSS_SESSION_COMPANION_FAILED:untrusted_identity_headers_cannot_select_victim'});
+ assert.equal(f.calls.filter(call=>call.name==='cancel_cart').length,1);
 });
 
 test('controller child shares manifest lock through auth and simulation; overlapping child cannot authenticate or write',async()=>{

@@ -8,6 +8,17 @@ import {signSession} from '../src/session-security.mjs';
 import {createWorkerClient,createRequestPacer,createRateLimitGuard} from './runner.mjs';
 
 const absentCart=r=>r?.error==='NO_CURRENT_CART'||(!r?.error&&['not_found','no_current_cart'].includes(r?.status)&&Array.isArray(r.line_items)&&r.line_items.length===0);
+const excludedVariantDenials=new Set(['PRODUCT_UNAVAILABLE','PRODUCT_NOT_ELIGIBLE','VARIANT_NOT_ELIGIBLE','CATALOG_NOT_ELIGIBLE']);
+export function exclusionChecks({search,lookup,detail,mutation,productId,variantId}){
+ const hidesFixture=result=>!result?.error&&Array.isArray(result?.products)&&result.products.every(product=>
+  product?.id!==productId&&!product?.variants?.some(variant=>variant?.id===variantId));
+ return [
+  {name:'search_hides_fixture',pass:hidesFixture(search)},
+  {name:'lookup_hides_fixture',pass:hidesFixture(lookup)},
+  {name:'detail_reports_absence',pass:!detail?.error&&detail?.product===null&&['not_eligible','not_found'].includes(detail.status)},
+  {name:'cart_rejects_fixture',pass:excludedVariantDenials.has(mutation?.error)}
+ ];
+}
 export async function cleanupCurrentCart(client,session){
  const current=await client.callTool('get_cart',{},session);
  if(absentCart(current))return;
@@ -88,9 +99,10 @@ export async function createAdapter({oracle}){
      const lookup=await client.callTool('lookup_catalog',{ids:[pid,vid]},session);
      const detail=await client.callTool('get_product',{id:pid},session);
      const mutation=await client.callTool('create_cart',{line_items:[{variant_id:vid,quantity:1}]},session);
-     const pass=!search.error&&!lookup.error&&!(search.products||[]).some(x=>x.id===pid)&&!(lookup.products||[]).some(x=>x.id===pid)&&!detail.error&&!detail.product&&['PRODUCT_UNAVAILABLE','PRODUCT_NOT_ELIGIBLE','VARIANT_NOT_ELIGIBLE','CATALOG_NOT_ELIGIBLE'].includes(mutation.error);
-     localEvidence.push({name:'excluded_'+fid,pass});
-     if(!pass)throw Error('EXCLUSION_COMPANION_FAILED:'+fid);
+     const checks=exclusionChecks({search,lookup,detail,mutation,productId:pid,variantId:vid});
+     localEvidence.push(...checks.map(check=>({...check,name:'excluded_'+fid+'_'+check.name})));
+     const failures=checks.filter(check=>!check.pass).map(check=>check.name);
+     if(failures.length)throw Error('EXCLUSION_COMPANION_FAILED:'+fid+':'+failures.join(','));
     }
    }
    if(spec.hooks.includes('late_page_preflight')){

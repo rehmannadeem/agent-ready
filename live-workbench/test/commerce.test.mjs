@@ -71,6 +71,15 @@ test('publication gate runs on search, lookup and detail before exposure',async(
 test('variant eligibility denial occurs before mutation request',async()=>{
  let calls=0;await assert.rejects(()=>callCommerce('create_cart',create,env,async()=>{calls++;return response(cart);},context,{...gates,gateVariants:async()=>{throw new CommerceError('PRODUCT_UNAVAILABLE','Unavailable',403);}}));assert.equal(calls,0);
 });
+test('explicit product absence remains distinct from a malformed or failed detail response',async()=>{
+ const args={id:pid};
+ const absent=await call('get_product',args,async()=>response({product:null}));
+ assert.equal(absent.product,null);
+ assert.equal(absent.status,'not_found');
+ await assert.rejects(call('get_product',args,async()=>response({})),{code:'INVALID_RESPONSE'});
+ await assert.rejects(call('get_product',args,async()=>response({product:null},true)),{code:'COMMERCE_REJECTED'});
+ await assert.rejects(call('get_product',args,async()=>response({product:null,messages:[{type:'error'}]})),{code:'INVALID_RESPONSE'});
+});
 test('full-state update preserves omitted discount codes and supported fresh state; explicit [] clears',async()=>{
  const snapshot={...cart,buyer:{consent:{'dev.example.marketing':{granted:false,source:'platform'}}},context:{intent:'running'},attribution:{utm_source:'test'},fulfillment:{methods:[]},declared_fields:[{key:'note',value:'keep'}]};
  let sent;const f=async(_,init)=>{sent=JSON.parse(init.body).params.arguments;return response({...cart,line_items:[...cart.line_items,{item:{id:v2},quantity:2}]});};

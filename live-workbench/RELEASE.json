@@ -27,7 +27,7 @@
   "candidate": {
     "date": "2026-11-11",
     "branch": "feat/realistic-catalogue-20261110",
-    "status": "GATE6_PENDING_CLEANUP_AND_EVALUATION",
+    "status": "GATE6_BLOCKED_RENEWED_PROVIDER_THROTTLING",
     "deployed": false,
     "merged": false,
     "gate2_approved": true,
@@ -59,7 +59,7 @@
     "cloudflare_credentials_switched": true,
     "source_deployed": false,
     "deterministic_tests_status": "173/173 passed on 2026-11-11 after priority ordering; previous 172/172 result retained as historical evidence",
-    "source_checkpoint": "014e40e2c7cfabd2f7a366139bc08cb28e537c67",
+    "source_checkpoint": "3538249ea82e0726086be8c247df76b8ebc0ab34",
     "browser_cart_smoke": "PASS: p001 Black/10 quantity1 USD79 create/get/cancel/verified absence; separate from75scenario suite",
     "credential_change_cloudflare_version": "1da0a93d-088b-4f40-8885-24629753a0e9",
     "credential_change_cloudflare_deployment": "d394ec92-a435-48f1-a46a-25d8cd90a17f",
@@ -129,11 +129,10 @@
     "provider_cooldown": {
       "observed_error": "RATE_LIMITED",
       "http_status": 429,
-      "retry_after_seconds": 2249,
-      "recorded_at": "2026-11-11T12:23:00.893Z",
-      "resume_after_plus_safety_margin": "2026-11-11T13:00:34.893Z",
-      "resume_after_plus_safety_margin_pkt": "2026-11-11T18:00:34.893+05:00",
-      "timestamp_basis": "Conservative remote clock read after the response, plus five seconds; original response timestamp was not captured",
+      "retry_after_seconds": 3550,
+      "recorded_at": "2026-11-11T13:00:51.304Z",
+      "resume_after_plus_safety_margin": "2026-11-11T14:00:06.304Z",
+      "resume_after_plus_safety_margin_pkt": "2026-11-11T19:00:06.304+05:00",
       "future_execution_scheduled": false
     },
     "evaluation_pacing_ms": 3000,
@@ -147,7 +146,7 @@
     "load_finding": "Anonymous UCP throttled during 20-overlapping-session test; HTTP requests were serialized, not 20 simultaneous network calls",
     "production_authenticated_agent_access": "REQUIRED_NOT_CONFIGURED_OR_PROVEN",
     "evaluation_execution_plan": {
-      "status": "PENDING_READ_ONLY_CLEANUP",
+      "status": "BLOCKED_REQUIRED_ABSENCE_CHECKS_UNCONFIRMED",
       "required_absence_checks": 6,
       "total_first_attempts": 75,
       "priority_scenarios": [
@@ -162,6 +161,30 @@
       "max_iterations": 5,
       "request_spacing_ms": 3000,
       "human_acceptance": "PENDING_REVIEW after mechanical success"
+    },
+    "provider_cooldown_history": [
+      {
+        "observed_error": "RATE_LIMITED",
+        "http_status": 429,
+        "retry_after_seconds": 2249,
+        "recorded_at": "2026-11-11T12:23:00.893Z",
+        "resume_after_plus_safety_margin": "2026-11-11T13:00:34.893Z",
+        "resume_after_plus_safety_margin_pkt": "2026-11-11T18:00:34.893+05:00",
+        "timestamp_basis": "Conservative remote clock read after the response, plus five seconds; original response timestamp was not captured",
+        "future_execution_scheduled": false
+      }
+    ],
+    "final_read_only_recovery": {
+      "evidence": "sdd/evidence/load-six-absence-after-cooldown-2026-11-11.json",
+      "planned_reads": 6,
+      "attempted_reads": 1,
+      "not_run_reads": 5,
+      "absence_pending": 6,
+      "previously_verified_absent": 14,
+      "mutations": 0,
+      "model_calls": 0,
+      "stop_reason": "RATE_LIMITED",
+      "new_load_runs": 0
     }
   }
 }

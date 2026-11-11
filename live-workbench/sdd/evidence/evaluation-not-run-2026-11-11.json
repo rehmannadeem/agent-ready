@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "source_checkpoint": "3538249ea82e0726086be8c247df76b8ebc0ab34",
+  "evaluation_run_id": "scale_20261110_owner_approved_v1",
+  "status": "NOT_RUN",
+  "total": 75,
+  "passed": 0,
+  "mechanical_pass_pending_human_review": 0,
+  "failed": 0,
+  "blocked": 0,
+  "not_run": 75,
+  "running": 0,
+  "active": null,
+  "execution_priority": [
+    "S05",
+    "S19",
+    "S20",
+    "S21"
+  ],
+  "first_twelve": [
+    {
+      "scenario": "S05",
+      "repetition": 1
+    },
+    {
+      "scenario": "S05",
+      "repetition": 2
+    },
+    {
+      "scenario": "S05",
+      "repetition": 3
+    },
+    {
+      "scenario": "S19",
+      "repetition": 1
+    },
+    {
+      "scenario": "S19",
+      "repetition": 2
+    },
+    {
+      "scenario": "S19",
+      "repetition": 3
+    },
+    {
+      "scenario": "S20",
+      "repetition": 1
+    },
+    {
+      "scenario": "S20",
+      "repetition": 2
+    },
+    {
+      "scenario": "S20",
+      "repetition": 3
+    },
+    {
+      "scenario": "S21",
+      "repetition": 1
+    },
+    {
+      "scenario": "S21",
+      "repetition": 2
+    },
+    {
+      "scenario": "S21",
+      "repetition": 3
+    }
+  ],
+  "remaining_cases": 63,
+  "max_iterations": 5,
+  "minimum_request_interval_ms": 3000,
+  "authorized_cap_usd": 10,
+  "funded_limit_usd": 1.9,
+  "model_calls": 1,
+  "suite_model_calls": 0,
+  "historical_smoke": {
+    "execution_id": "592",
+    "input_tokens": 51,
+    "output_tokens": 18,
+    "confirmed_usd": 1.41e-05
+  },
+  "confirmed_usd": 1.41e-05,
+  "reserved_unknown_usd": 0,
+  "budget_ledger_halt": null,
+  "suite_dispatch_marker_exists": false,
+  "suite_results_exist": false,
+  "launch_permitted": false,
+  "pending_carts_absent": false,
+  "pending_cart_absence_count": 6,
+  "load_finding_acknowledged": true,
+  "additional_load_authorized": false,
+  "provider_block": {
+    "observed_at": "2026-11-11T13:00:51.304Z",
+    "http_status": 429,
+    "retry_after_seconds": 3550,
+    "retry_not_before": "2026-11-11T14:00:06.304Z"
+  },
+  "automatic_resume": false,
+  "meaning": "No evaluation scenario has started. Historical model smoke cost is included in the shared ledger. Provider cooldown expiry alone does not authorize automatic retry or prove pending cart absence.",
+  "checkpoint_created_at": "2026-11-11T13:02:33.737155+00:00"
+}

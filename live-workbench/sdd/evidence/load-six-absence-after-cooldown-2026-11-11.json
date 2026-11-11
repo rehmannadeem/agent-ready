@@ -1,0 +1,25 @@
+{
+  "started_at": "2026-11-11T13:00:50.425Z",
+  "store": "karachi-kicks-supportops-lab.myshopify.com",
+  "scope": "Six pending cart absence reads only; no cancellation retries or load test",
+  "mutations": 0,
+  "model_calls": 0,
+  "previously_confirmed_absent": 14,
+  "planned_reads": 6,
+  "checks": [
+    {
+      "correlation": "2b1c19af9485222e",
+      "observed_at": "2026-11-11T13:00:51.304Z",
+      "error": "RATE_LIMITED",
+      "http_status": 429,
+      "retry_after_seconds": 3550,
+      "empty": false
+    }
+  ],
+  "stop_reason": "RATE_LIMITED",
+  "not_before": "2026-11-11T14:00:06.304Z",
+  "finished_at": "2026-11-11T13:00:51.305Z",
+  "all_six_absent": false,
+  "total_confirmed_absent": 14,
+  "all20_absent": false
+}

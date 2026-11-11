@@ -1,6 +1,6 @@
 # Agent Shopping Readiness Scorecard
 
-**FOR CLAUDE REVIEW — 11 November 2026 — Gate 6 pending cleanup and evaluation; not passed.**
+**FOR CLAUDE REVIEW — 11 November 2026 — Gate 6 BLOCKED by renewed provider throttling; not passed.**
 
 Store: Karachi Kicks SupportOps Lab. Synthetic catalogue on a real Shopify development store; no production client, orders, payments or customer-data handling.
 
@@ -20,7 +20,8 @@ Store: Karachi Kicks SupportOps Lab. Synthetic catalogue on a real Shopify devel
 | Load recovery, 11 November | All 20 old carts confirmed absent; 25/25 diagnostic searches passed |
 | Load retest | Stopped after 76/80 requests: all 20 search/create/cancel acknowledgements passed; 14 cart absences verified, six pending |
 | Retest outcome | 14 full sessions passed, two failed verification reads, four incomplete; upstream HTTP 429 / `RATE_LIMITED` |
-| Provider cooldown | `Retry-After: 2249` seconds; conservative earliest retry 18:00:35 PKT on 11 November; read-only recovery queued for this active session |
+| Recovery after cooldown | First of six absence reads returned HTTP 429 at 13:00:51.304 UTC; other five NOT_RUN; all six absences remain unconfirmed |
+| Latest provider cooldown | `Retry-After: 3550` seconds; conservative next retry 19:00:06.304 PKT on 11 November; no automatic retry scheduled |
 | AI scenario suite | **0/75 attempted**; pass rate unavailable |
 | Safety-critical S05/S19/S20/S21 | Not run live |
 | Model spend | USD 0.0000141 transport smoke; funded stop USD 1.90; owner ceiling USD 10 |
@@ -28,8 +29,10 @@ Store: Karachi Kicks SupportOps Lab. Synthetic catalogue on a real Shopify devel
 
 The earlier load failure remains part of the evidence. Its historical cause is unproven; a later pass must not erase it. No functional search fix or production-reliability claim is made from the successful diagnostics.
 
-Revised owner scope: no further load run. After the recorded provider cooldown, verify absence for the six pending carts using read-only checks, then execute the 75 first attempts at five iterations. Run S05, S19, S20 and S21 with all three repetitions first (12 attempts), then the other 63 attempts. Cleanup and scenario outcomes are pending; verify simulation restoration and review every transcript. Shared evaluator request pacing was reduced to one request per 3,000 ms; 44 focused tests passed locally and on Windows. Full code suite: 173/173 passed after priority ordering; the earlier 172/172 result remains historical evidence. A persistent throttle stop now blocks subsequent model/tool calls and restart until operator recovery. Mechanical successes remain **PENDING_REVIEW** until human acceptance. The controlled local evaluator is distinct from the unchanged published hosted-chat workflow. Shared Armans SupportOps Connector is unchanged. PR #1 remains open and unmerged; stop at Gate 6.
+Revised owner scope: no further load run. After the recorded provider cooldown, verify absence for the six pending carts using read-only checks, then execute the 75 first attempts at five iterations. Run S05, S19, S20 and S21 with all three repetitions first (12 attempts), then the other 63 attempts. Recovery was attempted after the prior cooldown but blocked on its first read; all 75 scenario attempts remain NOT_RUN because absence confirmation is a prerequisite; verify simulation restoration and review every transcript. Shared evaluator request pacing was reduced to one request per 3,000 ms; 44 focused tests passed locally and on Windows. Full code suite: 173/173 passed after priority ordering; the earlier 172/172 result remains historical evidence. A persistent throttle stop now blocks subsequent model/tool calls and restart until operator recovery. Mechanical successes remain **PENDING_REVIEW** until human acceptance. The controlled local evaluator is distinct from the unchanged published hosted-chat workflow. Shared Armans SupportOps Connector is unchanged. PR #1 remains open and unmerged; stop at Gate 6.
 
 UCP merchant requests currently use anonymous access; the isolated Shopify Admin credential is a separate authentication path. The three-second evaluator spacing is a precaution, not a merchant-quota guarantee.
 
 The live load finding is **anonymous UCP throttled during the 20-overlapping-session test**. HTTP requests were serialized, not 20 simultaneous network calls. This remains an unresolved production risk; a further load pass is not a criterion to rerun under the revised scope. Authenticated agent access is required before production and has not been configured or proven.
+
+[Final read-only recovery evidence](sdd/evidence/load-six-absence-after-cooldown-2026-11-11.json): one read, zero mutations and zero model calls. Source checkpoint `3538249ea82e0726086be8c247df76b8ebc0ab34`. No new authentication configuration was applied.

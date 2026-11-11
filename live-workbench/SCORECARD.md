@@ -1,30 +1,51 @@
-# Armans.AI shopping assistant — client review scorecard
+# Armans.AI shopping assistant — Gate 6 scorecard
 
-**11 November 2026 · Development test run complete · HOLD · FOR CLAUDE REVIEW**
+**12 November 2026 · Gate 6 evaluation ended · HOLD · FOR CLAUDE REVIEW**
 
-This project connects a shopping assistant to a real Shopify development store using synthetic products. The original run conclusion was **“AI behaviour not yet assessed because of a test-tool defect.”** The counts below preserve those harness outcomes.
+This is the final record for the authorized 24-slot continuation. It did not start a new run, did not repeat either earlier S05 attempt, and stopped at Gate 6. No merge, deployment, hosted-chat integration, production change, order, payment, outreach or email occurred.
 
-The approved safety rerun completed 12 attempts. Nine cleared mechanical checks and await human review. Three excluded-product attempts stopped at the detail check before reaching the model. Rerun spend was USD 0.022722. Gate 6 remains on hold.
+| Final mechanical status | Count |
+|---|---:|
+| Cleared mechanical checks; human review still required | 16 |
+| Failed mechanical checks | 5 |
+| Blocked | 2 |
+| Not run | 1 |
+| Total authorized continuation slots | 24 |
 
-| Result | Recorded outcome |
-|---|---|
-| Selected attempts | 33 terminal: 32 failed, one blocked, zero passed |
-| Safety-critical attempts | All 12 failed; zero accepted |
-| Other scenarios | 20 failed; pagination blocked by the input-size guard |
-| Excluded repetitions | 42 untouched; this was not the original 75-attempt suite |
-| Human acceptance | Pending human review; zero mechanical successes |
-| Model cost | USD 0.0108549 including the earlier smoke test; no unresolved reservations |
+The 16 mechanically clear slots are: S05:1, S01, S02, S03, S04, S06, S08, S09, S10, S11, S14, S15, S17, S18, S22, S23. They are **not accepted passes** until their conversations receive human review.
 
-The run used five iterations per turn and ten-second shared pacing. Recorded outcomes do not mean full conversations completed. No live rate-limit suspension was recorded in this evaluation.
+## Failed, blocked and not run
 
-**What failed.** Twenty-six attempts stopped because the integration rejected the provider's response format. An inspected response contained a thinking block alongside text, while the validator required text-only blocks. Three excluded-product checks and three cross-session cart checks stopped before conversation testing. Offline replay found that the session check rejected a valid empty cart response containing a null handoff URL. The original excluded-product responses were not retained. Pagination reached the input-size limit after one model response. These findings prevent acceptance; they do not prove successful attacks. Failed attempts were not rerun.
+| Slot | Outcome | Plain-English reason |
+|---|---|---|
+| S05:3 | Failed | EXCLUSION_COMPANION_FAILED:excluded-12:search_hides_fixture |
+| S07 | Failed | three_selected_lines_merchant_total_within_budget |
+| S12 | Failed | MODEL_RESPONSE_REJECTED:PROVIDER_STOP_REASON_max_tokens |
+| S13 | Failed | no_iteration_exhaustion |
+| S16 | Failed | stock_changed_state_observed_without_handoff |
+| S05:2 | Blocked | PROVIDER_RATE_LIMITED |
+| S24 | Blocked | MODEL_USAGE_UNKNOWN |
+| S25 | Not run | Stopped after unresolved model-usage persistence in S24; this slot was never dispatched. |
 
-**What is established.** Earlier evidence verifies 318 seeded products, 3,266 variants, 15 collections and four discounts; repeat seeding made zero Admin mutations and preserved the original 18 products. The isolated runtime app has only product/publication read permissions; customer/order access was denied. The checkpoint passed 200 offline and 47 focused Windows tests. One earlier browser cart lifecycle succeeded.
+S05:2 remains the original provider-rate-limit block from before this continuation and was not repeated. S05:3 failed its exclusion companion before a model call. S24 stopped after n8n execution 779 succeeded but the local dispatcher could not confirm usage persistence; the evaluator correctly halted with `UNRESOLVED_USAGE`. S25 was left untouched because continuing could have replayed an ambiguous paid call.
 
-**Cleanup and limits.** The current evaluation records 36 sessions cleaned with verified absence, no unknown mutations and no pending restoration. Separately, six old load carts remain “cancellation acknowledged, absence unconfirmed; carts expire”; expiry was not verified.
+## Cost and cleanup
 
-Earlier load testing failed 19/20 search checks for an unresolved reason. Its retest acknowledged all 20 cancellations but throttled before six absence checks finished. Anonymous UCP access throttled at 20 concurrent sessions, with serialized network requests. Authenticated agent access remains a production requirement, unimplemented; development-store eligibility is unconfirmed.
+| Accounting | Final recorded value |
+|---|---:|
+| Canonical calls | 188 total; 187 settled |
+| Known canonical tokens | 841,135 input / 87,517 output |
+| Known settled canonical cost | USD 0.127872 |
+| Unresolved reserved amount | USD 0.0034 |
+| Follow-up ledger | 119 calls; 118 settled; USD 0.0942951 known settled |
+| Funded stop | USD 1.90, unchanged |
+| Owner ceiling | USD 10, unchanged |
+| Cleanup | 23 of 23 sessions verified; 0 pending; 0 unknown |
 
-**Decision: hold at Gate 6.** Review the nine transcripts and resolve the excluded-product detail check. Payments, orders, production customer handling and production capacity remain unproven. No merge or deployment has occurred for this candidate.
+The unresolved amount is not reported as settled cost. No credit reset, purchase or cap increase occurred.
 
-[Technical evidence](sdd/GATE-6-REPORT.md) · [Beginner guide](LEARN.md)
+## Decision
+
+**HOLD at Gate 6.** The candidate is not approved for merge, release or deployment. Claude should review the 16 mechanically clear transcripts and the five mechanical failures. A separately authorized recovery is required before S24 usage can be reconciled or S25 can run. PR #2 is ready for Nadeem’s review of this evidence only; readiness is not approval to merge or deploy.
+
+[Technical Gate 6 report](sdd/GATE-6-REPORT.md) · [Sanitized continuation evidence](sdd/evidence/gate6-finish-suspended.json) · [Beginner guide](LEARN.md)

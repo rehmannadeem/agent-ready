@@ -1,0 +1,23 @@
+{
+  "not_before": "2026-11-11T14:15:00.000Z",
+  "scenarios": [
+    "S05",
+    "S19",
+    "S20",
+    "S21"
+  ],
+  "repetitions": 3,
+  "selected_attempts": 12,
+  "out_of_scope_attempts": 63,
+  "max_iterations": 5,
+  "minimum_request_interval_ms": 10000,
+  "stop_first_429": true,
+  "cart_absence_prerequisite": false,
+  "prior_cart_status": "cancellation acknowledged, absence unconfirmed; carts expire",
+  "expiry_verified": false,
+  "offline_tests": 176,
+  "offline_passed": 176,
+  "store_calls_during_preparation": 0,
+  "model_calls_during_preparation": 0,
+  "execution_status": "NOT_STARTED"
+}

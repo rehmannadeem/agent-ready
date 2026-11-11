@@ -1,0 +1,113 @@
+{
+  "recorded_at": "2026-11-11T12:23:00.893Z",
+  "source": "Safe stdout projection of read-only recovery process 30908",
+  "quiet_cooldown_seconds": 60,
+  "request_spacing_ms": 3000,
+  "checks": [
+    {
+      "correlation": "f4f1ee6a4094f6b9",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "6238a37765684490",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "cdcc504d3177bcba",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "4f892f924a67a198",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "c73e2b32a1d46f79",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "0129b1a6541354eb",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "f2c69ea0b8d25ba6",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "72cfb0663ce5c3f3",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "4476f0774de869af",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "439ebdb6dd35f994",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "5a87d24bdb2e3279",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "2cb6c43565e5ff2d",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "d62a84aabd9e7fab",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "b542c747e7cf4d20",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "2b1c19af9485222e",
+      "error": "RATE_LIMITED",
+      "retry_after_seconds": 2249,
+      "http_status": 429,
+      "empty": false
+    }
+  ],
+  "all20_absent": false,
+  "cancel_acknowledged_sessions": 20,
+  "absence_confirmed_sessions": 14,
+  "absence_unconfirmed_sessions": 6,
+  "upstream_retry_after_seconds": 2249,
+  "not_before_conservative": "2026-11-11T13:00:29.893Z",
+  "deadline_note": "Conservative deadline calculated from remote clock read after response; original response timestamp was not captured.",
+  "mutations": 0,
+  "model_calls": 0,
+  "stopped_on_first_throttle": true,
+  "slower_load_not_started": true,
+  "not_before_conservative_pkt": "2026-11-11T18:00:29.893+05:00",
+  "resume_after_plus_5_seconds": "2026-11-11T13:00:34.893Z",
+  "resume_after_plus_5_seconds_pkt": "2026-11-11T18:00:34.893+05:00"
+}

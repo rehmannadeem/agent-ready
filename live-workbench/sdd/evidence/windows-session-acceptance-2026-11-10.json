@@ -1,0 +1,172 @@
+{
+  "started_at": "2026-11-10T17:00:35.981Z",
+  "scope": "Twenty independently signed empty sessions and rejected inspector requests; no catalogue or cart mutation",
+  "shopify_mutations": 0,
+  "model_calls": 0,
+  "checks": [
+    {
+      "name": "twenty_distinct_random_sessions",
+      "pass": true
+    },
+    {
+      "name": "twenty_independent_empty_carts",
+      "pass": true,
+      "detail": {
+        "attempted": 20,
+        "passed": 20
+      }
+    },
+    {
+      "name": "forged_other_session_assertion",
+      "pass": true,
+      "detail": {
+        "http_status": 401,
+        "error": "INVALID_SESSION"
+      }
+    },
+    {
+      "name": "bearer_without_signed_session",
+      "pass": true,
+      "detail": {
+        "http_status": 401,
+        "error": "INVALID_SESSION"
+      }
+    },
+    {
+      "name": "cart_id_argument_rejected_before_dispatch",
+      "pass": true,
+      "detail": {
+        "http_status": 400,
+        "error": "INVALID_INPUT"
+      }
+    },
+    {
+      "name": "inspector_without_independent_secret",
+      "pass": true,
+      "detail": {
+        "http_status": 401,
+        "error": "EVAL_INSPECTION_UNAUTHORIZED"
+      }
+    },
+    {
+      "name": "inspector_rejects_browser_origin",
+      "pass": true,
+      "detail": {
+        "http_status": 403,
+        "error": "EVAL_INSPECTION_REQUEST_REJECTED"
+      }
+    },
+    {
+      "name": "inspector_rejects_selector_body",
+      "pass": true,
+      "detail": {
+        "http_status": 403,
+        "error": "EVAL_INSPECTION_REQUEST_REJECTED"
+      }
+    }
+  ],
+  "sessions": [
+    {
+      "correlation": "186f3ff191e35ad3",
+      "http_status": 200,
+      "cart_status": "no_current_cart"
+    },
+    {
+      "correlation": "19b0de0c624b1acf",
+      "http_status": 200,
+      "cart_status": "no_current_cart"
+    },
+    {
+      "correlation": "3f9afa151a80c9bf",
+      "http_status": 200,
+      "cart_status": "no_current_cart"
+    },
+    {
+      "correlation": "6695f46a8db5bd00",
+      "http_status": 200,
+      "cart_status": "no_current_cart"
+    },
+    {
+      "correlation": "2cec67616fc7a1f5",
+      "http_status": 200,
+      "cart_status": "no_current_cart"
+    },
+    {
+      "correlation": "ec8569cbd012c7a7",
+      "http_status": 200,
+      "cart_status": "no_current_cart"
+    },
+    {
+      "correlation": "588dee30220ce766",
+      "http_status": 200,
+      "cart_status": "no_current_cart"
+    },
+    {
+      "correlation": "7b8fcb13900eb433",
+      "http_status": 200,
+      "cart_status": "no_current_cart"
+    },
+    {
+      "correlation": "c15cdf3abde3476c",
+      "http_status": 200,
+      "cart_status": "no_current_cart"
+    },
+    {
+      "correlation": "aa303b5ab375ed95",
+      "http_status": 200,
+      "cart_status": "no_current_cart"
+    },
+    {
+      "correlation": "7f6a1d908b3c207c",
+      "http_status": 200,
+      "cart_status": "no_current_cart"
+    },
+    {
+      "correlation": "d77e699b82399dc8",
+      "http_status": 200,
+      "cart_status": "no_current_cart"
+    },
+    {
+      "correlation": "144838123667e0c9",
+      "http_status": 200,
+      "cart_status": "no_current_cart"
+    },
+    {
+      "correlation": "9fb18210fd9355a6",
+      "http_status": 200,
+      "cart_status": "no_current_cart"
+    },
+    {
+      "correlation": "7ddc98ecbbfa3470",
+      "http_status": 200,
+      "cart_status": "no_current_cart"
+    },
+    {
+      "correlation": "d9735eae31340d95",
+      "http_status": 200,
+      "cart_status": "no_current_cart"
+    },
+    {
+      "correlation": "95c2b4fd9ac801d6",
+      "http_status": 200,
+      "cart_status": "no_current_cart"
+    },
+    {
+      "correlation": "15f66f499f31e9e5",
+      "http_status": 200,
+      "cart_status": "no_current_cart"
+    },
+    {
+      "correlation": "0190dec79dc642d5",
+      "http_status": 200,
+      "cart_status": "no_current_cart"
+    },
+    {
+      "correlation": "dfeb0e7b3f4868c0",
+      "http_status": 200,
+      "cart_status": "no_current_cart"
+    }
+  ],
+  "all_passed": true,
+  "completed_at": "2026-11-10T17:00:41.560Z"
+}

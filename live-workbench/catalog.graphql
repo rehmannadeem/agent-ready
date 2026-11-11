@@ -1,0 +1,13 @@
+query WorkbenchCatalog($search:String!,$after:String,$first:Int!,$publicationId:ID!){
+  shop { name currencyCode }
+  products(first:$first,after:$after,query:$search,sortKey:ID){
+    nodes { id title handle status productType vendor
+  publishedOnPublication(publicationId:$publicationId)
+  publishedInContext(context:{country:US}) variants(first:16) { nodes { id title availableForSale inventoryQuantity inventoryPolicy
+  inventoryItem { tracked }
+  selectedOptions { name value }
+  publishedOnPublication(publicationId:$publicationId)
+  contextualPricing(context:{country:US}) { price { amount currencyCode } compareAtPrice { amount currencyCode } } } pageInfo { hasNextPage endCursor } } }
+    pageInfo { hasNextPage endCursor }
+  }
+}

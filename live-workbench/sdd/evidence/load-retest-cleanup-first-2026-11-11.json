@@ -1,0 +1,99 @@
+{
+  "at": "2026-11-11T12:19:22.150Z",
+  "mutations": 0,
+  "model_calls": 0,
+  "checks": [
+    {
+      "correlation": "f4f1ee6a4094f6b9",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "6238a37765684490",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "cdcc504d3177bcba",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "4f892f924a67a198",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "c73e2b32a1d46f79",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "0129b1a6541354eb",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "f2c69ea0b8d25ba6",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "72cfb0663ce5c3f3",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "4476f0774de869af",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "439ebdb6dd35f994",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "5a87d24bdb2e3279",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "2cb6c43565e5ff2d",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "d62a84aabd9e7fab",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "b542c747e7cf4d20",
+      "status": "no_current_cart",
+      "http_status": 200,
+      "empty": true
+    },
+    {
+      "correlation": "2b1c19af9485222e",
+      "error": "RATE_LIMITED",
+      "http_status": 429,
+      "empty": false
+    }
+  ],
+  "all20_absent": false,
+  "finished_at": "2026-11-11T12:20:07.223Z"
+}

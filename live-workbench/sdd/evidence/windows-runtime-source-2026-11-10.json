@@ -1,0 +1,21 @@
+{
+  "checked_at": "2026-11-10T16:58:29.6100718Z",
+  "base_source_revision": "704057a78efc2c093e3631d5c569f340ddf0b388",
+  "worker_launcher_pid": 14004,
+  "launcher_matches_expected_private_local_config": true,
+  "listener": {
+    "address": "127.0.0.1",
+    "port": 8787,
+    "pid": 24188
+  },
+  "sha256": {
+    "src/worker.mjs": "718006eab80372cafb64ba68a35a93d378c854115ef87cefcf8aaa1583911223",
+    "src/commerce.mjs": "ad8bbfb27618cad1b501e6f67ab6a99790c1913a6f24249e7e23c14680127d07",
+    "src/session-state.mjs": "ea7c14b471338b0048c3a218781fdf7933c2bb5a75bd1914fc9891c122344566",
+    "src/session-security.mjs": "87b6ee905385d1c70788355018badfd698680f81846b6b0bcd055e79f0919d73",
+    "src/catalog.mjs": "d0af3366ac0c1e9839349a41164c7a1f0b7db67de4ff2e3c3e4e45f1c5e5cb9c",
+    "dev/eval-worker.mjs": "203c6c9aaa8fe58ef6878b92d5cecb1d5a9750383a6f6f843949b6016a5a9509"
+  },
+  "all_runtime_hashes_match_local_candidate": true,
+  "qualification": "Runtime files and private configuration path matched. Additional evaluation harness and bridge changes are tracked separately; no claim that every file remains identical to the original archive."
+}

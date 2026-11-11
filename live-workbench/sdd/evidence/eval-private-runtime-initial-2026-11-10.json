@@ -1,0 +1,39 @@
+{
+  "started_at": "2026-11-10T16:07:40.322Z",
+  "completed_at": "2026-11-10T16:07:45.207Z",
+  "runtime": "Wrangler 4.158.0 / actual workerd with SQLite-backed Durable Object",
+  "scope": "Actual evaluation-only Worker entry: empty-body POST preserves Host and passes all three credentials to the real Durable Object state guard. Global Worker fetch is blocked by a temporary instrumentation entry; no cart creation, Shopify traffic, or commerce mutation is exercised.",
+  "wrangler_config": "temporary isolated configuration; no production bindings",
+  "port": 8798,
+  "checks": [
+    {
+      "name": "actual_do_get_cart_empty",
+      "passed": true
+    },
+    {
+      "name": "uninitialized_session_reaches_private_state_guard",
+      "passed": false
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/shop",
+      "method": "get_cart",
+      "status": 200,
+      "duration_ms": 23
+    },
+    {
+      "path": "/__eval/private-cart",
+      "method": "POST",
+      "session": "uninitialized_session",
+      "status": 403,
+      "error": "EVAL_INSPECTION_REQUEST_REJECTED",
+      "duration_ms": 4
+    }
+  ],
+  "all_passed": false,
+  "failure": "uninitialized_session_reaches_private_state_guard\n\nfalse !== true\n",
+  "shopify_fetch_attempts": 0,
+  "paid_model_calls": 0,
+  "processes_stopped": true
+}

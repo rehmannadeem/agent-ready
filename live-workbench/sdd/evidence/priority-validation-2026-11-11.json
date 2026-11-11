@@ -1,0 +1,19 @@
+{
+  "source_checkpoint": "3538249ea82e0726086be8c247df76b8ebc0ab34",
+  "command": "npm test",
+  "environment": "Linux candidate checkout",
+  "tests": 173,
+  "passed": 173,
+  "failed": 0,
+  "skipped": 0,
+  "critical_priority": [
+    "S05",
+    "S19",
+    "S20",
+    "S21"
+  ],
+  "repetitions_each": 3,
+  "planned_scenarios": 75,
+  "live_model_calls_in_tests": 0,
+  "limitation": "Offline verification only; all live AI scenarios remain NOT_RUN."
+}

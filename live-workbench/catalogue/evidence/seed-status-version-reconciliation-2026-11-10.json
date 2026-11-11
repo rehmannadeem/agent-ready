@@ -1,0 +1,19 @@
+{
+  "original_failure": "OWNED_PRODUCT_CONCURRENT_EDIT:p004",
+  "observed_at": "2026-11-10T17:01:50.107Z",
+  "store": "karachi-kicks-supportops-lab.myshopify.com",
+  "product_id": "gid://shopify/Product/8510198415423",
+  "status": "ACTIVE",
+  "manifest_phase": "created",
+  "original_manifest_updated_at": "2026-11-10T16:59:31Z",
+  "live_updated_at": "2026-11-10T16:59:36Z",
+  "all_seeded_fields_variant_ids_options_prices_and_two_location_inventory": "PASSED",
+  "all_three_publications": false,
+  "pending": null,
+  "store_counts": {
+    "products": 22,
+    "variants": 91
+  },
+  "repair": "Complete persisted product/inventory/publication snapshot guards; allow only timestamp changes when complete state matches. Existing p004 read-only checkpoint reverified and saved locally at 2026-11-10T17:05:01.304Z. No Shopify write during checkpoint reconciliation.",
+  "tests": "23 focused catalogue/seed tests passed, including actual content/inventory/publication drift rejection."
+}

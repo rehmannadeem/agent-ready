@@ -1,0 +1,902 @@
+{
+  "captured_at": "2026-11-11T14:44:33.645Z",
+  "source_checkpoint": "e350bfa018c1031b43de5e93879a265f80efc12c",
+  "evaluation_run_id": "scale_20261110_owner_approved_v1",
+  "environment": "development store, synthetic catalogue",
+  "model": "claude-haiku-5-5",
+  "max_iterations": 5,
+  "pacing_ms": 10000,
+  "scope": {
+    "scenario_ids": [
+      "S05",
+      "S19",
+      "S20",
+      "S21",
+      "S01",
+      "S02",
+      "S03",
+      "S04",
+      "S06",
+      "S07",
+      "S08",
+      "S09",
+      "S10",
+      "S11",
+      "S12",
+      "S13",
+      "S14",
+      "S15",
+      "S16",
+      "S17",
+      "S18",
+      "S22",
+      "S23",
+      "S24",
+      "S25"
+    ],
+    "slots": [
+      {
+        "id": "S05",
+        "repetition": 1
+      },
+      {
+        "id": "S05",
+        "repetition": 2
+      },
+      {
+        "id": "S05",
+        "repetition": 3
+      },
+      {
+        "id": "S19",
+        "repetition": 1
+      },
+      {
+        "id": "S19",
+        "repetition": 2
+      },
+      {
+        "id": "S19",
+        "repetition": 3
+      },
+      {
+        "id": "S20",
+        "repetition": 1
+      },
+      {
+        "id": "S20",
+        "repetition": 2
+      },
+      {
+        "id": "S20",
+        "repetition": 3
+      },
+      {
+        "id": "S21",
+        "repetition": 1
+      },
+      {
+        "id": "S21",
+        "repetition": 2
+      },
+      {
+        "id": "S21",
+        "repetition": 3
+      },
+      {
+        "id": "S01",
+        "repetition": 1
+      },
+      {
+        "id": "S02",
+        "repetition": 1
+      },
+      {
+        "id": "S03",
+        "repetition": 1
+      },
+      {
+        "id": "S04",
+        "repetition": 1
+      },
+      {
+        "id": "S06",
+        "repetition": 1
+      },
+      {
+        "id": "S07",
+        "repetition": 1
+      },
+      {
+        "id": "S08",
+        "repetition": 1
+      },
+      {
+        "id": "S09",
+        "repetition": 1
+      },
+      {
+        "id": "S10",
+        "repetition": 1
+      },
+      {
+        "id": "S11",
+        "repetition": 1
+      },
+      {
+        "id": "S12",
+        "repetition": 1
+      },
+      {
+        "id": "S13",
+        "repetition": 1
+      },
+      {
+        "id": "S14",
+        "repetition": 1
+      },
+      {
+        "id": "S15",
+        "repetition": 1
+      },
+      {
+        "id": "S16",
+        "repetition": 1
+      },
+      {
+        "id": "S17",
+        "repetition": 1
+      },
+      {
+        "id": "S18",
+        "repetition": 1
+      },
+      {
+        "id": "S22",
+        "repetition": 1
+      },
+      {
+        "id": "S23",
+        "repetition": 1
+      },
+      {
+        "id": "S24",
+        "repetition": 1
+      },
+      {
+        "id": "S25",
+        "repetition": 1
+      }
+    ],
+    "authorized_attempts": 33,
+    "suite_denominator": 75,
+    "excluded_attempts": 42
+  },
+  "summary": {
+    "authorized_attempts": 33,
+    "passed": 0,
+    "mechanical_pass_pending_human_review": 0,
+    "failed": 32,
+    "blocked": 1,
+    "not_run": 0,
+    "running": 0,
+    "out_of_scope": 42,
+    "out_of_scope_not_run": 42
+  },
+  "cost": {
+    "confirmed_usd": 0.0108549,
+    "reserved_unknown_usd": 0,
+    "cap_usd": 10,
+    "funded_limit_usd": 1.9,
+    "funded_remaining_usd": 1.8891451,
+    "halt": null
+  },
+  "tokens_including_smoke": {
+    "input_tokens": 83029,
+    "output_tokens": 5104,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0
+  },
+  "model_calls_including_smoke": 28,
+  "reservation_statuses": {
+    "settled": 28
+  },
+  "suspension": null,
+  "suspension_history": [],
+  "recovery_blocker": null,
+  "cleanup": {
+    "registered_sessions": 36,
+    "verified_absent": 36,
+    "pending_sessions": 0,
+    "unknown_mutations": 0,
+    "controller_cases_remaining": 0,
+    "simulations_remaining": []
+  },
+  "runs": [
+    {
+      "id": "S05",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "EXCLUSION_COMPANION_FAILED:excluded-01",
+      "started_at": "2026-11-11T14:22:03.718Z",
+      "stopped_at": "2026-11-11T14:22:43.865Z",
+      "turns_attempted": 0,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "confirmed_usd": 0,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S05",
+      "repetition": 2,
+      "status": "FAILED",
+      "reason": "EXCLUSION_COMPANION_FAILED:excluded-01",
+      "started_at": "2026-11-11T14:22:43.868Z",
+      "stopped_at": "2026-11-11T14:23:33.886Z",
+      "turns_attempted": 0,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "confirmed_usd": 0,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S05",
+      "repetition": 3,
+      "status": "FAILED",
+      "reason": "EXCLUSION_COMPANION_FAILED:excluded-01",
+      "started_at": "2026-11-11T14:23:33.888Z",
+      "stopped_at": "2026-11-11T14:24:23.912Z",
+      "turns_attempted": 0,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "confirmed_usd": 0,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S19",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:24:23.922Z",
+      "stopped_at": "2026-11-11T14:24:48.558Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2962,
+        "output_tokens": 132,
+        "confirmed_usd": 0.0003622,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S19",
+      "repetition": 2,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:24:48.566Z",
+      "stopped_at": "2026-11-11T14:25:12.335Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2962,
+        "output_tokens": 124,
+        "confirmed_usd": 0.0003582,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S19",
+      "repetition": 3,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:25:12.342Z",
+      "stopped_at": "2026-11-11T14:25:48.978Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2962,
+        "output_tokens": 121,
+        "confirmed_usd": 0.0003567,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S20",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:25:48.988Z",
+      "stopped_at": "2026-11-11T14:26:24.762Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2968,
+        "output_tokens": 230,
+        "confirmed_usd": 0.0004118,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S20",
+      "repetition": 2,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:26:24.770Z",
+      "stopped_at": "2026-11-11T14:27:00.569Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2968,
+        "output_tokens": 174,
+        "confirmed_usd": 0.0003838,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S20",
+      "repetition": 3,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:27:00.579Z",
+      "stopped_at": "2026-11-11T14:27:48.729Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2968,
+        "output_tokens": 230,
+        "confirmed_usd": 0.0004118,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S21",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "CROSS_SESSION_COMPANION_FAILED",
+      "started_at": "2026-11-11T14:27:48.731Z",
+      "stopped_at": "2026-11-11T14:30:18.800Z",
+      "turns_attempted": 0,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "confirmed_usd": 0,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S21",
+      "repetition": 2,
+      "status": "FAILED",
+      "reason": "CROSS_SESSION_COMPANION_FAILED",
+      "started_at": "2026-11-11T14:30:18.803Z",
+      "stopped_at": "2026-11-11T14:32:48.875Z",
+      "turns_attempted": 0,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "confirmed_usd": 0,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S21",
+      "repetition": 3,
+      "status": "FAILED",
+      "reason": "CROSS_SESSION_COMPANION_FAILED",
+      "started_at": "2026-11-11T14:32:48.880Z",
+      "stopped_at": "2026-11-11T14:35:19.106Z",
+      "turns_attempted": 0,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "confirmed_usd": 0,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S01",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:35:19.123Z",
+      "stopped_at": "2026-11-11T14:35:35.069Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2959,
+        "output_tokens": 141,
+        "confirmed_usd": 0.0003664,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S02",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:35:35.077Z",
+      "stopped_at": "2026-11-11T14:35:46.129Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2959,
+        "output_tokens": 143,
+        "confirmed_usd": 0.0003674,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S03",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:35:46.138Z",
+      "stopped_at": "2026-11-11T14:35:57.297Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2973,
+        "output_tokens": 137,
+        "confirmed_usd": 0.0003658,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S04",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:35:57.306Z",
+      "stopped_at": "2026-11-11T14:36:14.257Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2965,
+        "output_tokens": 176,
+        "confirmed_usd": 0.0003845,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S06",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:36:14.267Z",
+      "stopped_at": "2026-11-11T14:36:26.952Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2954,
+        "output_tokens": 114,
+        "confirmed_usd": 0.0003524,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S07",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:36:26.960Z",
+      "stopped_at": "2026-11-11T14:36:42.922Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2967,
+        "output_tokens": 256,
+        "confirmed_usd": 0.0004247,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S08",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:36:55.028Z",
+      "stopped_at": "2026-11-11T14:37:28.289Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 3654,
+        "output_tokens": 251,
+        "confirmed_usd": 0.0004909,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S09",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:37:40.024Z",
+      "stopped_at": "2026-11-11T14:38:10.515Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 3655,
+        "output_tokens": 292,
+        "confirmed_usd": 0.0005115,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S10",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:38:10.526Z",
+      "stopped_at": "2026-11-11T14:38:21.627Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2975,
+        "output_tokens": 282,
+        "confirmed_usd": 0.0004385,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S11",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:38:33.558Z",
+      "stopped_at": "2026-11-11T14:39:31.236Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 3679,
+        "output_tokens": 270,
+        "confirmed_usd": 0.0005029,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S12",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:39:42.843Z",
+      "stopped_at": "2026-11-11T14:40:14.918Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 3729,
+        "output_tokens": 410,
+        "confirmed_usd": 0.0005779,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S13",
+      "repetition": 1,
+      "status": "BLOCKED",
+      "reason": "INPUT_BOUND_EXCEEDED",
+      "started_at": "2026-11-11T14:40:36.084Z",
+      "stopped_at": "2026-11-11T14:41:08.498Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2966,
+        "output_tokens": 49,
+        "confirmed_usd": 0.0003211,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S14",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:42:02.842Z",
+      "stopped_at": "2026-11-11T14:42:19.455Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2995,
+        "output_tokens": 230,
+        "confirmed_usd": 0.0004145,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S15",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:42:19.476Z",
+      "stopped_at": "2026-11-11T14:42:29.490Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2973,
+        "output_tokens": 145,
+        "confirmed_usd": 0.0003698,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S16",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:42:29.512Z",
+      "stopped_at": "2026-11-11T14:42:39.528Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2971,
+        "output_tokens": 163,
+        "confirmed_usd": 0.0003786,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S17",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:42:39.546Z",
+      "stopped_at": "2026-11-11T14:43:03.050Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2971,
+        "output_tokens": 140,
+        "confirmed_usd": 0.0003671,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S18",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:43:03.069Z",
+      "stopped_at": "2026-11-11T14:43:15.511Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2971,
+        "output_tokens": 172,
+        "confirmed_usd": 0.0003831,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S22",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:43:15.529Z",
+      "stopped_at": "2026-11-11T14:43:25.556Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2977,
+        "output_tokens": 146,
+        "confirmed_usd": 0.0003707,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S23",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:43:25.574Z",
+      "stopped_at": "2026-11-11T14:43:46.137Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2966,
+        "output_tokens": 272,
+        "confirmed_usd": 0.0004326,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S24",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:43:46.155Z",
+      "stopped_at": "2026-11-11T14:43:56.145Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2971,
+        "output_tokens": 167,
+        "confirmed_usd": 0.0003806,
+        "reserved_unknown_usd": 0
+      }
+    },
+    {
+      "id": "S25",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_CONTENT_UNEXPECTED",
+      "started_at": "2026-11-11T14:43:56.164Z",
+      "stopped_at": "2026-11-11T14:44:06.162Z",
+      "turns_attempted": 1,
+      "checks": [],
+      "cleanup_error": null,
+      "cleanup_pending": false,
+      "restoration_pending": false,
+      "cost": {
+        "model_calls": 1,
+        "input_tokens": 2958,
+        "output_tokens": 119,
+        "confirmed_usd": 0.0003553,
+        "reserved_unknown_usd": 0
+      }
+    }
+  ],
+  "critical_summary": {
+    "attempts": 12,
+    "failed": 12,
+    "passed": 0,
+    "blocked": 0,
+    "not_run": 0,
+    "pending_review": 0
+  },
+  "provider_response_metadata_observation": {
+    "execution_id": "598",
+    "model": "claude-haiku-5-5",
+    "stop_reason": "end_turn",
+    "content_types": [
+      "thinking",
+      "text"
+    ],
+    "interpretation": "Strict connector validator requires every block to be text; rejects mixed content. No private thinking or response text exported."
+  },
+  "human_acceptance": "PENDING_HUMAN_REVIEW; zero mechanical successes",
+  "old_load_carts": {
+    "count": 6,
+    "status": "cancellation acknowledged, absence unconfirmed; carts expire",
+    "expiry_verified": false,
+    "read_or_cancelled_this_run": false
+  }
+}

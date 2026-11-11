@@ -1,0 +1,1 @@
+query SeedProducts($after:String){products(first:50,after:$after){nodes{id handle status tags updatedAt}pageInfo{hasNextPage endCursor}}}

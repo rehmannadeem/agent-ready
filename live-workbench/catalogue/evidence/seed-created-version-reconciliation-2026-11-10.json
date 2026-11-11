@@ -1,0 +1,29 @@
+{
+  "operation": "READ_ONLY_POST_CREATE_RECONCILIATION",
+  "at": "2026-11-10T16:56:01.028Z",
+  "manifest_phase": "created",
+  "manifest_updated_at": "2026-11-10T16:54:39Z",
+  "live_updated_at": "2026-11-10T16:54:43Z",
+  "pending": null,
+  "all_seeded_draft_fields_and_inventory": "PASSED",
+  "publications": {
+    "gid://shopify/Publication/152115052607": false,
+    "gid://shopify/Publication/152115118143": false,
+    "gid://shopify/Publication/152115150911": false
+  },
+  "writes": 0,
+  "shop": "karachi-kicks-supportops-lab.myshopify.com",
+  "counts": {
+    "products": {
+      "count": 19,
+      "precision": "EXACT"
+    },
+    "variants": {
+      "count": 43,
+      "precision": "EXACT"
+    }
+  },
+  "product_id": "gid://shopify/Product/8510196547647",
+  "status": "DRAFT",
+  "original_failure": "OWNED_PRODUCT_CONCURRENT_EDIT:p001"
+}

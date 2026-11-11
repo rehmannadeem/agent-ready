@@ -1,0 +1,1 @@
+mutation SeedCollectionCreate($input:CollectionInput!){collectionCreate(input:$input){collection{id handle}userErrors{field message}}}

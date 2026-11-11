@@ -1,0 +1,636 @@
+{
+  "schema_version": 1,
+  "run_id": "989e6f79-6973-46c0-acd7-efa3e06ad7d9",
+  "store": "karachi-kicks-supportops-lab.myshopify.com",
+  "seed_sha256": "72955f4f280b995d0cd37e69b7f9f6e848ed51de18eacf9983be783653008e32",
+  "fixture": "p001",
+  "started_at": "2026-11-10T17:55:37.395Z",
+  "status": "FINISHED",
+  "no_models": true,
+  "load": {
+    "logical_sessions": 20,
+    "dispatch_interval_ms": 1100,
+    "maximum_api_in_flight": 1,
+    "actual_peak_api_in_flight": 1,
+    "peak_started_unfinished_sessions": 2,
+    "peak_confirmed_carts": 1,
+    "request_parallelism": "serialized; twenty logical sessions do not mean twenty simultaneous HTTP or merchant requests"
+  },
+  "stop_reason": null,
+  "sessions": [
+    {
+      "correlation": "71765290a2b7a515",
+      "status": "FAILED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "FAILED",
+          "dispatched": true,
+          "duration_ms": 1909,
+          "started_at": "2026-11-10T17:55:37.407Z",
+          "http_status": null,
+          "throttle": null,
+          "tool_error": false,
+          "error": "BUSINESS_POSTCONDITION_FAILED"
+        },
+        "create": {
+          "status": "NOT_RUN"
+        },
+        "cancel": {
+          "status": "NOT_RUN"
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794333337403,
+      "finished_at_ms": 1794333339316
+    },
+    {
+      "correlation": "c94f0e75c625d057",
+      "status": "FAILED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "FAILED",
+          "dispatched": true,
+          "duration_ms": 1457,
+          "started_at": "2026-11-10T17:55:39.331Z",
+          "http_status": null,
+          "throttle": null,
+          "tool_error": false,
+          "error": "BUSINESS_POSTCONDITION_FAILED"
+        },
+        "create": {
+          "status": "NOT_RUN"
+        },
+        "cancel": {
+          "status": "NOT_RUN"
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794333339324,
+      "finished_at_ms": 1794333340788
+    },
+    {
+      "correlation": "7e54107a4b922fc3",
+      "status": "FAILED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "FAILED",
+          "dispatched": true,
+          "duration_ms": 1413,
+          "started_at": "2026-11-10T17:55:40.795Z",
+          "http_status": null,
+          "throttle": null,
+          "tool_error": false,
+          "error": "BUSINESS_POSTCONDITION_FAILED"
+        },
+        "create": {
+          "status": "NOT_RUN"
+        },
+        "cancel": {
+          "status": "NOT_RUN"
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794333340792,
+      "finished_at_ms": 1794333342208
+    },
+    {
+      "correlation": "b731d1d8c72e8f10",
+      "status": "FAILED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "FAILED",
+          "dispatched": true,
+          "duration_ms": 1432,
+          "started_at": "2026-11-10T17:55:42.220Z",
+          "http_status": null,
+          "throttle": null,
+          "tool_error": false,
+          "error": "BUSINESS_POSTCONDITION_FAILED"
+        },
+        "create": {
+          "status": "NOT_RUN"
+        },
+        "cancel": {
+          "status": "NOT_RUN"
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794333342214,
+      "finished_at_ms": 1794333343652
+    },
+    {
+      "correlation": "cbf5780ede12c00e",
+      "status": "FAILED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "FAILED",
+          "dispatched": true,
+          "duration_ms": 1353,
+          "started_at": "2026-11-10T17:55:43.665Z",
+          "http_status": null,
+          "throttle": null,
+          "tool_error": false,
+          "error": "BUSINESS_POSTCONDITION_FAILED"
+        },
+        "create": {
+          "status": "NOT_RUN"
+        },
+        "cancel": {
+          "status": "NOT_RUN"
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794333343659,
+      "finished_at_ms": 1794333345018
+    },
+    {
+      "correlation": "9d2cbba22b92a939",
+      "status": "FAILED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "FAILED",
+          "dispatched": true,
+          "duration_ms": 1362,
+          "started_at": "2026-11-10T17:55:45.031Z",
+          "http_status": null,
+          "throttle": null,
+          "tool_error": false,
+          "error": "BUSINESS_POSTCONDITION_FAILED"
+        },
+        "create": {
+          "status": "NOT_RUN"
+        },
+        "cancel": {
+          "status": "NOT_RUN"
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794333345025,
+      "finished_at_ms": 1794333346393
+    },
+    {
+      "correlation": "4726a227c110b88c",
+      "status": "FAILED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "FAILED",
+          "dispatched": true,
+          "duration_ms": 1410,
+          "started_at": "2026-11-10T17:55:46.401Z",
+          "http_status": null,
+          "throttle": null,
+          "tool_error": false,
+          "error": "BUSINESS_POSTCONDITION_FAILED"
+        },
+        "create": {
+          "status": "NOT_RUN"
+        },
+        "cancel": {
+          "status": "NOT_RUN"
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794333346397,
+      "finished_at_ms": 1794333347811
+    },
+    {
+      "correlation": "9e2962e5051c5d3e",
+      "status": "FAILED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "FAILED",
+          "dispatched": true,
+          "duration_ms": 1454,
+          "started_at": "2026-11-10T17:55:47.823Z",
+          "http_status": null,
+          "throttle": null,
+          "tool_error": false,
+          "error": "BUSINESS_POSTCONDITION_FAILED"
+        },
+        "create": {
+          "status": "NOT_RUN"
+        },
+        "cancel": {
+          "status": "NOT_RUN"
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794333347818,
+      "finished_at_ms": 1794333349277
+    },
+    {
+      "correlation": "fb8c42983d1f3534",
+      "status": "FAILED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "FAILED",
+          "dispatched": true,
+          "duration_ms": 1356,
+          "started_at": "2026-11-10T17:55:49.283Z",
+          "http_status": null,
+          "throttle": null,
+          "tool_error": false,
+          "error": "BUSINESS_POSTCONDITION_FAILED"
+        },
+        "create": {
+          "status": "NOT_RUN"
+        },
+        "cancel": {
+          "status": "NOT_RUN"
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794333349280,
+      "finished_at_ms": 1794333350639
+    },
+    {
+      "correlation": "b527b415bac1ec85",
+      "status": "FAILED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "FAILED",
+          "dispatched": true,
+          "duration_ms": 1377,
+          "started_at": "2026-11-10T17:55:50.652Z",
+          "http_status": null,
+          "throttle": null,
+          "tool_error": false,
+          "error": "BUSINESS_POSTCONDITION_FAILED"
+        },
+        "create": {
+          "status": "NOT_RUN"
+        },
+        "cancel": {
+          "status": "NOT_RUN"
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794333350646,
+      "finished_at_ms": 1794333352029
+    },
+    {
+      "correlation": "13f716accb3e66d0",
+      "status": "FAILED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "FAILED",
+          "dispatched": true,
+          "duration_ms": 1355,
+          "started_at": "2026-11-10T17:55:52.035Z",
+          "http_status": null,
+          "throttle": null,
+          "tool_error": false,
+          "error": "BUSINESS_POSTCONDITION_FAILED"
+        },
+        "create": {
+          "status": "NOT_RUN"
+        },
+        "cancel": {
+          "status": "NOT_RUN"
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794333352032,
+      "finished_at_ms": 1794333353390
+    },
+    {
+      "correlation": "1c875a31f140e267",
+      "status": "FAILED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "FAILED",
+          "dispatched": true,
+          "duration_ms": 1750,
+          "started_at": "2026-11-10T17:55:53.402Z",
+          "http_status": null,
+          "throttle": null,
+          "tool_error": false,
+          "error": "BUSINESS_POSTCONDITION_FAILED"
+        },
+        "create": {
+          "status": "NOT_RUN"
+        },
+        "cancel": {
+          "status": "NOT_RUN"
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794333353396,
+      "finished_at_ms": 1794333355152
+    },
+    {
+      "correlation": "e1d7ad8ae1aeabeb",
+      "status": "FAILED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "FAILED",
+          "dispatched": true,
+          "duration_ms": 1370,
+          "started_at": "2026-11-10T17:55:55.159Z",
+          "http_status": null,
+          "throttle": null,
+          "tool_error": false,
+          "error": "BUSINESS_POSTCONDITION_FAILED"
+        },
+        "create": {
+          "status": "NOT_RUN"
+        },
+        "cancel": {
+          "status": "NOT_RUN"
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794333355156,
+      "finished_at_ms": 1794333356529
+    },
+    {
+      "correlation": "53dc795971af8e91",
+      "status": "FAILED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "FAILED",
+          "dispatched": true,
+          "duration_ms": 1359,
+          "started_at": "2026-11-10T17:55:56.542Z",
+          "http_status": null,
+          "throttle": null,
+          "tool_error": false,
+          "error": "BUSINESS_POSTCONDITION_FAILED"
+        },
+        "create": {
+          "status": "NOT_RUN"
+        },
+        "cancel": {
+          "status": "NOT_RUN"
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794333356535,
+      "finished_at_ms": 1794333357901
+    },
+    {
+      "correlation": "f4a735771e79e28b",
+      "status": "FAILED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "FAILED",
+          "dispatched": true,
+          "duration_ms": 1449,
+          "started_at": "2026-11-10T17:55:57.908Z",
+          "http_status": null,
+          "throttle": null,
+          "tool_error": false,
+          "error": "BUSINESS_POSTCONDITION_FAILED"
+        },
+        "create": {
+          "status": "NOT_RUN"
+        },
+        "cancel": {
+          "status": "NOT_RUN"
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794333357905,
+      "finished_at_ms": 1794333359357
+    },
+    {
+      "correlation": "b6bb3a1b38b85009",
+      "status": "FAILED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "FAILED",
+          "dispatched": true,
+          "duration_ms": 1406,
+          "started_at": "2026-11-10T17:55:59.364Z",
+          "http_status": null,
+          "throttle": null,
+          "tool_error": false,
+          "error": "BUSINESS_POSTCONDITION_FAILED"
+        },
+        "create": {
+          "status": "NOT_RUN"
+        },
+        "cancel": {
+          "status": "NOT_RUN"
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794333359360,
+      "finished_at_ms": 1794333360770
+    },
+    {
+      "correlation": "0ee813313dbd4d87",
+      "status": "PASSED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 2408,
+          "started_at": "2026-11-10T17:56:00.777Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "create": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1901,
+          "started_at": "2026-11-10T17:56:07.522Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 785,
+          "started_at": "2026-11-10T17:56:09.429Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "verify_cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 441,
+          "started_at": "2026-11-10T17:56:10.548Z",
+          "http_status": null,
+          "throttle": null
+        }
+      },
+      "started_at_ms": 1794333360773,
+      "finished_at_ms": 1794333370989
+    },
+    {
+      "correlation": "5a6954f9094c106c",
+      "status": "FAILED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "FAILED",
+          "dispatched": true,
+          "duration_ms": 1525,
+          "started_at": "2026-11-10T17:56:03.198Z",
+          "http_status": null,
+          "throttle": null,
+          "tool_error": false,
+          "error": "BUSINESS_POSTCONDITION_FAILED"
+        },
+        "create": {
+          "status": "NOT_RUN"
+        },
+        "cancel": {
+          "status": "NOT_RUN"
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794333363192,
+      "finished_at_ms": 1794333364723
+    },
+    {
+      "correlation": "1423e9cb9eca24f6",
+      "status": "FAILED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "FAILED",
+          "dispatched": true,
+          "duration_ms": 1387,
+          "started_at": "2026-11-10T17:56:04.729Z",
+          "http_status": null,
+          "throttle": null,
+          "tool_error": false,
+          "error": "BUSINESS_POSTCONDITION_FAILED"
+        },
+        "create": {
+          "status": "NOT_RUN"
+        },
+        "cancel": {
+          "status": "NOT_RUN"
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794333364727,
+      "finished_at_ms": 1794333366116
+    },
+    {
+      "correlation": "a9c841ca0f6dcdbd",
+      "status": "FAILED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "FAILED",
+          "dispatched": true,
+          "duration_ms": 1393,
+          "started_at": "2026-11-10T17:56:06.122Z",
+          "http_status": null,
+          "throttle": null,
+          "tool_error": false,
+          "error": "BUSINESS_POSTCONDITION_FAILED"
+        },
+        "create": {
+          "status": "NOT_RUN"
+        },
+        "cancel": {
+          "status": "NOT_RUN"
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794333366119,
+      "finished_at_ms": 1794333367515
+    }
+  ],
+  "summary": {
+    "planned_sessions": 20,
+    "passed_sessions": 1,
+    "failed_sessions": 19,
+    "not_run_sessions": 0,
+    "incomplete_sessions": 0,
+    "completed_sessions": 20,
+    "session_pass_rate": 0.05,
+    "planned_workload_requests": 60,
+    "planned_verification_requests": 20,
+    "attempted_requests": 23,
+    "not_run_requests": 57,
+    "tool_errors": 0,
+    "business_failures": 19,
+    "error_rate": 0,
+    "error_rate_denominator": "all attempted API requests; NOT_RUN requests reported separately",
+    "complete": true,
+    "cleanup_failures": []
+  },
+  "latency": {
+    "client_http": {
+      "samples": 23,
+      "p50_ms": 1406,
+      "p95_ms": 1909
+    },
+    "upstream_http": null,
+    "upstream_timing_note": "Worker tool responses do not expose isolated Shopify duration; client time includes Worker, rate permit, Admin eligibility and Shopify work.",
+    "logical_session": {
+      "samples": 20,
+      "p50_ms": 1410,
+      "p95_ms": 1913
+    }
+  },
+  "throttles": {
+    "application": 0,
+    "upstream": 0,
+    "unknown": 0,
+    "upstream_note": "RATE_LIMITED is upstream, but UCP and Admin eligibility throttles cannot be separated by the current response contract."
+  },
+  "finished_at": "2026-11-10T17:56:10.993Z",
+  "elapsed_ms": 33599
+}

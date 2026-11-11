@@ -1,0 +1,75 @@
+{
+  "recorded_at": "2026-11-10T17:06:51.826Z",
+  "scope": "Windows browser dashboard acceptance through loopback session bridge",
+  "initial_failure": {
+    "response": "ORIGIN_DENIED",
+    "observed_request": {
+      "method": "GET",
+      "path": "/",
+      "origin": null,
+      "sec_fetch_site": "cross-site",
+      "sec_fetch_mode": "navigate",
+      "sec_fetch_dest": "document"
+    },
+    "credential_or_cookie_headers_recorded": false
+  },
+  "correction": {
+    "scope": "GET top-level document navigation to /, /index.html, or /login, with no Origin or query, may reach only the public login shell",
+    "authenticated_content_proxied_under_exception": false,
+    "api_post_iframe_cors_foreign_origin_checks_preserved": true,
+    "worker_restarted": false,
+    "bridge_restarted": true,
+    "temporary_metadata_observer_removed": true
+  },
+  "regression": {
+    "bridge_tests": {
+      "passed": 8,
+      "failed": 0
+    },
+    "private_inspection_tests": {
+      "passed": 9,
+      "failed": 0
+    }
+  },
+  "browser_observations": {
+    "source": "Root agent observed the connected browser after applying the correction",
+    "login": "PASS; protected session ready",
+    "application_version": "0.3.0-candidate",
+    "default_catalog_products": 10,
+    "pagination_visible": true,
+    "runner_pro_filter": {
+      "products": 1,
+      "title": "Karachi Kicks Runner Pro",
+      "price": "79.00",
+      "currency": "USD",
+      "availability": "available"
+    },
+    "screenshot": "windows-dashboard-runtime-2026-11-10.png",
+    "cart_mutations": 0,
+    "model_calls": 0
+  },
+  "all_passed": true,
+  "additional_seed_ui_checks": {
+    "observed_at": "2026-11-10T17:10:43.390453+00:00",
+    "seed_in_progress": true,
+    "filter": "Trail",
+    "page_1_products": 10,
+    "product_001_options": 16,
+    "selected_variant": "10 / Black",
+    "selected_price_usd": 79,
+    "selected_quantity": 1,
+    "selection_cleared": true,
+    "pagination_page": 2,
+    "page_2_fixture_numbers": [
+      31,
+      34,
+      37,
+      40,
+      43,
+      46,
+      49
+    ],
+    "shopify_mutations": 0,
+    "model_calls": 0
+  }
+}

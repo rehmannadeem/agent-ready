@@ -1,0 +1,12 @@
+node_modules/
+.wrangler/
+.dev.vars*
+.env*
+secrets*.json
+*.log
+
+# Private runtime/seed manifests and evaluation state
+**/*.local.json
+evals/private/
+evals/output/
+**/*.local.json.lock

@@ -1,0 +1,117 @@
+{
+  "deployment": "f0db2ce6-63f3-4d29-a423-49a5b2e47406",
+  "source": "Deployed Worker /api/shop deterministic lifecycle",
+  "started_at": "2026-11-09T13:49:44.234Z",
+  "steps": [
+    {
+      "operation": "create_cart",
+      "captured_at": "2026-11-09T13:49:45.284Z",
+      "observed_at": "2026-11-09T13:49:44.786Z",
+      "http_status": 200,
+      "status": null,
+      "error": null,
+      "item_count": 1,
+      "quantities": [
+        1
+      ],
+      "currency": "USD",
+      "totals": [
+        {
+          "type": "subtotal",
+          "amount": 7900,
+          "display_text": "Subtotal"
+        },
+        {
+          "type": "total",
+          "amount": 7900,
+          "display_text": "Total"
+        }
+      ],
+      "messages": [],
+      "ready_for_handoff": true,
+      "order_placed": false,
+      "payment_submitted": false
+    },
+    {
+      "operation": "get_cart",
+      "captured_at": "2026-11-09T13:49:45.490Z",
+      "observed_at": "2026-11-09T13:49:45.015Z",
+      "http_status": 200,
+      "status": null,
+      "error": null,
+      "item_count": 1,
+      "quantities": [
+        1
+      ],
+      "currency": "USD",
+      "totals": [
+        {
+          "type": "subtotal",
+          "amount": 7900,
+          "display_text": "Subtotal"
+        },
+        {
+          "type": "total",
+          "amount": 7900,
+          "display_text": "Total"
+        }
+      ],
+      "messages": [],
+      "ready_for_handoff": true,
+      "order_placed": false,
+      "payment_submitted": false
+    },
+    {
+      "operation": "cancel_cart",
+      "captured_at": "2026-11-09T13:49:45.699Z",
+      "observed_at": "2026-11-09T13:49:45.225Z",
+      "http_status": 200,
+      "status": null,
+      "error": null,
+      "item_count": 1,
+      "quantities": [
+        1
+      ],
+      "currency": "USD",
+      "totals": [
+        {
+          "type": "subtotal",
+          "amount": 7900,
+          "display_text": "Subtotal"
+        },
+        {
+          "type": "total",
+          "amount": 7900,
+          "display_text": "Total"
+        }
+      ],
+      "messages": [],
+      "ready_for_handoff": false,
+      "order_placed": false,
+      "payment_submitted": false
+    },
+    {
+      "operation": "get_cart",
+      "captured_at": "2026-11-09T13:49:45.888Z",
+      "observed_at": "2026-11-09T13:49:45.413Z",
+      "http_status": 200,
+      "status": "not_found",
+      "error": null,
+      "item_count": 0,
+      "quantities": [],
+      "currency": null,
+      "totals": [],
+      "messages": [
+        {
+          "type": "error",
+          "code": "cart_not_found",
+          "severity": "unrecoverable"
+        }
+      ],
+      "ready_for_handoff": false,
+      "order_placed": false,
+      "payment_submitted": false
+    }
+  ],
+  "finished_at": "2026-11-09T13:49:45.888Z"
+}

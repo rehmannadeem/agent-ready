@@ -1,0 +1,1 @@
+mutation SeedDiscountCreate($input:DiscountCodeBasicInput!){discountCodeBasicCreate(basicCodeDiscount:$input){codeDiscountNode{id codeDiscount{...on DiscountCodeBasic{title endsAt updatedAt}}}userErrors{field message code}}}

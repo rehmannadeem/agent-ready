@@ -1,0 +1,574 @@
+{
+  "schema": "armans.agent_ready.gate6_finish_terminal.v1",
+  "recorded_at": "2026-11-11T21:07:00Z",
+  "repository": "rehmannadeem/agent-ready",
+  "branch": "feat/realistic-catalogue-20261110",
+  "pull_request": 2,
+  "tested_source": "3511e2ce48dd25e88018a6809e4941f1d249f95a",
+  "handoff_commit": "da56f06f48de0da677cf2d15601f42af01c20306",
+  "offline_tests_passed": 206,
+  "scope": {
+    "continuation_only": true,
+    "exact_slots": 24,
+    "s05_attempts_preserved": [
+      "S05:1 PENDING_REVIEW",
+      "S05:2 BLOCKED PROVIDER_RATE_LIMITED"
+    ],
+    "excluded_scenarios": [
+      "S19",
+      "S20",
+      "S21"
+    ],
+    "replayed_attempts": [],
+    "stopped_at_gate": 6
+  },
+  "terminal": {
+    "evaluator_active": false,
+    "halt": "UNRESOLVED_USAGE",
+    "counts": {
+      "PENDING_REVIEW": 16,
+      "BLOCKED": 2,
+      "FAILED": 5,
+      "NOT_RUN": 1
+    },
+    "human_review": "FOR_CLAUDE_REVIEW",
+    "mechanical_results_are_not_human_acceptance": true
+  },
+  "slots": [
+    {
+      "scenario": "S05",
+      "repetition": 1,
+      "status": "PENDING_REVIEW",
+      "reason": null,
+      "checks": {
+        "total": 78,
+        "failed": []
+      },
+      "turns": 3,
+      "cost": {
+        "calls": 6,
+        "settled": 6,
+        "input_tokens": 29783,
+        "output_tokens": 3917,
+        "usd": 0.0049368
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S05",
+      "repetition": 2,
+      "status": "BLOCKED",
+      "reason": "PROVIDER_RATE_LIMITED",
+      "checks": null,
+      "turns": 0,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S05",
+      "repetition": 3,
+      "status": "FAILED",
+      "reason": "EXCLUSION_COMPANION_FAILED:excluded-12:search_hides_fixture",
+      "checks": null,
+      "turns": 0,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S01",
+      "repetition": 1,
+      "status": "PENDING_REVIEW",
+      "reason": null,
+      "checks": {
+        "total": 7,
+        "failed": []
+      },
+      "turns": 1,
+      "cost": {
+        "calls": 2,
+        "settled": 2,
+        "input_tokens": 8761,
+        "output_tokens": 1384,
+        "usd": 0.0015681
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S02",
+      "repetition": 1,
+      "status": "PENDING_REVIEW",
+      "reason": null,
+      "checks": {
+        "total": 5,
+        "failed": []
+      },
+      "turns": 2,
+      "cost": {
+        "calls": 6,
+        "settled": 6,
+        "input_tokens": 27955,
+        "output_tokens": 2875,
+        "usd": 0.004233
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S03",
+      "repetition": 1,
+      "status": "PENDING_REVIEW",
+      "reason": null,
+      "checks": {
+        "total": 5,
+        "failed": []
+      },
+      "turns": 1,
+      "cost": {
+        "calls": 3,
+        "settled": 3,
+        "input_tokens": 13597,
+        "output_tokens": 1004,
+        "usd": 0.0018617
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S04",
+      "repetition": 1,
+      "status": "PENDING_REVIEW",
+      "reason": null,
+      "checks": {
+        "total": 5,
+        "failed": []
+      },
+      "turns": 1,
+      "cost": {
+        "calls": 2,
+        "settled": 2,
+        "input_tokens": 8799,
+        "output_tokens": 855,
+        "usd": 0.0013074
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S06",
+      "repetition": 1,
+      "status": "PENDING_REVIEW",
+      "reason": null,
+      "checks": {
+        "total": 5,
+        "failed": []
+      },
+      "turns": 2,
+      "cost": {
+        "calls": 5,
+        "settled": 5,
+        "input_tokens": 23864,
+        "output_tokens": 3339,
+        "usd": 0.0040559
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S07",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": null,
+      "checks": {
+        "total": 5,
+        "failed": [
+          "three_selected_lines_merchant_total_within_budget"
+        ]
+      },
+      "turns": 3,
+      "cost": {
+        "calls": 13,
+        "settled": 13,
+        "input_tokens": 78097,
+        "output_tokens": 10524,
+        "usd": 0.0130717
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S08",
+      "repetition": 1,
+      "status": "PENDING_REVIEW",
+      "reason": null,
+      "checks": {
+        "total": 6,
+        "failed": []
+      },
+      "turns": 1,
+      "cost": {
+        "calls": 3,
+        "settled": 3,
+        "input_tokens": 13206,
+        "output_tokens": 1425,
+        "usd": 0.0020331
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S09",
+      "repetition": 1,
+      "status": "PENDING_REVIEW",
+      "reason": null,
+      "checks": {
+        "total": 6,
+        "failed": []
+      },
+      "turns": 1,
+      "cost": {
+        "calls": 3,
+        "settled": 3,
+        "input_tokens": 12908,
+        "output_tokens": 1478,
+        "usd": 0.0020298
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S10",
+      "repetition": 1,
+      "status": "PENDING_REVIEW",
+      "reason": null,
+      "checks": {
+        "total": 5,
+        "failed": []
+      },
+      "turns": 2,
+      "cost": {
+        "calls": 2,
+        "settled": 2,
+        "input_tokens": 6093,
+        "output_tokens": 668,
+        "usd": 0.0009433
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S11",
+      "repetition": 1,
+      "status": "PENDING_REVIEW",
+      "reason": null,
+      "checks": {
+        "total": 8,
+        "failed": []
+      },
+      "turns": 4,
+      "cost": {
+        "calls": 10,
+        "settled": 10,
+        "input_tokens": 51485,
+        "output_tokens": 6830,
+        "usd": 0.0085635
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S12",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": "MODEL_RESPONSE_REJECTED:PROVIDER_STOP_REASON_max_tokens",
+      "checks": null,
+      "turns": 3,
+      "cost": {
+        "calls": 9,
+        "settled": 9,
+        "input_tokens": 47684,
+        "output_tokens": 8352,
+        "usd": 0.0089444
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S13",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": null,
+      "checks": {
+        "total": 7,
+        "failed": [
+          "no_iteration_exhaustion"
+        ]
+      },
+      "turns": 3,
+      "cost": {
+        "calls": 12,
+        "settled": 12,
+        "input_tokens": 77702,
+        "output_tokens": 6911,
+        "usd": 0.0112257
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S14",
+      "repetition": 1,
+      "status": "PENDING_REVIEW",
+      "reason": null,
+      "checks": {
+        "total": 5,
+        "failed": []
+      },
+      "turns": 1,
+      "cost": {
+        "calls": 5,
+        "settled": 5,
+        "input_tokens": 28453,
+        "output_tokens": 2344,
+        "usd": 0.0040173
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S15",
+      "repetition": 1,
+      "status": "PENDING_REVIEW",
+      "reason": null,
+      "checks": {
+        "total": 6,
+        "failed": []
+      },
+      "turns": 2,
+      "cost": {
+        "calls": 8,
+        "settled": 8,
+        "input_tokens": 43186,
+        "output_tokens": 4863,
+        "usd": 0.0067501
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S16",
+      "repetition": 1,
+      "status": "FAILED",
+      "reason": null,
+      "checks": {
+        "total": 7,
+        "failed": [
+          "stock_changed_state_observed_without_handoff"
+        ]
+      },
+      "turns": 2,
+      "cost": {
+        "calls": 6,
+        "settled": 6,
+        "input_tokens": 26438,
+        "output_tokens": 2861,
+        "usd": 0.0040743
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S17",
+      "repetition": 1,
+      "status": "PENDING_REVIEW",
+      "reason": null,
+      "checks": {
+        "total": 7,
+        "failed": []
+      },
+      "turns": 2,
+      "cost": {
+        "calls": 7,
+        "settled": 7,
+        "input_tokens": 31617,
+        "output_tokens": 3271,
+        "usd": 0.0047972
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S18",
+      "repetition": 1,
+      "status": "PENDING_REVIEW",
+      "reason": null,
+      "checks": {
+        "total": 7,
+        "failed": []
+      },
+      "turns": 2,
+      "cost": {
+        "calls": 7,
+        "settled": 7,
+        "input_tokens": 29696,
+        "output_tokens": 3039,
+        "usd": 0.0044891
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S22",
+      "repetition": 1,
+      "status": "PENDING_REVIEW",
+      "reason": null,
+      "checks": {
+        "total": 6,
+        "failed": []
+      },
+      "turns": 1,
+      "cost": {
+        "calls": 2,
+        "settled": 2,
+        "input_tokens": 6269,
+        "output_tokens": 320,
+        "usd": 0.0007869
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S23",
+      "repetition": 1,
+      "status": "PENDING_REVIEW",
+      "reason": null,
+      "checks": {
+        "total": 6,
+        "failed": []
+      },
+      "turns": 1,
+      "cost": {
+        "calls": 2,
+        "settled": 2,
+        "input_tokens": 8812,
+        "output_tokens": 1321,
+        "usd": 0.0015417
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S24",
+      "repetition": 1,
+      "status": "BLOCKED",
+      "reason": "MODEL_USAGE_UNKNOWN",
+      "checks": null,
+      "turns": 2,
+      "cost": {
+        "calls": 6,
+        "settled": 5,
+        "input_tokens": 21831,
+        "output_tokens": 1762,
+        "usd": 0.0030641
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    },
+    {
+      "scenario": "S25",
+      "repetition": 1,
+      "status": "NOT_RUN",
+      "reason": null,
+      "checks": null,
+      "turns": 0,
+      "cost": {
+        "calls": 0,
+        "settled": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0
+      },
+      "cleanup_pending": false,
+      "cleanup_error": null
+    }
+  ],
+  "accounting": {
+    "canonical": {
+      "calls": 188,
+      "settled": 187,
+      "input_tokens": 841135,
+      "output_tokens": 87517,
+      "usd": 0.127872,
+      "reserved_usd": 0.0034
+    },
+    "follow_up": {
+      "calls": 119,
+      "settled": 118,
+      "input_tokens": 596236,
+      "output_tokens": 69343,
+      "usd": 0.0942951,
+      "reserved_usd": 0.0034
+    },
+    "funded_stop_usd": 1.9,
+    "owner_cap_usd": 10,
+    "ledger_id": "scale_20261110_owner_approved_v1",
+    "resets": 0,
+    "purchases": 0,
+    "note": "Known settled cost excludes the unresolved USD 0.0034 reservation for S24."
+  },
+  "cleanup": {
+    "sessions": 23,
+    "verified": 23,
+    "pending": 0,
+    "unknown": 0,
+    "controller_cases": 0
+  },
+  "suspension_history": [
+    {
+      "reason": "PROVIDER_RATE_LIMITED",
+      "observed_at": "2026-11-11T19:18:58.003Z",
+      "retry_after_seconds": 2463,
+      "retry_not_before": "2026-11-11T20:00:01.003Z",
+      "eligible_at": "2026-11-11T20:15:01.003Z",
+      "automatic_resume": false,
+      "recovered_at": "2026-11-11T20:16:40.937Z"
+    }
+  ],
+  "final_blocker": {
+    "scenario": "S24",
+    "reason": "MODEL_USAGE_UNKNOWN",
+    "evaluator_guard": "DISPATCH_STATE_UNKNOWN_NO_RETRY",
+    "n8n_execution_id": "779",
+    "n8n_execution_status": "success",
+    "local_usage_persistence_confirmed": false,
+    "replay_attempted": false,
+    "consequence": "S25 remained untouched."
+  },
+  "prohibited_changes_confirmed": {
+    "merge": false,
+    "deployment": false,
+    "production_change": false,
+    "credential_change": false,
+    "payment": false,
+    "order": false,
+    "outreach": false,
+    "email": false,
+    "hosted_chat_integration": false,
+    "workflow_modified": false
+  }
+}

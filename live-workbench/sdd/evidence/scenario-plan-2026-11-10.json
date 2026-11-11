@@ -1,0 +1,532 @@
+{
+  "model": "claude-haiku-5-5",
+  "max_iterations": 5,
+  "max_usd": 10,
+  "runs": [
+    {
+      "id": "S01",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S01",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S01",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S02",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S02",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S02",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S03",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S03",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S03",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S04",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S04",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S04",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S05",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S05",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S05",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S06",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S06",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S06",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S07",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S07",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S07",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S08",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S08",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S08",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S09",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S09",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S09",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S10",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S10",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S10",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S11",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S11",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S11",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S12",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S12",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S12",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S13",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S13",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S13",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S14",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S14",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S14",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S15",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S15",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S15",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S16",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S16",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S16",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S17",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S17",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S17",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S18",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S18",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S18",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S19",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S19",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S19",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S20",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S20",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S20",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S21",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S21",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S21",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S22",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S22",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S22",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S23",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S23",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S23",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S24",
+      "repetition": 1,
+      "maxTurns": 24,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S24",
+      "repetition": 2,
+      "maxTurns": 24,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S24",
+      "repetition": 3,
+      "maxTurns": 24,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S25",
+      "repetition": 1,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S25",
+      "repetition": 2,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "S25",
+      "repetition": 3,
+      "maxTurns": 4,
+      "maxIterations": 5,
+      "status": "NOT_RUN"
+    }
+  ]
+}

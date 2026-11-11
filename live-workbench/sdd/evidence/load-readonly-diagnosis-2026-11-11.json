@@ -1,0 +1,176 @@
+{
+  "checked_at": "2026-11-11T12:23:43.631Z",
+  "shop": {
+    "myshopifyDomain": "karachi-kicks-supportops-lab.myshopify.com",
+    "currencyCode": "USD",
+    "plan": {
+      "partnerDevelopment": true,
+      "publicDisplayName": "Basic"
+    }
+  },
+  "counts": {
+    "products": {
+      "count": 336,
+      "precision": "EXACT"
+    },
+    "variants": {
+      "count": 3293,
+      "precision": "EXACT"
+    }
+  },
+  "original_load_sessions_checked": 20,
+  "all_original_load_sessions_empty": true,
+  "direct_searches": [
+    {
+      "iteration": 1,
+      "exact_variant_found": true
+    },
+    {
+      "iteration": 2,
+      "exact_variant_found": true
+    },
+    {
+      "iteration": 3,
+      "exact_variant_found": true
+    },
+    {
+      "iteration": 4,
+      "exact_variant_found": true
+    },
+    {
+      "iteration": 5,
+      "exact_variant_found": true
+    }
+  ],
+  "mcp_searches": [
+    {
+      "iteration": 1,
+      "exact_product_found": true,
+      "exact_variant_available": true,
+      "currency": "USD"
+    },
+    {
+      "iteration": 2,
+      "exact_product_found": true,
+      "exact_variant_available": true,
+      "currency": "USD"
+    },
+    {
+      "iteration": 3,
+      "exact_product_found": true,
+      "exact_variant_available": true,
+      "currency": "USD"
+    },
+    {
+      "iteration": 4,
+      "exact_product_found": true,
+      "exact_variant_available": true,
+      "currency": "USD"
+    },
+    {
+      "iteration": 5,
+      "exact_product_found": true,
+      "exact_variant_available": true,
+      "currency": "USD"
+    },
+    {
+      "iteration": 6,
+      "exact_product_found": true,
+      "exact_variant_available": true,
+      "currency": "USD"
+    },
+    {
+      "iteration": 7,
+      "exact_product_found": true,
+      "exact_variant_available": true,
+      "currency": "USD"
+    },
+    {
+      "iteration": 8,
+      "exact_product_found": true,
+      "exact_variant_available": true,
+      "currency": "USD"
+    },
+    {
+      "iteration": 9,
+      "exact_product_found": true,
+      "exact_variant_available": true,
+      "currency": "USD"
+    },
+    {
+      "iteration": 10,
+      "exact_product_found": true,
+      "exact_variant_available": true,
+      "currency": "USD"
+    },
+    {
+      "iteration": 11,
+      "exact_product_found": true,
+      "exact_variant_available": true,
+      "currency": "USD"
+    },
+    {
+      "iteration": 12,
+      "exact_product_found": true,
+      "exact_variant_available": true,
+      "currency": "USD"
+    },
+    {
+      "iteration": 13,
+      "exact_product_found": true,
+      "exact_variant_available": true,
+      "currency": "USD"
+    },
+    {
+      "iteration": 14,
+      "exact_product_found": true,
+      "exact_variant_available": true,
+      "currency": "USD"
+    },
+    {
+      "iteration": 15,
+      "exact_product_found": true,
+      "exact_variant_available": true,
+      "currency": "USD"
+    },
+    {
+      "iteration": 16,
+      "exact_product_found": true,
+      "exact_variant_available": true,
+      "currency": "USD"
+    },
+    {
+      "iteration": 17,
+      "exact_product_found": true,
+      "exact_variant_available": true,
+      "currency": "USD"
+    },
+    {
+      "iteration": 18,
+      "exact_product_found": true,
+      "exact_variant_available": true,
+      "currency": "USD"
+    },
+    {
+      "iteration": 19,
+      "exact_product_found": true,
+      "exact_variant_available": true,
+      "currency": "USD"
+    },
+    {
+      "iteration": 20,
+      "exact_product_found": true,
+      "exact_variant_available": true,
+      "currency": "USD"
+    }
+  ],
+  "exact_lookup_returned_variant_count": 1,
+  "historical_failure_root_cause": "Unproven: first load saved pass/fail but not returned product/variant observations. Current unchanged search checks pass; index/ranking settling remains a hypothesis, not a finding.",
+  "changes": "Added bounded diagnostic projection only; original80requests and all acceptance assertions unchanged.",
+  "source_evidence_sha256": {
+    "readonly": "49da4023c57dd0acb612525a919758b24eaf8c1958caffa264d68cbc5e09c4e9",
+    "mcp": "60c995efa77532acfb60b08932029e4fa303b9bd99496af1995116ade7b76675"
+  },
+  "shopify_mutations": 0,
+  "model_calls": 0
+}

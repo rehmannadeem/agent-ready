@@ -1,0 +1,1278 @@
+{
+  "schema_version": 1,
+  "run_id": "f0142a3c-562a-48bf-b89d-54b6c7c52daa",
+  "store": "karachi-kicks-supportops-lab.myshopify.com",
+  "seed_sha256": "72955f4f280b995d0cd37e69b7f9f6e848ed51de18eacf9983be783653008e32",
+  "fixture": "p001",
+  "started_at": "2026-11-11T12:13:43.794Z",
+  "status": "STOPPED",
+  "no_models": true,
+  "load": {
+    "logical_sessions": 20,
+    "dispatch_interval_ms": 1100,
+    "maximum_api_in_flight": 1,
+    "actual_peak_api_in_flight": 1,
+    "peak_started_unfinished_sessions": 20,
+    "peak_confirmed_carts": 20,
+    "request_parallelism": "serialized; twenty logical sessions do not mean twenty simultaneous HTTP or merchant requests"
+  },
+  "stop_reason": "SUSTAINED_THROTTLE",
+  "sessions": [
+    {
+      "correlation": "f4f1ee6a4094f6b9",
+      "status": "PASSED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 2029,
+          "started_at": "2026-11-11T12:13:43.805Z",
+          "http_status": null,
+          "throttle": null,
+          "search_observation": {
+            "product_count": 10,
+            "target_product_seen": true,
+            "target_variant_seen": true,
+            "target_variant_available": true,
+            "target_variant_currency": "USD",
+            "returned_product_ids": [
+              "gid://shopify/Product/8510196547647",
+              "gid://shopify/Product/8510201135167",
+              "gid://shopify/Product/8510200840255",
+              "gid://shopify/Product/8510200610879",
+              "gid://shopify/Product/8510200774719",
+              "gid://shopify/Product/8510198251583",
+              "gid://shopify/Product/8510200971327",
+              "gid://shopify/Product/8510201364543",
+              "gid://shopify/Product/8510201102399",
+              "gid://shopify/Product/8510202970175"
+            ]
+          }
+        },
+        "create": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 2222,
+          "started_at": "2026-11-11T12:14:16.678Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 890,
+          "started_at": "2026-11-11T12:14:53.130Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "verify_cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 356,
+          "started_at": "2026-11-11T12:15:15.839Z",
+          "http_status": null,
+          "throttle": null
+        }
+      },
+      "started_at_ms": 1794399223802,
+      "finished_at_ms": 1794399316195
+    },
+    {
+      "correlation": "6238a37765684490",
+      "status": "PASSED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1436,
+          "started_at": "2026-11-11T12:13:45.847Z",
+          "http_status": null,
+          "throttle": null,
+          "search_observation": {
+            "product_count": 10,
+            "target_product_seen": true,
+            "target_variant_seen": true,
+            "target_variant_available": true,
+            "target_variant_currency": "USD",
+            "returned_product_ids": [
+              "gid://shopify/Product/8510196547647",
+              "gid://shopify/Product/8510201135167",
+              "gid://shopify/Product/8510200840255",
+              "gid://shopify/Product/8510200610879",
+              "gid://shopify/Product/8510200774719",
+              "gid://shopify/Product/8510198251583",
+              "gid://shopify/Product/8510200971327",
+              "gid://shopify/Product/8510201364543",
+              "gid://shopify/Product/8510201102399",
+              "gid://shopify/Product/8510202970175"
+            ]
+          }
+        },
+        "create": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1796,
+          "started_at": "2026-11-11T12:14:18.913Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 981,
+          "started_at": "2026-11-11T12:14:54.254Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "verify_cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 696,
+          "started_at": "2026-11-11T12:15:16.959Z",
+          "http_status": null,
+          "throttle": null
+        }
+      },
+      "started_at_ms": 1794399225843,
+      "finished_at_ms": 1794399317655
+    },
+    {
+      "correlation": "cdcc504d3177bcba",
+      "status": "PASSED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1427,
+          "started_at": "2026-11-11T12:13:47.291Z",
+          "http_status": null,
+          "throttle": null,
+          "search_observation": {
+            "product_count": 10,
+            "target_product_seen": true,
+            "target_variant_seen": true,
+            "target_variant_available": true,
+            "target_variant_currency": "USD",
+            "returned_product_ids": [
+              "gid://shopify/Product/8510196547647",
+              "gid://shopify/Product/8510201135167",
+              "gid://shopify/Product/8510200840255",
+              "gid://shopify/Product/8510200610879",
+              "gid://shopify/Product/8510200774719",
+              "gid://shopify/Product/8510198251583",
+              "gid://shopify/Product/8510200971327",
+              "gid://shopify/Product/8510201364543",
+              "gid://shopify/Product/8510201102399",
+              "gid://shopify/Product/8510202970175"
+            ]
+          }
+        },
+        "create": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1837,
+          "started_at": "2026-11-11T12:14:20.723Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 866,
+          "started_at": "2026-11-11T12:14:55.369Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "verify_cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 779,
+          "started_at": "2026-11-11T12:15:18.065Z",
+          "http_status": null,
+          "throttle": null
+        }
+      },
+      "started_at_ms": 1794399227288,
+      "finished_at_ms": 1794399318844
+    },
+    {
+      "correlation": "4f892f924a67a198",
+      "status": "PASSED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1443,
+          "started_at": "2026-11-11T12:13:48.724Z",
+          "http_status": null,
+          "throttle": null,
+          "search_observation": {
+            "product_count": 10,
+            "target_product_seen": true,
+            "target_variant_seen": true,
+            "target_variant_available": true,
+            "target_variant_currency": "USD",
+            "returned_product_ids": [
+              "gid://shopify/Product/8510196547647",
+              "gid://shopify/Product/8510201135167",
+              "gid://shopify/Product/8510200840255",
+              "gid://shopify/Product/8510200610879",
+              "gid://shopify/Product/8510200774719",
+              "gid://shopify/Product/8510198251583",
+              "gid://shopify/Product/8510200971327",
+              "gid://shopify/Product/8510201364543",
+              "gid://shopify/Product/8510201102399",
+              "gid://shopify/Product/8510202970175"
+            ]
+          }
+        },
+        "create": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1758,
+          "started_at": "2026-11-11T12:14:22.568Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 979,
+          "started_at": "2026-11-11T12:14:56.484Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "verify_cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 357,
+          "started_at": "2026-11-11T12:15:19.190Z",
+          "http_status": null,
+          "throttle": null
+        }
+      },
+      "started_at_ms": 1794399228721,
+      "finished_at_ms": 1794399319547
+    },
+    {
+      "correlation": "c73e2b32a1d46f79",
+      "status": "PASSED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1436,
+          "started_at": "2026-11-11T12:13:50.173Z",
+          "http_status": null,
+          "throttle": null,
+          "search_observation": {
+            "product_count": 10,
+            "target_product_seen": true,
+            "target_variant_seen": true,
+            "target_variant_available": true,
+            "target_variant_currency": "USD",
+            "returned_product_ids": [
+              "gid://shopify/Product/8510196547647",
+              "gid://shopify/Product/8510201135167",
+              "gid://shopify/Product/8510200840255",
+              "gid://shopify/Product/8510200610879",
+              "gid://shopify/Product/8510200774719",
+              "gid://shopify/Product/8510198251583",
+              "gid://shopify/Product/8510200971327",
+              "gid://shopify/Product/8510201364543",
+              "gid://shopify/Product/8510201102399",
+              "gid://shopify/Product/8510202970175"
+            ]
+          }
+        },
+        "create": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1864,
+          "started_at": "2026-11-11T12:14:24.332Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1556,
+          "started_at": "2026-11-11T12:14:57.589Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "verify_cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 666,
+          "started_at": "2026-11-11T12:15:20.299Z",
+          "http_status": null,
+          "throttle": null
+        }
+      },
+      "started_at_ms": 1794399230171,
+      "finished_at_ms": 1794399320965
+    },
+    {
+      "correlation": "0129b1a6541354eb",
+      "status": "PASSED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1397,
+          "started_at": "2026-11-11T12:13:51.615Z",
+          "http_status": null,
+          "throttle": null,
+          "search_observation": {
+            "product_count": 10,
+            "target_product_seen": true,
+            "target_variant_seen": true,
+            "target_variant_available": true,
+            "target_variant_currency": "USD",
+            "returned_product_ids": [
+              "gid://shopify/Product/8510196547647",
+              "gid://shopify/Product/8510201135167",
+              "gid://shopify/Product/8510200840255",
+              "gid://shopify/Product/8510200610879",
+              "gid://shopify/Product/8510200774719",
+              "gid://shopify/Product/8510198251583",
+              "gid://shopify/Product/8510200971327",
+              "gid://shopify/Product/8510201364543",
+              "gid://shopify/Product/8510201102399",
+              "gid://shopify/Product/8510202970175"
+            ]
+          }
+        },
+        "create": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 2068,
+          "started_at": "2026-11-11T12:14:26.202Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1039,
+          "started_at": "2026-11-11T12:14:59.152Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "verify_cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 344,
+          "started_at": "2026-11-11T12:15:21.412Z",
+          "http_status": null,
+          "throttle": null
+        }
+      },
+      "started_at_ms": 1794399231613,
+      "finished_at_ms": 1794399321756
+    },
+    {
+      "correlation": "f2c69ea0b8d25ba6",
+      "status": "PASSED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1487,
+          "started_at": "2026-11-11T12:13:53.019Z",
+          "http_status": null,
+          "throttle": null,
+          "search_observation": {
+            "product_count": 10,
+            "target_product_seen": true,
+            "target_variant_seen": true,
+            "target_variant_available": true,
+            "target_variant_currency": "USD",
+            "returned_product_ids": [
+              "gid://shopify/Product/8510196547647",
+              "gid://shopify/Product/8510201135167",
+              "gid://shopify/Product/8510200840255",
+              "gid://shopify/Product/8510200610879",
+              "gid://shopify/Product/8510200774719",
+              "gid://shopify/Product/8510198251583",
+              "gid://shopify/Product/8510200971327",
+              "gid://shopify/Product/8510201364543",
+              "gid://shopify/Product/8510201102399",
+              "gid://shopify/Product/8510202970175"
+            ]
+          }
+        },
+        "create": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1860,
+          "started_at": "2026-11-11T12:14:28.277Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 898,
+          "started_at": "2026-11-11T12:15:00.263Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "verify_cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 409,
+          "started_at": "2026-11-11T12:15:22.525Z",
+          "http_status": null,
+          "throttle": null
+        }
+      },
+      "started_at_ms": 1794399233016,
+      "finished_at_ms": 1794399322934
+    },
+    {
+      "correlation": "72cfb0663ce5c3f3",
+      "status": "PASSED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1640,
+          "started_at": "2026-11-11T12:13:54.520Z",
+          "http_status": null,
+          "throttle": null,
+          "search_observation": {
+            "product_count": 10,
+            "target_product_seen": true,
+            "target_variant_seen": true,
+            "target_variant_available": true,
+            "target_variant_currency": "USD",
+            "returned_product_ids": [
+              "gid://shopify/Product/8510196547647",
+              "gid://shopify/Product/8510201135167",
+              "gid://shopify/Product/8510200840255",
+              "gid://shopify/Product/8510200610879",
+              "gid://shopify/Product/8510200774719",
+              "gid://shopify/Product/8510198251583",
+              "gid://shopify/Product/8510200971327",
+              "gid://shopify/Product/8510201364543",
+              "gid://shopify/Product/8510201102399",
+              "gid://shopify/Product/8510202970175"
+            ]
+          }
+        },
+        "create": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1666,
+          "started_at": "2026-11-11T12:14:30.144Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 883,
+          "started_at": "2026-11-11T12:15:01.374Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "verify_cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 736,
+          "started_at": "2026-11-11T12:15:23.646Z",
+          "http_status": null,
+          "throttle": null
+        }
+      },
+      "started_at_ms": 1794399234513,
+      "finished_at_ms": 1794399324382
+    },
+    {
+      "correlation": "4476f0774de869af",
+      "status": "PASSED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1660,
+          "started_at": "2026-11-11T12:13:56.168Z",
+          "http_status": null,
+          "throttle": null,
+          "search_observation": {
+            "product_count": 10,
+            "target_product_seen": true,
+            "target_variant_seen": true,
+            "target_variant_available": true,
+            "target_variant_currency": "USD",
+            "returned_product_ids": [
+              "gid://shopify/Product/8510196547647",
+              "gid://shopify/Product/8510201135167",
+              "gid://shopify/Product/8510200840255",
+              "gid://shopify/Product/8510200610879",
+              "gid://shopify/Product/8510200774719",
+              "gid://shopify/Product/8510198251583",
+              "gid://shopify/Product/8510200971327",
+              "gid://shopify/Product/8510201364543",
+              "gid://shopify/Product/8510201102399",
+              "gid://shopify/Product/8510202970175"
+            ]
+          }
+        },
+        "create": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1728,
+          "started_at": "2026-11-11T12:14:31.823Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 968,
+          "started_at": "2026-11-11T12:15:02.490Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "verify_cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 363,
+          "started_at": "2026-11-11T12:15:24.763Z",
+          "http_status": null,
+          "throttle": null
+        }
+      },
+      "started_at_ms": 1794399236164,
+      "finished_at_ms": 1794399325126
+    },
+    {
+      "correlation": "439ebdb6dd35f994",
+      "status": "PASSED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1486,
+          "started_at": "2026-11-11T12:13:57.834Z",
+          "http_status": null,
+          "throttle": null,
+          "search_observation": {
+            "product_count": 10,
+            "target_product_seen": true,
+            "target_variant_seen": true,
+            "target_variant_available": true,
+            "target_variant_currency": "USD",
+            "returned_product_ids": [
+              "gid://shopify/Product/8510196547647",
+              "gid://shopify/Product/8510201135167",
+              "gid://shopify/Product/8510200840255",
+              "gid://shopify/Product/8510200610879",
+              "gid://shopify/Product/8510200774719",
+              "gid://shopify/Product/8510198251583",
+              "gid://shopify/Product/8510200971327",
+              "gid://shopify/Product/8510201364543",
+              "gid://shopify/Product/8510201102399",
+              "gid://shopify/Product/8510202970175"
+            ]
+          }
+        },
+        "create": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1730,
+          "started_at": "2026-11-11T12:14:33.556Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 905,
+          "started_at": "2026-11-11T12:15:03.596Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "verify_cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 631,
+          "started_at": "2026-11-11T12:15:25.879Z",
+          "http_status": null,
+          "throttle": null
+        }
+      },
+      "started_at_ms": 1794399237831,
+      "finished_at_ms": 1794399326510
+    },
+    {
+      "correlation": "5a87d24bdb2e3279",
+      "status": "PASSED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1461,
+          "started_at": "2026-11-11T12:13:59.327Z",
+          "http_status": null,
+          "throttle": null,
+          "search_observation": {
+            "product_count": 10,
+            "target_product_seen": true,
+            "target_variant_seen": true,
+            "target_variant_available": true,
+            "target_variant_currency": "USD",
+            "returned_product_ids": [
+              "gid://shopify/Product/8510196547647",
+              "gid://shopify/Product/8510201135167",
+              "gid://shopify/Product/8510200840255",
+              "gid://shopify/Product/8510200610879",
+              "gid://shopify/Product/8510200774719",
+              "gid://shopify/Product/8510198251583",
+              "gid://shopify/Product/8510200971327",
+              "gid://shopify/Product/8510201364543",
+              "gid://shopify/Product/8510201102399",
+              "gid://shopify/Product/8510202970175"
+            ]
+          }
+        },
+        "create": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1829,
+          "started_at": "2026-11-11T12:14:35.293Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 914,
+          "started_at": "2026-11-11T12:15:04.715Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "verify_cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 395,
+          "started_at": "2026-11-11T12:15:27.007Z",
+          "http_status": null,
+          "throttle": null
+        }
+      },
+      "started_at_ms": 1794399239323,
+      "finished_at_ms": 1794399327402
+    },
+    {
+      "correlation": "2cb6c43565e5ff2d",
+      "status": "PASSED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1841,
+          "started_at": "2026-11-11T12:14:00.796Z",
+          "http_status": null,
+          "throttle": null,
+          "search_observation": {
+            "product_count": 10,
+            "target_product_seen": true,
+            "target_variant_seen": true,
+            "target_variant_available": true,
+            "target_variant_currency": "USD",
+            "returned_product_ids": [
+              "gid://shopify/Product/8510196547647",
+              "gid://shopify/Product/8510201135167",
+              "gid://shopify/Product/8510200840255",
+              "gid://shopify/Product/8510200610879",
+              "gid://shopify/Product/8510200774719",
+              "gid://shopify/Product/8510198251583",
+              "gid://shopify/Product/8510200971327",
+              "gid://shopify/Product/8510201364543",
+              "gid://shopify/Product/8510201102399",
+              "gid://shopify/Product/8510202970175"
+            ]
+          }
+        },
+        "create": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1693,
+          "started_at": "2026-11-11T12:14:37.129Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 941,
+          "started_at": "2026-11-11T12:15:05.829Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "verify_cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 348,
+          "started_at": "2026-11-11T12:15:28.128Z",
+          "http_status": null,
+          "throttle": null
+        }
+      },
+      "started_at_ms": 1794399240793,
+      "finished_at_ms": 1794399328476
+    },
+    {
+      "correlation": "d62a84aabd9e7fab",
+      "status": "PASSED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 2153,
+          "started_at": "2026-11-11T12:14:02.644Z",
+          "http_status": null,
+          "throttle": null,
+          "search_observation": {
+            "product_count": 10,
+            "target_product_seen": true,
+            "target_variant_seen": true,
+            "target_variant_available": true,
+            "target_variant_currency": "USD",
+            "returned_product_ids": [
+              "gid://shopify/Product/8510196547647",
+              "gid://shopify/Product/8510201135167",
+              "gid://shopify/Product/8510200840255",
+              "gid://shopify/Product/8510200610879",
+              "gid://shopify/Product/8510200774719",
+              "gid://shopify/Product/8510198251583",
+              "gid://shopify/Product/8510200971327",
+              "gid://shopify/Product/8510201364543",
+              "gid://shopify/Product/8510201102399",
+              "gid://shopify/Product/8510202970175"
+            ]
+          }
+        },
+        "create": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1777,
+          "started_at": "2026-11-11T12:14:38.829Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 823,
+          "started_at": "2026-11-11T12:15:06.937Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "verify_cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 368,
+          "started_at": "2026-11-11T12:15:29.250Z",
+          "http_status": null,
+          "throttle": null
+        }
+      },
+      "started_at_ms": 1794399242641,
+      "finished_at_ms": 1794399329618
+    },
+    {
+      "correlation": "b542c747e7cf4d20",
+      "status": "PASSED",
+      "cart_state": "none",
+      "steps": {
+        "search": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1519,
+          "started_at": "2026-11-11T12:14:04.803Z",
+          "http_status": null,
+          "throttle": null,
+          "search_observation": {
+            "product_count": 10,
+            "target_product_seen": true,
+            "target_variant_seen": true,
+            "target_variant_available": true,
+            "target_variant_currency": "USD",
+            "returned_product_ids": [
+              "gid://shopify/Product/8510196547647",
+              "gid://shopify/Product/8510201135167",
+              "gid://shopify/Product/8510200840255",
+              "gid://shopify/Product/8510200610879",
+              "gid://shopify/Product/8510200774719",
+              "gid://shopify/Product/8510198251583",
+              "gid://shopify/Product/8510200971327",
+              "gid://shopify/Product/8510201364543",
+              "gid://shopify/Product/8510201102399",
+              "gid://shopify/Product/8510202970175"
+            ]
+          }
+        },
+        "create": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1722,
+          "started_at": "2026-11-11T12:14:40.614Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 846,
+          "started_at": "2026-11-11T12:15:08.055Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "verify_cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 370,
+          "started_at": "2026-11-11T12:15:30.358Z",
+          "http_status": null,
+          "throttle": null
+        }
+      },
+      "started_at_ms": 1794399244801,
+      "finished_at_ms": 1794399330728
+    },
+    {
+      "correlation": "2b1c19af9485222e",
+      "status": "FAILED",
+      "cart_state": "cancel_acknowledged",
+      "steps": {
+        "search": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1651,
+          "started_at": "2026-11-11T12:14:06.330Z",
+          "http_status": null,
+          "throttle": null,
+          "search_observation": {
+            "product_count": 10,
+            "target_product_seen": true,
+            "target_variant_seen": true,
+            "target_variant_available": true,
+            "target_variant_currency": "USD",
+            "returned_product_ids": [
+              "gid://shopify/Product/8510196547647",
+              "gid://shopify/Product/8510201135167",
+              "gid://shopify/Product/8510200840255",
+              "gid://shopify/Product/8510200610879",
+              "gid://shopify/Product/8510200774719",
+              "gid://shopify/Product/8510198251583",
+              "gid://shopify/Product/8510200971327",
+              "gid://shopify/Product/8510201364543",
+              "gid://shopify/Product/8510201102399",
+              "gid://shopify/Product/8510202970175"
+            ]
+          }
+        },
+        "create": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1967,
+          "started_at": "2026-11-11T12:14:42.343Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 840,
+          "started_at": "2026-11-11T12:15:09.168Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "verify_cancel": {
+          "status": "FAILED",
+          "dispatched": true,
+          "duration_ms": 273,
+          "started_at": "2026-11-11T12:15:31.466Z",
+          "http_status": 200,
+          "throttle": "upstream",
+          "tool_error": true,
+          "error": "RATE_LIMITED",
+          "retry_after_available": false,
+          "cooldown_ms": 5000
+        }
+      },
+      "started_at_ms": 1794399246326,
+      "finished_at_ms": 1794399331739
+    },
+    {
+      "correlation": "ce1241129281b1ea",
+      "status": "FAILED",
+      "cart_state": "cancel_acknowledged",
+      "steps": {
+        "search": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1879,
+          "started_at": "2026-11-11T12:14:07.986Z",
+          "http_status": null,
+          "throttle": null,
+          "search_observation": {
+            "product_count": 10,
+            "target_product_seen": true,
+            "target_variant_seen": true,
+            "target_variant_available": true,
+            "target_variant_currency": "USD",
+            "returned_product_ids": [
+              "gid://shopify/Product/8510196547647",
+              "gid://shopify/Product/8510201135167",
+              "gid://shopify/Product/8510200840255",
+              "gid://shopify/Product/8510200610879",
+              "gid://shopify/Product/8510200774719",
+              "gid://shopify/Product/8510198251583",
+              "gid://shopify/Product/8510200971327",
+              "gid://shopify/Product/8510201364543",
+              "gid://shopify/Product/8510201102399",
+              "gid://shopify/Product/8510202970175"
+            ]
+          }
+        },
+        "create": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1768,
+          "started_at": "2026-11-11T12:14:44.316Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 828,
+          "started_at": "2026-11-11T12:15:10.274Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "verify_cancel": {
+          "status": "FAILED",
+          "dispatched": true,
+          "duration_ms": 408,
+          "started_at": "2026-11-11T12:15:36.751Z",
+          "http_status": 200,
+          "throttle": "upstream",
+          "tool_error": true,
+          "error": "RATE_LIMITED",
+          "retry_after_available": false,
+          "cooldown_ms": 5000
+        }
+      },
+      "started_at_ms": 1794399247984,
+      "finished_at_ms": 1794399337159
+    },
+    {
+      "correlation": "cbc3dc816d427925",
+      "status": "INCOMPLETE",
+      "cart_state": "cancel_acknowledged",
+      "steps": {
+        "search": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1569,
+          "started_at": "2026-11-11T12:14:09.872Z",
+          "http_status": null,
+          "throttle": null,
+          "search_observation": {
+            "product_count": 10,
+            "target_product_seen": true,
+            "target_variant_seen": true,
+            "target_variant_available": true,
+            "target_variant_currency": "USD",
+            "returned_product_ids": [
+              "gid://shopify/Product/8510196547647",
+              "gid://shopify/Product/8510201135167",
+              "gid://shopify/Product/8510200840255",
+              "gid://shopify/Product/8510200610879",
+              "gid://shopify/Product/8510200774719",
+              "gid://shopify/Product/8510198251583",
+              "gid://shopify/Product/8510200971327",
+              "gid://shopify/Product/8510201364543",
+              "gid://shopify/Product/8510201102399",
+              "gid://shopify/Product/8510202970175"
+            ]
+          }
+        },
+        "create": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1719,
+          "started_at": "2026-11-11T12:14:46.091Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 854,
+          "started_at": "2026-11-11T12:15:11.382Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794399249869
+    },
+    {
+      "correlation": "855c2e0666548fd9",
+      "status": "INCOMPLETE",
+      "cart_state": "cancel_acknowledged",
+      "steps": {
+        "search": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1760,
+          "started_at": "2026-11-11T12:14:11.448Z",
+          "http_status": null,
+          "throttle": null,
+          "search_observation": {
+            "product_count": 10,
+            "target_product_seen": true,
+            "target_variant_seen": true,
+            "target_variant_available": true,
+            "target_variant_currency": "USD",
+            "returned_product_ids": [
+              "gid://shopify/Product/8510196547647",
+              "gid://shopify/Product/8510201135167",
+              "gid://shopify/Product/8510200840255",
+              "gid://shopify/Product/8510200610879",
+              "gid://shopify/Product/8510200774719",
+              "gid://shopify/Product/8510198251583",
+              "gid://shopify/Product/8510200971327",
+              "gid://shopify/Product/8510201364543",
+              "gid://shopify/Product/8510201102399",
+              "gid://shopify/Product/8510202970175"
+            ]
+          }
+        },
+        "create": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1736,
+          "started_at": "2026-11-11T12:14:47.816Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 831,
+          "started_at": "2026-11-11T12:15:12.495Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794399251445
+    },
+    {
+      "correlation": "2cf4098c22afab59",
+      "status": "INCOMPLETE",
+      "cart_state": "cancel_acknowledged",
+      "steps": {
+        "search": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1647,
+          "started_at": "2026-11-11T12:14:13.215Z",
+          "http_status": null,
+          "throttle": null,
+          "search_observation": {
+            "product_count": 10,
+            "target_product_seen": true,
+            "target_variant_seen": true,
+            "target_variant_available": true,
+            "target_variant_currency": "USD",
+            "returned_product_ids": [
+              "gid://shopify/Product/8510196547647",
+              "gid://shopify/Product/8510201135167",
+              "gid://shopify/Product/8510200840255",
+              "gid://shopify/Product/8510200610879",
+              "gid://shopify/Product/8510200774719",
+              "gid://shopify/Product/8510198251583",
+              "gid://shopify/Product/8510200971327",
+              "gid://shopify/Product/8510201364543",
+              "gid://shopify/Product/8510201102399",
+              "gid://shopify/Product/8510202970175"
+            ]
+          }
+        },
+        "create": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1817,
+          "started_at": "2026-11-11T12:14:49.568Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 845,
+          "started_at": "2026-11-11T12:15:13.617Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794399253212
+    },
+    {
+      "correlation": "c7da5a8c586a9eb5",
+      "status": "INCOMPLETE",
+      "cart_state": "cancel_acknowledged",
+      "steps": {
+        "search": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1803,
+          "started_at": "2026-11-11T12:14:14.869Z",
+          "http_status": null,
+          "throttle": null,
+          "search_observation": {
+            "product_count": 10,
+            "target_product_seen": true,
+            "target_variant_seen": true,
+            "target_variant_available": true,
+            "target_variant_currency": "USD",
+            "returned_product_ids": [
+              "gid://shopify/Product/8510196547647",
+              "gid://shopify/Product/8510201135167",
+              "gid://shopify/Product/8510200840255",
+              "gid://shopify/Product/8510200610879",
+              "gid://shopify/Product/8510200774719",
+              "gid://shopify/Product/8510198251583",
+              "gid://shopify/Product/8510200971327",
+              "gid://shopify/Product/8510201364543",
+              "gid://shopify/Product/8510201102399",
+              "gid://shopify/Product/8510202970175"
+            ]
+          }
+        },
+        "create": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 1732,
+          "started_at": "2026-11-11T12:14:51.392Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "cancel": {
+          "status": "PASSED",
+          "dispatched": true,
+          "duration_ms": 851,
+          "started_at": "2026-11-11T12:15:14.727Z",
+          "http_status": null,
+          "throttle": null
+        },
+        "verify_cancel": {
+          "status": "NOT_RUN"
+        }
+      },
+      "started_at_ms": 1794399254866
+    }
+  ],
+  "summary": {
+    "planned_sessions": 20,
+    "passed_sessions": 14,
+    "failed_sessions": 2,
+    "not_run_sessions": 0,
+    "incomplete_sessions": 4,
+    "completed_sessions": 16,
+    "session_pass_rate": 0.7,
+    "planned_workload_requests": 60,
+    "planned_verification_requests": 20,
+    "attempted_requests": 76,
+    "not_run_requests": 4,
+    "tool_errors": 2,
+    "business_failures": 0,
+    "error_rate": 0.02631578947368421,
+    "error_rate_denominator": "all attempted API requests; NOT_RUN requests reported separately",
+    "complete": false,
+    "cleanup_failures": [
+      {
+        "correlation": "2b1c19af9485222e",
+        "cart_state": "cancel_acknowledged",
+        "reason": "SUSTAINED_THROTTLE"
+      },
+      {
+        "correlation": "ce1241129281b1ea",
+        "cart_state": "cancel_acknowledged",
+        "reason": "SUSTAINED_THROTTLE"
+      },
+      {
+        "correlation": "cbc3dc816d427925",
+        "cart_state": "cancel_acknowledged",
+        "reason": "SUSTAINED_THROTTLE"
+      },
+      {
+        "correlation": "855c2e0666548fd9",
+        "cart_state": "cancel_acknowledged",
+        "reason": "SUSTAINED_THROTTLE"
+      },
+      {
+        "correlation": "2cf4098c22afab59",
+        "cart_state": "cancel_acknowledged",
+        "reason": "SUSTAINED_THROTTLE"
+      },
+      {
+        "correlation": "c7da5a8c586a9eb5",
+        "cart_state": "cancel_acknowledged",
+        "reason": "SUSTAINED_THROTTLE"
+      }
+    ]
+  },
+  "latency": {
+    "client_http": {
+      "samples": 76,
+      "p50_ms": 1436,
+      "p95_ms": 2029
+    },
+    "upstream_http": null,
+    "upstream_timing_note": "Worker tool responses do not expose isolated Shopify duration; client time includes Worker, rate permit, Admin eligibility and Shopify work.",
+    "logical_session": {
+      "samples": 16,
+      "p50_ms": 89175,
+      "p95_ms": 92393
+    }
+  },
+  "throttles": {
+    "application": 0,
+    "upstream": 2,
+    "unknown": 0,
+    "upstream_note": "RATE_LIMITED is upstream, but UCP and Admin eligibility throttles cannot be separated by the current response contract."
+  },
+  "finished_at": "2026-11-11T12:15:37.163Z",
+  "elapsed_ms": 113369
+}

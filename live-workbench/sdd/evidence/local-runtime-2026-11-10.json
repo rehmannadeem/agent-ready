@@ -1,0 +1,108 @@
+{
+  "started_at": "2026-11-10T15:57:49.679Z",
+  "completed_at": "2026-11-10T15:58:06.021Z",
+  "runtime": "Wrangler 4.158.0 / actual workerd with SQLite-backed Durable Object",
+  "scope": "Local HTTP auth, session isolation, persisted rate limiting and log redaction. Global Worker fetch is blocked by a temporary instrumentation entry; no Shopify traffic or commerce mutation is exercised.",
+  "wrangler_config": "temporary isolated configuration; no production bindings",
+  "port": 8797,
+  "checks": [
+    {
+      "name": "missing_bearer_401",
+      "passed": true
+    },
+    {
+      "name": "wrong_bearer_401",
+      "passed": true
+    },
+    {
+      "name": "signed_tools_list_seven",
+      "passed": true,
+      "details": {
+        "tools": [
+          "search_catalog",
+          "lookup_catalog",
+          "get_product",
+          "create_cart",
+          "get_cart",
+          "update_cart",
+          "cancel_cart"
+        ]
+      }
+    },
+    {
+      "name": "session_a_empty_cart_actual_do",
+      "passed": true
+    },
+    {
+      "name": "restart_stayed_in_same_rate_minute",
+      "passed": true
+    },
+    {
+      "name": "rate_limit_survives_workerd_restart",
+      "passed": true
+    },
+    {
+      "name": "session_b_isolated_actual_do",
+      "passed": true
+    },
+    {
+      "name": "outbound_fetch_blocker_zero_attempts",
+      "passed": true
+    },
+    {
+      "name": "logs_have_no_secret_values",
+      "passed": true
+    },
+    {
+      "name": "logs_have_no_outbound_attempt",
+      "passed": true
+    },
+    {
+      "name": "real_application_observability_emitted",
+      "passed": true
+    }
+  ],
+  "requests": [
+    {
+      "path": "/api/mcp",
+      "method": "tools/list",
+      "status": 401,
+      "duration_ms": 9
+    },
+    {
+      "path": "/api/mcp",
+      "method": "tools/list",
+      "status": 401,
+      "duration_ms": 5
+    },
+    {
+      "path": "/api/mcp",
+      "method": "tools/list",
+      "status": 200,
+      "duration_ms": 6
+    },
+    {
+      "path": "/api/shop",
+      "method": "get_cart",
+      "status": 200,
+      "duration_ms": 18
+    },
+    {
+      "path": "/api/shop",
+      "method": "get_cart",
+      "status": 429,
+      "duration_ms": 15
+    },
+    {
+      "path": "/api/shop",
+      "method": "get_cart",
+      "status": 200,
+      "duration_ms": 14
+    }
+  ],
+  "all_passed": true,
+  "failure": null,
+  "shopify_fetch_attempts": 0,
+  "paid_model_calls": 0,
+  "processes_stopped": true
+}

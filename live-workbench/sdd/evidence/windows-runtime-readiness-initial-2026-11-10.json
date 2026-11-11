@@ -1,0 +1,96 @@
+{
+  "checked_at": "2026-11-10T16:50:33.373Z",
+  "checks": [
+    {
+      "name": "worker_health_correct_store",
+      "pass": true,
+      "details": {
+        "status": 200,
+        "version": "0.3.0-candidate",
+        "store": "karachi-kicks-supportops-lab.myshopify.com",
+        "catalog_configured": true
+      }
+    },
+    {
+      "name": "missing_service_bearer_rejected",
+      "pass": true,
+      "details": {
+        "status": 401
+      }
+    },
+    {
+      "name": "wrong_service_bearer_rejected",
+      "pass": true,
+      "details": {
+        "status": 401
+      }
+    },
+    {
+      "name": "signed_tools_list_seven",
+      "pass": true,
+      "details": {
+        "status": 200,
+        "tools": [
+          "search_catalog",
+          "lookup_catalog",
+          "get_product",
+          "create_cart",
+          "get_cart",
+          "update_cart",
+          "cancel_cart"
+        ]
+      }
+    },
+    {
+      "name": "new_session_has_no_cart",
+      "pass": false,
+      "details": {
+        "status": 500
+      }
+    },
+    {
+      "name": "private_inspector_reaches_empty_state_guard",
+      "pass": false,
+      "details": {
+        "status": 503,
+        "error": "EVAL_INSPECTION_FAILED"
+      }
+    },
+    {
+      "name": "browser_requires_operator_bootstrap",
+      "pass": true,
+      "details": {
+        "status": 401
+      }
+    },
+    {
+      "name": "login_page_contains_no_service_secrets",
+      "pass": true,
+      "details": {
+        "status": 200
+      }
+    },
+    {
+      "name": "private_bootstrap_file_exists",
+      "pass": true
+    },
+    {
+      "name": "runtime_logs_contain_no_secret_values",
+      "pass": true
+    }
+  ],
+  "shopify_mutations": 0,
+  "model_calls": 0,
+  "processes": {
+    "source_revision": "704057a78efc2c093e3631d5c569f340ddf0b388",
+    "worker_launcher_pid": 27548,
+    "bridge_pid": 31172,
+    "worker_url": "http://127.0.0.1:8787",
+    "bridge_url": "http://127.0.0.1:8788",
+    "runtime_purpose": "shopping-runtime",
+    "seed_credentials_in_worker_or_bridge": false,
+    "secrets_in_logs": false
+  },
+  "all_passed": false,
+  "evidence_origin": "Observed on authorized Windows device; credential/configuration values and private filesystem paths omitted."
+}

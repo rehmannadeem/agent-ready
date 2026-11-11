@@ -1,0 +1,129 @@
+{
+  "started_at": "2026-11-10T16:53:57.090Z",
+  "scope": "Read-only real Shopify smoke through the isolated local Worker",
+  "shopify_mutations": 0,
+  "model_calls": 0,
+  "checks": [
+    {
+      "name": "admin_catalog_small_page",
+      "pass": true,
+      "http_status": 200,
+      "duration_ms": 1358,
+      "source": "Shopify Admin API",
+      "store": "karachi-kicks-supportops-lab.myshopify.com",
+      "market": "US",
+      "currency": "USD",
+      "result_keys": [
+        "source",
+        "environment",
+        "observed_at",
+        "store",
+        "shop_name",
+        "currency",
+        "market",
+        "products",
+        "filters",
+        "pagination",
+        "more_products",
+        "limitation"
+      ],
+      "product_count": 1,
+      "products": [
+        {
+          "id": "gid://shopify/Product/8272134242367",
+          "title": "Karachi Kicks Runner Pro",
+          "variants": [
+            {
+              "id": "gid://shopify/ProductVariant/43580047556671",
+              "title": "Default Title",
+              "price": "79.0"
+            }
+          ],
+          "variant_count": 1
+        }
+      ]
+    },
+    {
+      "name": "ucp_search_catalog",
+      "pass": true,
+      "http_status": 200,
+      "duration_ms": 1949,
+      "source": "Shopify UCP MCP",
+      "store": "karachi-kicks-supportops-lab.myshopify.com",
+      "result_keys": [
+        "source",
+        "store",
+        "observed_at",
+        "environment",
+        "messages",
+        "products",
+        "has_next_page",
+        "next_cursor",
+        "revision"
+      ],
+      "product_count": 1,
+      "products": [
+        {
+          "id": "gid://shopify/Product/8272134242367",
+          "title": "Karachi Kicks Runner Pro",
+          "variants": [
+            {
+              "id": "gid://shopify/ProductVariant/43580047556671",
+              "title": "Default Title",
+              "price": {
+                "amount": 7900,
+                "currency": "USD"
+              },
+              "availability": {
+                "available": true
+              }
+            }
+          ],
+          "variant_count": 1
+        }
+      ]
+    },
+    {
+      "name": "ucp_get_known_product",
+      "pass": true,
+      "http_status": 200,
+      "duration_ms": 1262,
+      "source": "Shopify UCP MCP",
+      "store": "karachi-kicks-supportops-lab.myshopify.com",
+      "result_keys": [
+        "source",
+        "store",
+        "observed_at",
+        "environment",
+        "messages",
+        "product",
+        "status",
+        "revision"
+      ],
+      "product_count": 1,
+      "products": [
+        {
+          "id": "gid://shopify/Product/8272134242367",
+          "title": "Karachi Kicks Runner Pro",
+          "variants": [
+            {
+              "id": "gid://shopify/ProductVariant/43580047556671",
+              "title": "Default Title",
+              "price": {
+                "amount": 7900,
+                "currency": "USD"
+              },
+              "availability": {
+                "available": true
+              }
+            }
+          ],
+          "variant_count": 1
+        }
+      ]
+    }
+  ],
+  "all_passed": true,
+  "completed_at": "2026-11-10T16:54:01.674Z",
+  "evidence_origin": "Observed on authorized Windows device; credential/configuration values and private filesystem paths omitted."
+}

@@ -1,0 +1,1 @@
+query SeedPreflight { shop { id name myshopifyDomain currencyCode plan { partnerDevelopment publicDisplayName } } currentAppInstallation { accessScopes { handle } } productsCount(limit:null){count precision} productVariantsCount(limit:null){count precision} }

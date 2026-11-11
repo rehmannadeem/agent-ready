@@ -1,0 +1,142 @@
+{
+  "captured_at": "2026-11-10T16:09:18.130351+00:00",
+  "command": "node --test --test-reporter=spec test/*.test.mjs",
+  "tests": 149,
+  "passed": 149,
+  "failed": 0,
+  "skipped": 0,
+  "cancelled": 0,
+  "syntax_checks": [
+    {
+      "file": "src/catalog.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "src/commerce.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "src/session-security.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "src/session-state.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "src/worker.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "dev/bridge.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "dev/eval-worker.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "dev/init-local-secrets.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "dev/private-cart-inspector.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "dev/start-local-bridge.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "catalogue/admin.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "catalogue/generate.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "catalogue/operations.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "catalogue/preflight.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "catalogue/process-lock.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "catalogue/seed.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "catalogue/teardown.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "simulate/scenarios.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "evals/bridge.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "evals/budget.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "evals/load.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "evals/local-adapter.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "evals/model-context.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "evals/oracle.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "evals/review.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "evals/run.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "evals/runner.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "evals/scenarios.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "evals/shopify-controller.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "evals/spool.mjs",
+      "exit_code": 0
+    },
+    {
+      "file": "public/app.js",
+      "exit_code": 0
+    },
+    {
+      "file": "public/shopping.js",
+      "exit_code": 0
+    }
+  ],
+  "scope": "Deterministic code tests with mocked commerce/store/model calls. Actual local workerd HTTP checks are recorded separately.",
+  "paid_model_calls": 0,
+  "shopify_mutations": 0
+}

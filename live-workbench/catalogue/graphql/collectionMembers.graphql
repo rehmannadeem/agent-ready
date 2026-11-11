@@ -1,0 +1,1 @@
+query SeedCollectionMembers($id:ID!,$after:String){collection(id:$id){id handle products(first:250,after:$after){nodes{id}pageInfo{hasNextPage endCursor}}}}

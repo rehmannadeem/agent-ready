@@ -1,0 +1,1 @@
+query SeedPublications($after:String){publications(first:50,after:$after){nodes{id autoPublish channels(first:10){nodes{id name}pageInfo{hasNextPage}}}pageInfo{hasNextPage endCursor}}}

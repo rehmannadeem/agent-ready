@@ -124,6 +124,11 @@ export async function callCommerce(name,args,env,fetcher=fetch,context={},gates=
  const common={source:'Shopify UCP MCP',store:host(env),observed_at:new Date().toISOString(),environment:'development store',messages:messages(data.messages)};
  const missing=name==='get_cart'&&payload.result?.structuredContent&&object(cart)&&typeof cart.id!=='string'&&(cart.ucp?.version||data.ucp?.version)===UCP_VERSION&&cartMessages.some(m=>m.type==='error'&&m.severity==='unrecoverable'&&['not_found','cart_not_found'].includes(m.code));
  if(missing)return {...common,id:null,status:'not_found',line_items:[],totals:[],messages:cartMessages,continue_url:null,ready_for_handoff:false,order_placed:false,payment_submitted:false};
+ const missingProduct=name==='get_product'&&payload.result?.isError===true&&
+  data.ucp?.version===UCP_VERSION&&data.ucp.status==='error'&&data.product==null&&
+  Array.isArray(data.messages)&&data.messages.length>0&&data.messages.every(message=>
+   message?.type==='error'&&message.code==='product_not_found'&&message.severity==='unrecoverable');
+ if(missingProduct)return {...common,product:null,status:'not_found'};
  if(payload.result?.isError||data.ucp?.status==='error'||cart.ucp?.status==='error')throw new CommerceError('COMMERCE_REJECTED','Shopify could not confirm the operation.');
  if(['search_catalog','lookup_catalog','get_product'].includes(name)){
   if(name==='get_product'&&data.product===null&&!common.messages.some(message=>message.type==='error')){

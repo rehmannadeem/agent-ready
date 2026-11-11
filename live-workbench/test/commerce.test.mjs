@@ -80,6 +80,18 @@ test('explicit product absence remains distinct from a malformed or failed detai
  await assert.rejects(call('get_product',args,async()=>response({product:null},true)),{code:'COMMERCE_REJECTED'});
  await assert.rejects(call('get_product',args,async()=>response({product:null,messages:[{type:'error'}]})),{code:'INVALID_RESPONSE'});
 });
+test('captured Shopify product_not_found envelope maps to absence without leaking its URL',async()=>{
+ const capture=JSON.parse(readFileSync(new URL('../sdd/evidence/s05-hidden-product-exact.json',import.meta.url)));
+ const make=body=>new Response(body,{status:capture.http_status});
+ const result=await call('get_product',{id:capture.product_id},async()=>make(capture.body_exact));
+ assert.equal(result.product,null);
+ assert.equal(result.status,'not_found');
+ assert.equal(result.continue_url,undefined);
+ const different=JSON.parse(capture.body_exact);
+ different.result.structuredContent.messages.push({type:'error',code:'access_denied',severity:'unrecoverable'});
+ await assert.rejects(call('get_product',{id:capture.product_id},async()=>make(JSON.stringify(different))),
+  {code:'COMMERCE_REJECTED'});
+});
 test('full-state update preserves omitted discount codes and supported fresh state; explicit [] clears',async()=>{
  const snapshot={...cart,buyer:{consent:{'dev.example.marketing':{granted:false,source:'platform'}}},context:{intent:'running'},attribution:{utm_source:'test'},fulfillment:{methods:[]},declared_fields:[{key:'note',value:'keep'}]};
  let sent;const f=async(_,init)=>{sent=JSON.parse(init.body).params.arguments;return response({...cart,line_items:[...cart.line_items,{item:{id:v2},quantity:2}]});};

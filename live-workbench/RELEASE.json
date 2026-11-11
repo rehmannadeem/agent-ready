@@ -27,7 +27,7 @@
   "candidate": {
     "date": "2026-11-11",
     "branch": "feat/realistic-catalogue-20261110",
-    "status": "GATE6_BLOCKED_RENEWED_PROVIDER_THROTTLING",
+    "status": "GATE6_CRITICAL_ONLY_PREPARATION",
     "deployed": false,
     "merged": false,
     "gate2_approved": true,
@@ -39,7 +39,7 @@
     "model_evaluation_usd": 1.41e-05,
     "runtime_checks_passed": 11,
     "evidence": "sdd/GATE-6-REPORT.md",
-    "deterministic_tests_passed": 173,
+    "deterministic_tests_passed": 176,
     "syntax_files_passed": 32,
     "additional_private_runtime_checks_passed": 8,
     "seed_status": "VERIFIED_SEED_AND_IDEMPOTENT_RERUN",
@@ -58,7 +58,7 @@
     "runtime_order_access": "ACCESS_DENIED",
     "cloudflare_credentials_switched": true,
     "source_deployed": false,
-    "deterministic_tests_status": "173/173 passed on 2026-11-11 after priority ordering; previous 172/172 result retained as historical evidence",
+    "deterministic_tests_status": "176/176 passed; critical-only launch, time gate and selected denominator included",
     "source_checkpoint": "3538249ea82e0726086be8c247df76b8ebc0ab34",
     "browser_cart_smoke": "PASS: p001 Black/10 quantity1 USD79 create/get/cancel/verified absence; separate from75scenario suite",
     "credential_change_cloudflare_version": "1da0a93d-088b-4f40-8885-24629753a0e9",
@@ -185,6 +185,25 @@
       "model_calls": 0,
       "stop_reason": "RATE_LIMITED",
       "new_load_runs": 0
+    },
+    "revised_evaluation_scope": {
+      "selected_scenarios": [
+        "S05",
+        "S19",
+        "S20",
+        "S21"
+      ],
+      "repetitions_each": 3,
+      "attempts": 12,
+      "max_iterations": 5,
+      "pacing_ms": 10000,
+      "not_before": "2026-11-11T14:15:00.000Z",
+      "stop_first_429": true,
+      "cart_absence_prerequisite": false,
+      "prior_carts": "cancellation acknowledged, absence unconfirmed; carts expire",
+      "expiry_verified": false,
+      "remaining_63": "OUT_OF_SCOPE_NOT_RUN",
+      "actual_attempts": 0
     }
   }
 }

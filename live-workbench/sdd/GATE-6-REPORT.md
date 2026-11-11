@@ -1,3 +1,5 @@
+> Scope update, 11 November 2026: the following historical outcome is retained. The owner has removed the six-cart absence prerequisite and authorized ONLY 12 critical attempts (S05/S19/S20/S21 ×3), no requests before 19:15 PKT, five iterations, ten-second pacing, stop first 429. The old carts are cancellation acknowledged, absence unconfirmed; carts expire, but expiry is not verified. No further load or six-cart checks. Current execution results will be appended after the scheduled attempt. Auth research is in [UCP-AUTH-RESEARCH.md](UCP-AUTH-RESEARCH.md).
+
 # Development candidate stop report — Gate 6 blocked
 
 11 November 2026 · Asia/Karachi · FOR CLAUDE REVIEW · BLOCKED BY RENEWED PROVIDER THROTTLING
@@ -73,7 +75,7 @@ No further Install click is required. Both apps are installed, and the owner aut
 
 Suggested note: `Agent-Ready Live — Project Log`. Exact existing vault filename is unverified; do not edit the vault automatically.
 
-`2026-11-11 — Gate 6 BLOCKED by renewed provider throttling. Seed 318 products / 3266 variants, 15 collections, four discounts verified; zero-write rerun and original 18 products / 27 variants unchanged. First load 1/20 passed; cause unknown. Retest all 20 search/create/cancel acknowledgements passed; 14 absences verified, six unconfirmed; stopped after 76/80 requests. After honoring Retry-After 2249s, first recovery read at 13:00:51.304 UTC returned 429 / Retry-After 3550s; other five reads NOT_RUN. Next conservative boundary 19:00:06.304 PKT; no automatic retry. No further load authorized. Anonymous UCP throttled with 20 overlapping sessions and serialized HTTP; authenticated agent access required before production, not configured. AI 0/75, cost USD 0.0000141, five iterations, funded USD 1.90 / owner USD 10. Source checkpoint 3538249. PR1 open; no merge or source deployment.`
+`2026-11-11 — Gate 6 BLOCKED by renewed provider throttling. Seed 318 products / 3266 variants, 15 collections, four discounts verified; zero-write rerun and original 18 products / 27 variants unchanged. First load 1/20 passed; cause unknown. Retest all 20 search/create/cancel acknowledgements passed; 14 absences verified, six unconfirmed; stopped after 76/80 requests. After honoring Retry-After 2249s, first recovery read at 13:00:51.304 UTC returned 429 / Retry-After 3550s; other five reads NOT_RUN. Next conservative boundary 19:00:06.304 PKT; no automatic retry. No further load authorized. Anonymous UCP throttled with 20 overlapping sessions and serialized HTTP; authenticated agent access required before production, not configured. AI 0/75, cost USD 0.0000141, five iterations, funded USD 1.90 / owner USD 10. Source checkpoint 3538249. PR #1 open; no merge or source deployment.`
 
 ## 10. Gate 6 blockers
 

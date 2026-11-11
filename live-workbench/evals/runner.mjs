@@ -54,6 +54,7 @@ export function createWorkerClient({baseUrl,headersForSession,fetcher=fetch,befo
   let p;try{const body=await response.text();if(Buffer.byteLength(body)>524288)throw Error();p=JSON.parse(body);}catch{const rejected={error:response.status===429?'RATE_LIMITED':'INVALID_TOOL_RESPONSE',http_status:response.status,ambiguous:mutations.has(name),latency_ms:Math.round(performance.now()-start)};observeResult(rejected);return rejected;}
   let result=p.result?.structuredContent;
   if(!result&&p.result?.content?.[0]?.text){try{result=JSON.parse(p.result.content[0].text);}catch{}}
+  observeResult({...result,http_status:response.status});
   if(!response.ok||p.error||p.result?.isError){const error=result?.error||p.error?.message||p.error||'TOOL_REJECTED',retry=result?.retry_after_seconds;const rejected={error,message:result?.message||p.message||'Tool rejected the operation.',ambiguous:mutations.has(name)&&['UPSTREAM_UNREACHABLE','MUTATION_OUTCOME_UNKNOWN','UPSTREAM_HTTP','INVALID_RESPONSE'].includes(error),http_status:response.status,...(Number.isInteger(retry)&&retry>=0&&retry<=86400?{retry_after_seconds:retry}:{}),latency_ms:Math.round(performance.now()-start)};observeResult(rejected);return rejected;}
   return {...result,latency_ms:Math.round(performance.now()-start)};
  }};
@@ -135,6 +136,10 @@ export function createSuiteLedger(approval){
  if(typeof funded!=='number'||!Number.isFinite(funded)||funded<=0||funded>10||!Number.isSafeInteger(funded*1_000_000_000))throw Error('FUNDED_LIMIT_REQUIRED');
  return new BudgetLedger(approval.budget_ledger_path,{evaluationRunId:approval.evaluation_run_id,fundedNanoUsd:funded*1_000_000_000});
 }
+export function summarizeSelection(runs,ids){
+ const selected=runs.filter(r=>ids.includes(r.id)),count=status=>selected.filter(r=>r.status===status).length;
+ return {authorized_attempts:selected.length,passed:count('PASSED'),mechanical_pass_pending_human_review:count('PENDING_REVIEW'),failed:count('FAILED'),blocked:count('BLOCKED'),not_run:count('NOT_RUN'),running:count('RUNNING'),out_of_scope:runs.length-selected.length,out_of_scope_not_run:runs.filter(r=>!ids.includes(r.id)&&r.status==='NOT_RUN').length};
+}
 export async function runSuite({oracle,adapter,modelTransport,outputDir,approval,system,only,priority=[],reviewResults={}}){
  for(const k of ['owner_approved','gateway_tariff_verified','gateway_balance_confirmed','single_call_transport_verified','worker_preflight_passed','seed_verified'])if(approval?.[k]!==true)throw Error('PREFLIGHT_REQUIRED:'+k);
  if(approval.max_usd!==10||approval.max_iterations!==5||approval.model!==BUDGET.model)throw Error('APPROVED_BOUNDS_MISMATCH');
@@ -145,6 +150,9 @@ export async function runSuite({oracle,adapter,modelTransport,outputDir,approval
  try{report=JSON.parse(await readFile(path,'utf8'));if(report.seed_sha256!==oracle.digest)throw Error('RESULT_SEED_MISMATCH');if(report.evaluation_run_id!==approval.evaluation_run_id)throw Error('RESULT_RUN_ID_MISMATCH');}
  catch(e){if(e.code!=='ENOENT')throw e;report={schema_version:1,evaluation_run_id:approval.evaluation_run_id,environment:'development store, synthetic catalogue',execution_architecture:'local controlled tool loop + single-call n8n model helper; NOT hosted n8n Agent equivalence',model:BUDGET.model,max_iterations:5,max_output_tokens:2000,seed_sha256:oracle.digest,created_at:new Date().toISOString(),runs:prioritizeRuns(suitePlan(),priority),execution_priority:priority,billing:approval.tariff_evidence||'n8n Gateway pricing verified 2026-11-10'};}
  if(report.suspension)throw Error('SUSPENDED_SUITE_OPERATOR_RECOVERY_REQUIRED');
+ const selectedIds=only||SCENARIOS.map(s=>s.id);
+ if(!Array.isArray(selectedIds)||new Set(selectedIds).size!==selectedIds.length||selectedIds.some(id=>!SCENARIOS.some(s=>s.id===id)))throw Error('INVALID_SCENARIO_SELECTION');
+ report.execution_scope={scenario_ids:selectedIds,authorized_attempts:report.runs.filter(r=>selectedIds.includes(r.id)).length,suite_denominator:75,excluded_attempts:report.runs.filter(r=>!selectedIds.includes(r.id)).length};
  recoverInterruptedRuns(report);await save(path,report);
  await ledger.assertNoUnresolved();
  let stop=false;
@@ -192,5 +200,6 @@ export async function runSuite({oracle,adapter,modelTransport,outputDir,approval
   row.cost={model_calls:calls.length,input_tokens:settled.reduce((n,r)=>n+r.usage.input_tokens,0),output_tokens:settled.reduce((n,r)=>n+r.usage.output_tokens,0),confirmed_usd:dollars(settled.reduce((n,r)=>n+r.actualNanoUsd,0)),reserved_unknown_usd:dollars(calls.filter(r=>r.status!=='settled').reduce((n,r)=>n+r.reserveNanoUsd,0))};
  }
  applyReviews(report,reviewResults);summarizeReport(report);
+ report.selected_summary=summarizeSelection(report.runs,selectedIds);
  report.updated_at=new Date().toISOString();await save(path,report);return report;
 }

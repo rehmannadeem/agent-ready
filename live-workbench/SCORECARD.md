@@ -1,36 +1,28 @@
 # Armans.AI shopping assistant — client review scorecard
 
-**11 November 2026 · Development candidate · Evaluation pending**
+**11 November 2026 · Development evaluation complete · HOLD · FOR CLAUDE REVIEW**
 
-An AI shopping assistant connected to a real Shopify development store with synthetic products. This is not a production customer deployment.
+This project connects a shopping assistant to a real Shopify development store using synthetic products. The evaluated candidate did **not** meet acceptance requirements and is not a validated production assistant.
 
-| Area | Verified evidence |
+| Result | Recorded outcome |
 |---|---|
-| Catalogue | 318 seeded products, 3,266 variants, 15 collections and four discounts |
-| Existing data protection | Original 18 products / 27 variants unchanged; repeat seeding made zero Admin mutations |
-| Access control | Separate runtime app has only `read_products` and `read_publications`; customer/order access denied |
-| Shopping workflow | One browser cart completed create, read, cancel and verified absence; no purchase or payment |
-| Code checks | 200/200 deterministic tests passed at the recorded checkpoint |
-| Live load evidence | First attempt passed 1/20 sessions; cause of 19 search failures remains unknown. Retest passed all 20 search/create/cancel acknowledgements, then throttled; 14 absences verified, six unconfirmed |
-| AI evaluation | Results pending; no AI scenario acceptance claimed |
-| Recorded model cost | USD 0.0000141 transport smoke; USD 1.90 funded stop within USD 10 owner ceiling |
+| Selected attempts | 33 terminal: 32 failed, one blocked, zero passed |
+| Safety-critical attempts | All 12 failed; zero accepted |
+| Other scenarios | 20 failed; pagination blocked by the input-size guard |
+| Excluded repetitions | 42 untouched; this was not the original 75-attempt suite |
+| Human acceptance | Pending human review; zero mechanical successes |
+| Model cost | USD 0.0108549 including the earlier smoke test; no unresolved reservations |
 
-## What remains to be demonstrated
+The run used five iterations per turn and ten-second shared pacing. Recorded outcomes do not mean full conversations completed. No live rate-limit suspension was recorded in this evaluation.
 
-The current evaluation plan has **33 attempt slots**: four safety-critical scenarios repeated three times, then the other 21 scenarios once. It uses five agent iterations per turn and ten-second request spacing. On HTTP 429, it pauses for the provider's `Retry-After` plus 15 minutes. The cutoff is **12 November 2026, 18:00 PKT**. This does not complete the original 75-attempt evaluation.
+**What failed.** Twenty-six attempts stopped because the integration rejected the provider's response format. An inspected response contained a thinking block alongside text, while the validator required text-only blocks. Three excluded-product checks and three cross-session cart checks also failed before conversation testing; their precise underlying causes remain unconfirmed. Pagination reached the input-size limit after one model response. These findings prevent acceptance; they do not prove successful attacks. Failed attempts were not rerun.
 
-| Final result — awaiting evidence | Status |
-|---|---|
-| Attempted / 33 | Pending |
-| Mechanical successes / failures / not run | Pending |
-| Safety-critical repetitions / 12 | Pending |
-| Human transcript acceptance | Pending review |
-| Final model cost and restoration checks | Pending |
+**What is established.** Earlier evidence verifies 318 seeded products, 3,266 variants, 15 collections and four discounts; repeat seeding made zero Admin mutations and preserved the original 18 products. The isolated runtime app has only product/publication read permissions; customer/order access was denied. The checkpoint passed 200 offline and 47 focused Windows tests. One earlier browser cart lifecycle succeeded.
 
-## Production limitations
+**Cleanup and limits.** The current evaluation records 36 sessions cleaned with verified absence, no unknown mutations and no pending restoration. Separately, six old load carts remain “cancellation acknowledged, absence unconfirmed; carts expire”; expiry was not verified.
 
-Anonymous UCP access was throttled during 20 overlapping sessions with serialized HTTP requests. Authenticated agent access is required before production; it has not been implemented, and development-store eligibility is unconfirmed. Cancellation was acknowledged for six carts whose absence remains unconfirmed; expiry is not verified.
+Earlier load testing failed 19/20 search checks for an unresolved reason. Its retest acknowledged all 20 cancellations but throttled before six absence checks finished. Anonymous UCP access throttled at 20 concurrent sessions, with serialized network requests. Authenticated agent access remains a production requirement, unimplemented; development-store eligibility is unconfirmed.
 
-Orders, payments, customer handling, production capacity and AI-platform listing are not proven. Production session-state configuration is also incomplete. Gate 6 has not passed. No merge or production deployment is authorized.
+**Decision: hold at Gate 6.** Fix and independently review the observed defects, then authorize a separate retest. Payments, orders, production customer handling and production capacity remain unproven. No merge or deployment has occurred for this candidate.
 
-See [technical evidence](sdd/GATE-6-REPORT.md). SupportOps remains unchanged. Final review must retain failures and unfinished tests.
+[Technical evidence](sdd/GATE-6-REPORT.md) · [Beginner guide](LEARN.md)

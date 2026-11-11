@@ -27,7 +27,7 @@
   "candidate": {
     "date": "2026-11-11",
     "branch": "feat/realistic-catalogue-20261110",
-    "status": "GATE6_SCHEDULED_33_ATTEMPTS",
+    "status": "GATE6_HOLD_EVALUATION_COMPLETE",
     "deployed": false,
     "merged": false,
     "gate2_approved": true,
@@ -35,8 +35,8 @@
     "seed_products_generated": 318,
     "seed_variants_generated": 3266,
     "seed_products_written": 318,
-    "model_evaluation_runs": 0,
-    "model_evaluation_usd": 1.41e-05,
+    "model_evaluation_runs": 33,
+    "model_evaluation_usd": 0.0108549,
     "runtime_checks_passed": 11,
     "evidence": "sdd/GATE-6-REPORT.md",
     "deterministic_tests_passed": 200,
@@ -44,8 +44,8 @@
     "additional_private_runtime_checks_passed": 8,
     "seed_status": "VERIFIED_SEED_AND_IDEMPOTENT_RERUN",
     "model_transport_smoke_calls": 1,
-    "model_input_tokens": 51,
-    "model_output_tokens": 18,
+    "model_input_tokens": 83029,
+    "model_output_tokens": 5104,
     "funded_limit_usd": 1.9,
     "owner_limit_usd": 10,
     "model_iterations": 5,
@@ -59,12 +59,11 @@
     "cloudflare_credentials_switched": true,
     "source_deployed": false,
     "deterministic_tests_status": "200/200 passed; continuation, deadline, recovery and singleton safeguards included",
-    "source_checkpoint": "3538249ea82e0726086be8c247df76b8ebc0ab34",
+    "source_checkpoint": "e350bfa018c1031b43de5e93879a265f80efc12c",
     "browser_cart_smoke": "PASS: p001 Black/10 quantity1 USD79 create/get/cancel/verified absence; separate from75scenario suite",
     "credential_change_cloudflare_version": "1da0a93d-088b-4f40-8885-24629753a0e9",
     "credential_change_cloudflare_deployment": "d394ec92-a435-48f1-a46a-25d8cd90a17f",
     "credential_change_trigger": "secret",
-    "independent_review_blocking_defects": 0,
     "gate7_blocker": "Production SESSION_STATE binding absent; Gate7 unauthorized",
     "seed_variants_written": 3266,
     "seed_eligible_products": 300,
@@ -85,7 +84,7 @@
       "deleted": 0
     },
     "load_status": "RETEST_STOPPED_SUSTAINED_THROTTLE",
-    "model_scenario_status": "NOT_RUN",
+    "model_scenario_status": "32_FAILED_1_BLOCKED_0_PASSED",
     "gateway_balance_usd_rechecked": 1.98,
     "gateway_balance_checked_date": "2026-11-11",
     "load_first_attempt": {
@@ -133,22 +132,24 @@
       "recorded_at": "2026-11-11T13:00:51.304Z",
       "resume_after_plus_safety_margin": "2026-11-11T14:00:06.304Z",
       "resume_after_plus_safety_margin_pkt": "2026-11-11T19:00:06.304+05:00",
-      "future_execution_scheduled": false
+      "future_execution_scheduled": false,
+      "historical_only": true
     },
-    "evaluation_pacing_ms": 3000,
+    "evaluation_pacing_ms": 10000,
     "evaluation_pacing_tests_passed": 44,
-    "current_full_unit_test_count": 173,
+    "current_full_unit_test_count": 200,
     "ucp_authentication": "Anonymous merchant UCP requests; isolated Admin credential is separate",
     "rate_limit_source": "https://shopify.dev/docs/agents/profiles/auth-and-rate-limiting",
-    "rate_limit_qualification": "Merchant limits vary by tier/tool and may change; three-second spacing does not guarantee avoidance; honor provider Retry-After",
+    "rate_limit_qualification": "Historical merchant limits vary; ten-second spacing does not guarantee avoidance. No live429 suspension in the final33 evaluation; historical throttle findings remain.",
     "provider_suspension_guard": "Implemented and tested; prevents automatic restart and further dispatch after live throttling",
     "load_scope": "No further load run by owner direction; preserve both attempts and unresolved production risk",
     "load_finding": "Anonymous UCP throttled during 20-overlapping-session test; HTTP requests were serialized, not 20 simultaneous network calls",
     "production_authenticated_agent_access": "REQUIRED_NOT_CONFIGURED_OR_PROVEN",
     "evaluation_execution_plan": {
-      "status": "BLOCKED_REQUIRED_ABSENCE_CHECKS_UNCONFIRMED",
-      "required_absence_checks": 6,
-      "total_first_attempts": 75,
+      "status": "COMPLETED_WITH_FAILURES_HOLD",
+      "required_absence_checks": 0,
+      "total_first_attempts": 33,
+      "excluded_historical_repetitions": 42,
       "priority_scenarios": [
         "S05",
         "S19",
@@ -157,10 +158,10 @@
       ],
       "priority_repetitions_each": 3,
       "priority_attempts": 12,
-      "remaining_attempts": 63,
+      "remaining_scenarios_attempted_once": 21,
       "max_iterations": 5,
-      "request_spacing_ms": 3000,
-      "human_acceptance": "PENDING_REVIEW after mechanical success"
+      "request_spacing_ms": 10000,
+      "human_acceptance": "PENDING_HUMAN_REVIEW; zero mechanical successes"
     },
     "provider_cooldown_history": [
       {
@@ -206,11 +207,72 @@
       "cart_absence_prerequisite": false,
       "prior_carts": "cancellation acknowledged, absence unconfirmed; carts expire",
       "expiry_verified": false,
-      "actual_attempts": 0,
+      "actual_attempts": 33,
       "final_pr_authorized": true,
       "supersede_pr1_authorized": true,
       "merge_authorized": false,
-      "deploy_authorized": false
-    }
-  }
+      "deploy_authorized": false,
+      "execution_complete": true,
+      "passed": 0,
+      "failed": 32,
+      "blocked": 1,
+      "not_run_selected": 0
+    },
+    "historical_evaluation_execution_plan": {
+      "status": "BLOCKED_REQUIRED_ABSENCE_CHECKS_UNCONFIRMED",
+      "required_absence_checks": 6,
+      "total_first_attempts": 75,
+      "priority_scenarios": [
+        "S05",
+        "S19",
+        "S20",
+        "S21"
+      ],
+      "priority_repetitions_each": 3,
+      "priority_attempts": 12,
+      "remaining_attempts": 63,
+      "max_iterations": 5,
+      "request_spacing_ms": 3000,
+      "human_acceptance": "PENDING_REVIEW after mechanical success"
+    },
+    "model_calls_including_smoke": 28,
+    "evaluation_model_calls": 27,
+    "evaluation_cost_excluding_smoke_usd": 0.0108408,
+    "reserved_unknown_usd": 0,
+    "focused_windows_tests_passed": 47,
+    "human_acceptance": "PENDING_HUMAN_REVIEW; zero mechanical successes",
+    "final_evaluation_evidence": "sdd/evidence/evaluation-33-final-2026-11-11.json",
+    "selected_summary": {
+      "authorized_attempts": 33,
+      "passed": 0,
+      "mechanical_pass_pending_human_review": 0,
+      "failed": 32,
+      "blocked": 1,
+      "not_run": 0,
+      "running": 0,
+      "out_of_scope": 42,
+      "out_of_scope_not_run": 42
+    },
+    "critical_summary": {
+      "attempts": 12,
+      "failed": 12,
+      "passed": 0,
+      "blocked": 0,
+      "not_run": 0,
+      "pending_review": 0
+    },
+    "evaluation_cleanup": {
+      "registered_sessions": 36,
+      "verified_absent": 36,
+      "pending_sessions": 0,
+      "unknown_mutations": 0,
+      "controller_cases_remaining": 0,
+      "simulations_remaining": []
+    },
+    "evaluation_live429_suspensions": 0,
+    "completion_decision": "HOLD: response compatibility, companion checks and pagination input-bound defects require review and separately authorized retest",
+    "historical_independent_review_blocking_defects": 0,
+    "live_evaluation_blocking_finding_categories": 4
+  },
+  "metadata_note": "Top-level release fields describe the historical 2026-11-09 deployment; candidate fields describe the undeployed final evaluation."
 }

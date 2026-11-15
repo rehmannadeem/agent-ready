@@ -11,18 +11,22 @@ your operating system's certificate checks (recommended on Windows).
 Usage:
     python agent_ready.py allbirds.com colourpop.com
     python agent_ready.py --out reports mystore.com
+    python agent_ready.py --batch domains.txt
 """
 import argparse
 import json
 import re
 import ssl
 import sys
-import time
 import urllib.error
 import urllib.request
 from datetime import datetime, timezone
 from html import unescape
 from pathlib import Path
+from urllib.parse import urljoin
+
+from agent_ready_http import (HostPacer, MAX_BODY, build_opener, normalize_store,
+                              public_url, retry_delay)
 
 VERSION = "0.2.1"
 USER_AGENT = f"Mozilla/5.0 (compatible; ArmansAgentReadyAudit/{VERSION}; +https://armans.ai)"
@@ -71,53 +75,76 @@ SSL_CONTEXT = make_ssl_context()
 
 
 class Fetcher:
-    """Polite HTTP client: one request at a time, delay between calls, 429 backoff."""
+    """Public-only HTTP client with shared host pacing and bounded 429 retries."""
 
-    def __init__(self):
-        self.last = 0.0
+    def __init__(self, pacer=None):
+        self.pacer = pacer or HostPacer(delay=POLITE_DELAY)
         self.log = []
+        self.opener = build_opener(SSL_CONTEXT)
 
     def request(self, url, method="GET", body=None, headers=None, retries=2):
-        wait = POLITE_DELAY - (time.time() - self.last)
-        if wait > 0:
-            time.sleep(wait)
         hdrs = {"User-Agent": USER_AGENT, "Accept": "*/*"}
-        if headers:
-            hdrs.update(headers)
+        hdrs.update(headers or {})
         data = body.encode("utf-8") if isinstance(body, str) else body
-        req = urllib.request.Request(url, data=data, method=method, headers=hdrs)
-        try:
-            with urllib.request.urlopen(req, timeout=TIMEOUT, context=SSL_CONTEXT) as resp:
-                text = resp.read().decode("utf-8", errors="replace")
-                result = (resp.status, dict(resp.headers), text, resp.geturl())
-        except urllib.error.HTTPError as e:
-            text = e.read().decode("utf-8", errors="replace") if e.fp else ""
-            result = (e.code, dict(e.headers or {}), text, url)
-        except Exception as e:  # network error, timeout, TLS
-            result = (0, {}, f"{type(e).__name__}: {e}", url)
-        self.last = time.time()
-        status = result[0]
-        if status == 429 and retries > 0:
+        attempt, redirects = 0, 0
+        while True:
             try:
-                ra = int(result[1].get("Retry-After", "5"))
-            except ValueError:
-                ra = 5
-            time.sleep(min(max(ra, 2), 15))
-            return self.request(url, method, body, headers, retries - 1)
-        entry = {"method": method, "url": url, "status": status}
-        if status == 0:
-            entry["error"] = result[2][:200]
-        self.log.append(entry)
-        return result
+                _, host = public_url(url)
+                with self.pacer.slot(host) as allowed:
+                    if not allowed:
+                        self.log.append({"method": method, "url": url, "status": 429,
+                                         "skipped": "Host Retry-After cooldown is still active"})
+                        return 429, {}, "Not checked: host cooldown", url
+                    req = urllib.request.Request(url, data=data, method=method, headers=hdrs)
+                    try:
+                        response = self.opener.open(req, timeout=TIMEOUT)
+                    except urllib.error.HTTPError as exc:
+                        response = exc
+                    with response:
+                        payload = response.read(MAX_BODY + 1)
+                        if len(payload) > MAX_BODY:
+                            raise ValueError("Response exceeds the 5 MiB audit limit")
+                        result = (response.code, dict(response.headers),
+                                  payload.decode("utf-8", errors="replace"), url)
+                    if result[0] == 429:
+                        self.pacer.backoff(host, retry_delay(result[1], attempt))
+            except Exception as exc:  # Network, TLS or unsafe public-endpoint input.
+                result = (0, {}, f"{type(exc).__name__}: {exc}", url)
+            entry = {"method": method, "url": url, "status": result[0]}
+            if result[0] == 0:
+                entry["error"] = result[2][:200]
+            self.log.append(entry)
+            if result[0] == 429 and attempt < retries:
+                attempt += 1
+                continue
+            if result[0] in (301, 302, 303, 307, 308):
+                location = next((v for k, v in result[1].items() if k.lower() == "location"), None)
+                if location and redirects < 5:
+                    target = urljoin(url, location)
+                    try:
+                        old, old_host = public_url(url)
+                        new, new_host = public_url(target)
+                        if old.scheme == "https" and new.scheme != "https":
+                            raise ValueError("HTTPS downgrade redirect refused")
+                        if method != "GET" and (old_host, old.port, old.scheme) != (new_host, new.port, new.scheme):
+                            raise ValueError("Cross-origin MCP redirect refused")
+                    except ValueError as exc:
+                        self.log.append({"method": method, "url": target, "status": 0, "error": str(exc)})
+                        return 0, {}, str(exc), target
+                    if result[0] == 303 or (result[0] in (301, 302) and method == "POST"):
+                        method, data = "GET", None
+                        hdrs = {k: v for k, v in hdrs.items()
+                                if k.lower() not in ("mcp-session-id", "content-type")}
+                    url = target
+                    redirects += 1
+                    continue
+            return result
 
 
 # ---------------------------------------------------------------- helpers
 
 def normalize_base(store):
-    s = store.strip()
-    if not re.match(r"^https?://", s):
-        s = "https://" + s
-    return s.rstrip("/")
+    return normalize_store(store)
 
 
 def parse_json(text):
@@ -171,10 +198,17 @@ def check_ucp(f, base):
         out["final_url"] = final_url
         return out
     ucp = doc["ucp"]
+    if (not isinstance(ucp, dict)
+            or not isinstance(ucp.get("services", {}), dict)
+            or not isinstance(ucp.get("capabilities", {}), dict)
+            or not isinstance(ucp.get("payment_handlers", {}), dict)
+            or not isinstance(ucp.get("services", {}).get("dev.ucp.shopping", []), list)):
+        out["status"] = "not-a-manifest"
+        return out
     out["present"] = True
     out["version"] = ucp.get("version")
     for svc in (ucp.get("services") or {}).get("dev.ucp.shopping", []):
-        if svc.get("transport") == "mcp" and svc.get("endpoint"):
+        if isinstance(svc, dict) and svc.get("transport") == "mcp" and isinstance(svc.get("endpoint"), str):
             out["mcp_endpoint"] = svc["endpoint"]
             break
     out["capabilities"] = sorted((ucp.get("capabilities") or {}).keys())
@@ -194,19 +228,26 @@ def check_mcp(f, endpoint):
         "clientInfo": {"name": "agent-ready-audit", "version": VERSION}}})
     status, rh, text, _ = f.request(endpoint, "POST", init, hdrs)
     doc = parse_json(text)
-    if status != 200 or not isinstance(doc, dict) or "result" not in doc:
+    if status != 200 or not isinstance(doc, dict) or not isinstance(doc.get("result"), dict):
         out["status"] = status
+        out["inconclusive"] = status not in (200, 404, 410)
         return out
     out["live"] = True
-    out["server"] = (doc["result"].get("serverInfo") or {}).get("name")
+    info = doc["result"].get("serverInfo")
+    out["server"] = info.get("name") if isinstance(info, dict) else None
     session = rh.get("Mcp-Session-Id") or rh.get("mcp-session-id")
     if session:
         hdrs["Mcp-Session-Id"] = session
     lst = json.dumps({"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {}})
     status, _, text, _ = f.request(endpoint, "POST", lst, hdrs)
     doc = parse_json(text)
-    if isinstance(doc, dict) and "result" in doc:
-        out["tools"] = [t.get("name") for t in doc["result"].get("tools", [])]
+    out["tools_inconclusive"] = status not in (200, 404, 410)
+    out["tools_status"] = status
+    if status == 200 and isinstance(doc, dict) and isinstance(doc.get("result"), dict):
+        listed = doc["result"].get("tools")
+        if isinstance(listed, list):
+            out["tools"] = [t["name"] for t in listed
+                            if isinstance(t, dict) and isinstance(t.get("name"), str)]
     return out
 
 
@@ -387,6 +428,7 @@ def analyze_product_page(page):
 
 def score_and_findings(r):
     score, findings = 0.0, []
+    unchecked = 0
 
     def add(sev, area, finding, fix):
         findings.append({"severity": sev, "area": area, "finding": finding, "fix": fix})
@@ -423,9 +465,17 @@ def score_and_findings(r):
             "On other platforms, review Google UCP and OpenAI ACP onboarding.")
 
     # 2. Agent endpoint (MCP) - 15 points
-    if mcp["live"]:
+    if mcp.get("inconclusive"):
+        unchecked += 15
+        add("INFO", "Agent endpoint", "MCP endpoint could not be read; not checked and not scored.",
+            "Re-run the audit later.")
+    elif mcp["live"]:
         score += 10
-        if {"search_catalog", "get_product"} <= set(mcp["tools"]):
+        if mcp.get("tools_inconclusive"):
+            unchecked += 5
+            add("INFO", "Agent endpoint", "MCP tools/list could not be read; not checked and not scored.",
+                "Re-run the audit later.")
+        elif {"search_catalog", "get_product"} <= set(mcp["tools"]):
             score += 5
         else:
             add("MEDIUM", "Agent endpoint", "MCP endpoint is live but catalog search/product tools were not listed.",
@@ -443,7 +493,6 @@ def score_and_findings(r):
 
     # 4. Policies agents compare on - 15 points
     weights = {"refund": 5, "shipping": 5, "privacy": 2.5, "terms": 2.5}
-    unchecked = 0
     for key, w in weights.items():
         if pol.get(key) is None:
             unchecked += w
@@ -472,7 +521,12 @@ def score_and_findings(r):
 
     # 5. AI discovery access - 10 points
     blocked = rob["blocked_discovery"]
-    score += max(0, 10 - 2 * len(blocked))
+    if rob["status"] not in (200, 404, 410):
+        unchecked += 10
+        add("INFO", "robots.txt", "robots.txt could not be read; not checked and not scored.",
+            "Re-run the audit later.")
+    else:
+        score += max(0, 10 - 2 * len(blocked))
     if blocked:
         add("HIGH", "robots.txt", "Blocks AI search/assistant bots from the whole site: " + ", ".join(blocked),
             "These bots fetch pages to answer shoppers in real time. Unblock them unless this is deliberate.")
@@ -518,15 +572,16 @@ def score_and_findings(r):
 
 # ---------------------------------------------------------------- audit + report
 
-def audit(store):
-    f = Fetcher()
+def audit(store, pacer=None):
+    f = Fetcher(pacer=pacer)
     base = normalize_base(store)
     r = {"store": base, "tool": f"agent-ready-audit {VERSION}",
          "audited_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")}
     r["platform"], home_html = check_platform(f, base)
-    if r["platform"]["status"] == 0:
-        # Never grade a store we could not reach: a network failure is not a store failure.
-        r["error"] = "Could not reach the store: " + f.log[-1].get("error", "unknown error")
+    if r["platform"]["status"] != 200:
+        # Never grade an unreadable store: transport/access failures are not store failures.
+        r["error"] = (f"Could not read the store homepage (HTTP {r['platform']['status']}). "
+                      "Not checked; re-run later.")
         r["requests"] = f.log
         return r
     r["ucp"] = check_ucp(f, base)
@@ -582,17 +637,17 @@ def render_markdown(r):
          f"| Shopify store detected | {yes(r['platform']['is_shopify'])} |",
          f"| Commerce manifest (/.well-known/ucp) | {yes(u['present'])}"
          + (f" - version {u['version']}" if u["present"] else "") + " |",
-         f"| Agent endpoint (MCP) live | {yes(m['live'])}"
+         f"| Agent endpoint (MCP) live | {'Not checked' if m.get('inconclusive') else yes(m['live'])}"
          + (f" - {len(m['tools'])} tools" if m["live"] else "") + " |",
          f"| Core capabilities (search, lookup, cart, checkout) | {4 - len(u['missing_core'])}/4 |",
          f"| Payment options exposed to agents | {', '.join(u['payment_handlers']) or 'None'} |",
          f"| Refund / shipping policy | {pol_label(p, 'refund')} / {pol_label(p, 'shipping')} |",
-         f"| AI search bots blocked | {', '.join(rb['blocked_discovery']) or 'None'} |",
-         (f"| Product structured data (JSON-LD) | Not checked (HTTP {pr.get('status')}) |"
-          if pr.get("inconclusive") else
+         f"| AI search bots blocked | {(', '.join(rb['blocked_discovery']) or 'None') if rb['status'] in (200, 404, 410) else 'Not checked'} |",
+         ("| Product structured data (JSON-LD) | Not checked |"
+          if pr.get("inconclusive") or not pr.get("product_url") else
           f"| Product structured data (JSON-LD) | {yes(pr['jsonld'])} |"),
          ("| Price / stock / GTIN in product data | Not checked |"
-          if pr.get("inconclusive") else
+          if pr.get("inconclusive") or not pr.get("product_url") else
           f"| Price / stock / GTIN in product data | {yes(pr['price'])} / {yes(pr['availability'])} / {yes(pr['gtin'])} |"),
          "", "## Findings and fixes", ""]
     if not r["findings"]:
@@ -607,17 +662,43 @@ def render_markdown(r):
           "- Reads only public pages and the public agent manifest. No login, no admin access, no purchases.",
           "- Live catalog queries need a registered UCP agent profile and are not part of this public audit.",
           "- One product page is sampled. Catalog-wide data quality needs a full audit.",
-          "- A high score means agents can technically transact. It does not measure how often agents "
-          "recommend the store.", "",
+          "- A high score describes the public checks completed. Cart, checkout, payment and live "
+          "catalog operations were not tested; it does not prove a purchase can succeed.", "",
           "---", "Built by Rehman Nadeem, Armans.AI - https://armans.ai - open source, MIT licence."]
     return "\n".join(L) + "\n"
 
 
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser(description="Audit online stores for AI shopping-agent readiness.")
-    ap.add_argument("stores", nargs="+", help="store domains, e.g. allbirds.com")
+    ap.add_argument("stores", nargs="*", help="store domains, e.g. allbirds.com")
     ap.add_argument("--out", default="reports", help="output folder (default: reports)")
-    args = ap.parse_args()
+    ap.add_argument("--batch", metavar="FILE", help="UTF-8 domain list, up to 50 unique domains")
+    ap.add_argument("--concurrency", type=int, default=3, help="batch workers, 1-5 (default: 3)")
+    args = ap.parse_args(argv)
+    if not 1 <= args.concurrency <= 5:
+        ap.error("--concurrency must be between 1 and 5")
+    if bool(args.batch) == bool(args.stores):
+        ap.error("provide store domains OR --batch FILE")
+    if args.batch:
+        from agent_ready_batch import load_domains, run_batch, write_reports
+        try:
+            domains = load_domains(Path(args.batch))
+        except (OSError, UnicodeError, ValueError) as exc:
+            ap.error(str(exc))
+        print(f"Auditing {len(domains)} domains with {args.concurrency} workers ...", flush=True)
+        results = run_batch(domains, audit, concurrency=args.concurrency)
+        try:
+            csv_path, html_path = write_reports(results, Path(args.out))
+        except OSError as exc:
+            ap.error(f"Could not write reports: {exc}")
+        graded = sum("score" in r for r in results)
+        print(f"Graded: {graded}; not checked: {len(results) - graded} | "
+              f"CSV: {csv_path} | HTML: {html_path}", flush=True)
+        return 0
+    try:
+        args.stores = [normalize_base(store) for store in args.stores]
+    except ValueError as exc:
+        ap.error(str(exc))
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
     for store in args.stores:

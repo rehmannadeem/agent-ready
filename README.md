@@ -39,6 +39,63 @@ On Windows, also run `pip install truststore`. It makes Python use the operating
 
 Reports are written to `reports/` (git-ignored, so audits of other people's stores stay private).
 
+## Batch audit (v0.2)
+
+Put one public domain or root URL on each line of a UTF-8 file named `domains.txt`.
+Blank lines and lines starting with `#` are ignored. A UTF-8 BOM is accepted.
+Domains are normalized and deduplicated by hostname, keeping the first entry.
+A batch accepts **1–50 unique domains**; invalid input or 51+ domains stops before
+any audit requests. Use `examples/domains.txt` as a format example (reserved example
+domains, not a real store list).
+
+```sh
+python agent_ready.py --batch domains.txt
+# Optional: 1–5 concurrent workers (default 3), and a different output directory
+python agent_ready.py --batch domains.txt --concurrency 3 --out reports/agency-review
+```
+
+The default command writes exactly two files:
+
+- `reports/batch-audit.csv` — one row per domain, in input order, with score,
+  grade, coverage, check states, findings, fixes and incomplete-audit reasons.
+- `reports/batch-audit.html` — a self-contained summary with per-domain findings
+  and request evidence. Open it directly in a browser or share the single file;
+  it needs no JavaScript, external assets, server or internet connection.
+
+Repeating the command replaces these two files. Use a different `--out` folder
+for each batch you want to keep. Existing single-store Markdown/JSON mode and the
+MCP server's five-store limit remain available.
+
+**Read score and coverage together.** Unreadable checks say `Not checked` and are
+excluded from the score denominator. If the homepage or manifest is unreadable,
+the domain is ungraded: score, grade, coverage and high-issue count are blank in
+CSV, and dashes in HTML. A failed domain does not discard other results. The CLI
+returns 0 when the reports are written, including incomplete audits; it returns 2
+for invalid input or report-write errors. Read each row's status before using it.
+
+**Concurrency stays polite.** Workers can audit different hosts concurrently.
+Every worker shares the same hostname limiter: one in-flight request per host,
+with at least one second after completion before its next request. This also
+covers shared backend/MCP hosts and redirect targets. HTTP 429 uses exponential
+backoff (2, 4, 8 seconds...) and honors `Retry-After` seconds or HTTP dates. Normal
+requests have at most two retries; sampled product requests have three. A server
+wait over 30 seconds skips requests to that host until the cooldown expires,
+rather than shortening the wait or blocking a worker indefinitely. Skipped or
+unreadable checks remain neutral. Every attempt and cooldown skip is recorded.
+
+Only public HTTP(S) endpoints on ports 80/443 are allowed. Private/reserved IPs,
+private DNS answers, credentials in URLs, HTTPS downgrades and cross-origin MCP
+redirects are refused. DNS answers are checked and the connection uses the
+validated IP; TLS still verifies the original hostname. Environment proxy
+settings are deliberately ignored so they cannot bypass these checks. Responses
+are limited to 5 MiB and redirect chains to five hops. No login, admin, catalog,
+cart, checkout or payment operations are invoked; MCP only calls `initialize`
+and `tools/list`.
+
+Reports contain audited domain names and public evidence. Review them before
+sharing. `reports/` and the local `domains.txt` input are git-ignored. The report
+escapes remote HTML and guards CSV text against spreadsheet formula execution.
+
 ## Use it from Claude, ChatGPT or Cursor (MCP server)
 
 The audit also runs as an MCP server, so an AI assistant can call it as a tool.
@@ -85,7 +142,7 @@ A common finding on headless (custom front-end) Shopify stores: the Shopify back
 ## Design choices
 
 - **Public endpoints only.** No login, no admin access, no cart or checkout actions.
-- **Polite.** One request at a time, a one-second gap between requests, and backs off when a store returns HTTP 429.
+- **Polite.** One request at a time per hostname across batch workers, a one-second gap after each request, and shared HTTP 429 backoff.
 - **Never reports a false failure.** If a page cannot be read (rate limit, block, network error), that check is marked "not checked" and left out of the score. The report states its coverage. If the store or its manifest cannot be read at all, no grade is given.
 - **Headless-aware.** Policies kept on a separate support site are found from homepage links and scored as "elsewhere", not "missing". Gift cards are skipped when sampling a product.
 - **Identifies itself.** The User-Agent names the tool and links back to its author.
@@ -96,20 +153,20 @@ A common finding on headless (custom front-end) Shopify stores: the Shopify back
 python -m unittest -v
 ```
 
-Offline tests cover scoring, coverage, the headless gap, robots.txt parsing and structured-data parsing. No network needed.
+Offline tests cover scoring, coverage, the headless gap, robots.txt and structured-data parsing, 50-domain CLI execution, input limits, concurrency, pacing, retries, public-address enforcement and export safety. No network or third-party packages are needed. The subprocess fixture blocks real sockets. GitHub Actions runs the same unittest suite on Python 3.10 and 3.14, on Linux and Windows, for branches and pull requests.
 
 ## Limits
 
 - Live catalog queries through the agent endpoint require a registered UCP agent profile. They are not part of this public audit yet.
 - One product page is sampled. A full catalog-quality audit needs merchant access.
-- A good score means agents can technically transact with the store. It does not measure how often agents choose to recommend it.
+- A good score describes the public checks completed. Live catalog, cart, checkout and payment were not tested, so it does not prove a purchase can succeed or measure recommendations.
 - UCP moves fast. The newest version known to this release is `2026-08-25`.
 
 ## Roadmap
 
 - [x] MCP server, so Claude, ChatGPT or Cursor can run audits as a tool
 - [ ] Catalog-quality sampling through the UCP endpoint (needs an agent profile)
-- [ ] Batch mode with CSV output for agencies auditing many client stores
+- [x] Batch mode for up to 50 domains with CSV and a self-contained HTML summary
 - [ ] n8n workflow: new lead → automatic audit → draft report email for human review
 
 ## Author

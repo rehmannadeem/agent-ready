@@ -31,6 +31,7 @@ from agent_ready_http import (HostPacer, MAX_BODY, build_opener, normalize_store
 VERSION = "0.2.1"
 USER_AGENT = f"Mozilla/5.0 (compatible; ArmansAgentReadyAudit/{VERSION}; +https://armans.ai)"
 TIMEOUT = 20
+LATE_RETRY_WAIT = 120.0     # seconds the one late retry may wait for a 429 cooldown
 POLITE_DELAY = 1.0          # seconds between requests to the same store
 KNOWN_LATEST_UCP = "2026-08-25"   # newest UCP version observed at build time (Nov 2026)
 CORE_CAPABILITIES = [
@@ -79,6 +80,7 @@ class Fetcher:
 
     def __init__(self, pacer=None):
         self.pacer = pacer or HostPacer(delay=POLITE_DELAY)
+        self.max_wait = None   # None = pacer default; raised only for the late retry pass
         self.log = []
         self.opener = build_opener(SSL_CONTEXT)
 
@@ -90,7 +92,9 @@ class Fetcher:
         while True:
             try:
                 _, host = public_url(url)
-                with self.pacer.slot(host) as allowed:
+                slot = (self.pacer.slot(host) if self.max_wait is None
+                        else self.pacer.slot(host, max_wait=self.max_wait))
+                with slot as allowed:
                     if not allowed:
                         self.log.append({"method": method, "url": url, "status": 429,
                                          "skipped": "Host Retry-After cooldown is still active"})
@@ -268,9 +272,11 @@ def find_policy_link(home_html, key):
     return None
 
 
-def check_policies(f, base, home_html=""):
+def check_policies(f, base, home_html="", only=None):
     out = {"alt_urls": {}, "empty": {}}
     for key, path in POLICY_PATHS.items():
+        if only is not None and key not in only:
+            continue
         status, _, text, _ = f.request(base + path)
         if status in (404, 410):
             out[key] = False
@@ -328,6 +334,30 @@ def blocks_whole_site(groups, bot):
         rules = [x for a, r in groups if "*" in a for x in r]
     return (any(fl == "disallow" and v == "/" for fl, v in rules)
             and not any(fl == "allow" and v == "/" for fl, v in rules))
+
+
+def retry_after_cooldown(f, r, base, home_html=""):
+    """Product pages often trigger a store's 429 limit, and the cooldown then skips the
+    cheap checks that follow. Give unread policy and robots checks one late retry that
+    may wait out a cooldown of up to LATE_RETRY_WAIT seconds. Anything still unread
+    stays Not checked; it is never scored as a failure."""
+    keys = [k for k in POLICY_PATHS if r["policies"].get(k) is None]
+    robots_unread = r["robots"].get("status") in (0, 429)
+    if not keys and not robots_unread:
+        return
+    f.max_wait = LATE_RETRY_WAIT
+    try:
+        if keys:
+            again = check_policies(f, base, home_html, only=keys)
+            for k in keys:
+                r["policies"][k] = again.get(k)
+                for extra in ("alt_urls", "empty"):
+                    if k in again.get(extra, {}):
+                        r["policies"][extra][k] = again[extra][k]
+        if robots_unread:
+            r["robots"] = check_robots(f, base)
+    finally:
+        f.max_wait = None
 
 
 def check_robots(f, base):
@@ -607,6 +637,7 @@ def audit(store, pacer=None):
     r["mcp"] = check_mcp(f, r["ucp"]["mcp_endpoint"])
     r["policies"] = check_policies(f, base, home_html)
     r["robots"] = check_robots(f, base)
+    retry_after_cooldown(f, r, base, home_html)
     r["score"], r["grade"], r["findings"] = score_and_findings(r)
     r["requests"] = f.log
     return r

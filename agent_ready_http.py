@@ -145,12 +145,12 @@ class HostPacer:
         self._locks, self._ready, self._cooldown = {}, {}, {}
 
     @contextmanager
-    def slot(self, host):
+    def slot(self, host, max_wait=MAX_BACKOFF):
         with self._guard:
             lock = self._locks.setdefault(host, threading.Lock())
         with lock:
             wait = max(self._ready.get(host, 0), self._cooldown.get(host, 0)) - self.clock()
-            if wait > MAX_BACKOFF:
+            if wait > max_wait:
                 yield False  # Do not retry sooner than a long Retry-After requests.
                 return
             if wait > 0:
